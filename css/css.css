@@ -1,0 +1,103 @@
+@charset "utf-8";
+body{
+	font-family:Arial, Helvetica, sans-serif;
+	margin:0;
+	padding:0;
+}
+.all{
+	padding:20px;
+}
+.main-table{
+	border-collapse:collapse;
+	border-color:#0E518C;
+}
+.main-table td{
+	padding:4px;
+	border-color:#0E518C;
+}
+.main-table thead td{
+	background-color:#125A98;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.main-table tbody tr:hover td{
+	background-color:#E8E8EE;
+}
+.main-table tbody tr > td:nth-child(1)
+{
+	padding-left: 10px;
+}
+.main-table td select{
+	width:100%;
+	box-sizing:border-box;
+}
+.main-table td input[type="text"]{
+	width:100%;
+	box-sizing:border-box;
+}
+
+form{
+	margin:0;
+	padding:0;
+}
+input, select, textarea, button{
+	margin:0;
+}
+
+
+.database-info{
+	padding:0 0 4px 0;
+}
+.info-cell{
+	display:inline-block;
+	padding-right:20px;
+}
+.text-code{
+	box-sizing:border-box;
+	padding:10px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#333333;
+	background-color:#FFFFFF;
+	border:1px solid #BBBBBB;
+	resize:vertical;
+}
+.ui-tabs .ui-tabs-panel{
+	padding:10px;
+}
+.define-wrapper{
+	display:none;
+}
+.button-area{
+	padding-top:8px;
+}
+.CodeMirror {
+	line-height:1.6;
+	height: calc(100vh - 80px);
+}
+.code-area{
+	margin: -10px -10px -11px -10px;
+	display:none;
+}
+.desc{
+	line-height:1.5;
+}
+.reserved .field-name{
+	color:#bf0101;
+}
+
+.tab-content{
+	padding-top: 20px;
+}
+
+.config-table{
+	width: 100%;
+	max-width: 800px;
+}
+.config-table td{
+	padding:4px 0;
+}
+
+.config-table tbody > tr:nth-child(1) > td:nth-child(1){
+	width: 200px;
+}

@@ -1,0 +1,40 @@
+current_application:
+  id: app1
+  name: Application 1
+  
+database:
+  driver: mysql
+  host: localhost
+  port: 3306
+  username: root
+  password: pass
+  database_name: application1
+  schema: public
+  time_zone: Asia/Jakarta
+  time_zone_system: Asia/Jakarta
+  salt:
+
+sessions:
+  name: APPGENERATOR
+  max_life_time: 86400
+  save_handler: files  
+  
+entity_info:
+  active: active
+  draft: draft
+  waiting_for: waiting_for
+  admin_create: admin_create
+  admin_edit: admin_edit
+  admin_ask_edit: admin_ask_edit
+  ip_create: ip_create
+  ip_edit: ip_edit
+  ip_ask_edit: ip_ask_edit
+  time_create: time_create
+  time_edit: time_edit
+  time_ask_edit: time_ask_edit
+  database: database
+
+current_action:
+  user_function: "currentAction->getUserId()"
+  time_function: "currentAction->getTime()"
+  ip_function: "currentAction->getIp()"

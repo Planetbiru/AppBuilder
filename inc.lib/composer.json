@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-0": {
+            "AppBuilder\\": "classes/"
+        }
+    },
+    "require": {
+        "planetbiru/magic-object": "dev-main"
+    }
+}
