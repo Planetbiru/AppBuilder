@@ -55,6 +55,13 @@ class AppBuilderBase
     protected $appBuilderConfig;
 
     /**
+     * Current action
+     *
+     * @var SecretObject
+     */
+    protected $currentAction;
+
+    /**
      * Constructor
      *
      * @param PicoDatabase $database
@@ -65,6 +72,7 @@ class AppBuilderBase
     {
         $this->database = $database;
         $this->appBuilderConfig = $appBuilderConfig;
+        $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
         $this->entitiInfo = $entitiInfo;
         $this->skipedAutoSetter = array(
@@ -277,5 +285,16 @@ class AppBuilderBase
     public function getAppBuilderConfig()
     {
         return $this->appBuilderConfig;
+    }
+
+
+    /**
+     * Get current action
+     *
+     * @return  SecretObject
+     */ 
+    public function getCurrentAction()
+    {
+        return $this->currentAction;
     }
 }

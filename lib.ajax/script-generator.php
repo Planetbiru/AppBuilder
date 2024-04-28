@@ -63,12 +63,10 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         
         if($withStrash == 1)
         {
-            error_log('aaa');
             $deleteSection = $appBuilder->createDeleteSection($entityName, $pkName, true, $entityNameTrash);
         }
         else
         {
-            error_log('ooo');
             $deleteSection = $appBuilder->createDeleteSection($entityName, $pkName);
         }
         $approvalSection = "";

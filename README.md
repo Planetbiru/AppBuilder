@@ -45,12 +45,12 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setAdminCreate($);
-	$album->setTimeCreate($);
-	$album->setIpCreate($);
-	$album->setAdminEdit($);
-	$album->setTimeEdit($);
-	$album->setIpEdit($);
+	$album->setAdminCreate($currentAction->getUserId());
+	$album->setTimeCreate($currentAction->getTime());
+	$album->setIpCreate($currentAction->getIp());
+	$album->setAdminEdit($currentAction->getUserId());
+	$album->setTimeEdit($currentAction->getTime());
+	$album->setIpEdit($currentAction->getIp());
 	$album->insert();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
@@ -127,12 +127,12 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setAdminCreate($);
-	$album->setTimeCreate($);
-	$album->setIpCreate($);
-	$album->setAdminEdit($);
-	$album->setTimeEdit($);
-	$album->setIpEdit($);
+	$album->setAdminCreate($currentAction->getUserId());
+	$album->setTimeCreate($currentAction->getTime());
+	$album->setIpCreate($currentAction->getIp());
+	$album->setAdminEdit($currentAction->getUserId());
+	$album->setTimeEdit($currentAction->getTime());
+	$album->setIpEdit($currentAction->getIp());
 	$album->insert();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
@@ -217,12 +217,12 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setDraft(true);
 	$album->setWaitingFor(1);
-	$album->setAdminCreate($);
-	$album->setTimeCreate($);
-	$album->setIpCreate($);
-	$album->setAdminEdit($);
-	$album->setTimeEdit($);
-	$album->setIpEdit($);
+	$album->setAdminCreate($currentAction->getUserId());
+	$album->setTimeCreate($currentAction->getTime());
+	$album->setIpCreate($currentAction->getIp());
+	$album->setAdminEdit($currentAction->getUserId());
+	$album->setTimeEdit($currentAction->getTime());
+	$album->setIpEdit($currentAction->getIp());
 
 	$album->insert();
 
@@ -248,15 +248,15 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$albumApv->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$albumApv->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$albumApv->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$albumApv->setAdminEdit($);
-	$albumApv->setTimeEdit($);
-	$albumApv->setIpEdit($);
+	$albumApv->setAdminEdit($currentAction->getUserId());
+	$albumApv->setTimeEdit($currentAction->getTime());
+	$albumApv->setIpEdit($currentAction->getIp());
 
 	$albumApv->insert();
 
-	$album->setAdminAskEdit($);
-	$album->setTimeAskEdit($);
-	$album->setIpAskEdit($);
+	$album->setAdminAskEdit($currentAction->getUserId());
+	$album->setTimeAskEdit($currentAction->getTime());
+	$album->setIpAskEdit($currentAction->getIp());
 
 	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
 }
@@ -268,9 +268,9 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 		{
 			$album = new Album(null, $database);
 
-			$album->setAdminAskEdit($);
-			$album->setTimeAskEdit($);
-			$album->setIpAskEdit($);
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
 			$album->setAlbumId($rowId)->setWaitingFor(3)->update();
 		}
@@ -284,9 +284,9 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 		{
 			$album = new Album(null, $database);
 
-			$album->setAdminAskEdit($);
-			$album->setTimeAskEdit($);
-			$album->setIpAskEdit($);
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
 			$album->setAlbumId($rowId)->setWaitingFor(4)->update();
 		}
@@ -300,9 +300,9 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 		{
 			$album = new Album(null, $database);
 
-			$album->setAdminAskEdit($);
-			$album->setTimeAskEdit($);
-			$album->setIpAskEdit($);
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
 			$album->setAlbumId($rowId)->setWaitingFor(5)->update();
 		}
@@ -404,12 +404,12 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setDraft(true);
 	$album->setWaitingFor(1);
-	$album->setAdminCreate($);
-	$album->setTimeCreate($);
-	$album->setIpCreate($);
-	$album->setAdminEdit($);
-	$album->setTimeEdit($);
-	$album->setIpEdit($);
+	$album->setAdminCreate($currentAction->getUserId());
+	$album->setTimeCreate($currentAction->getTime());
+	$album->setIpCreate($currentAction->getIp());
+	$album->setAdminEdit($currentAction->getUserId());
+	$album->setTimeEdit($currentAction->getTime());
+	$album->setIpEdit($currentAction->getIp());
 
 	$album->insert();
 
@@ -435,15 +435,15 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$albumApv->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$albumApv->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$albumApv->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$albumApv->setAdminEdit($);
-	$albumApv->setTimeEdit($);
-	$albumApv->setIpEdit($);
+	$albumApv->setAdminEdit($currentAction->getUserId());
+	$albumApv->setTimeEdit($currentAction->getTime());
+	$albumApv->setIpEdit($currentAction->getIp());
 
 	$albumApv->insert();
 
-	$album->setAdminAskEdit($);
-	$album->setTimeAskEdit($);
-	$album->setIpAskEdit($);
+	$album->setAdminAskEdit($currentAction->getUserId());
+	$album->setTimeAskEdit($currentAction->getTime());
+	$album->setIpAskEdit($currentAction->getIp());
 
 	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
 }
@@ -455,9 +455,9 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 		{
 			$album = new Album(null, $database);
 
-			$album->setAdminAskEdit($);
-			$album->setTimeAskEdit($);
-			$album->setIpAskEdit($);
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
 			$album->setAlbumId($rowId)->setWaitingFor(3)->update();
 		}
@@ -471,9 +471,9 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 		{
 			$album = new Album(null, $database);
 
-			$album->setAdminAskEdit($);
-			$album->setTimeAskEdit($);
-			$album->setIpAskEdit($);
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
 			$album->setAlbumId($rowId)->setWaitingFor(4)->update();
 		}
@@ -487,9 +487,9 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 		{
 			$album = new Album(null, $database);
 
-			$album->setAdminAskEdit($);
-			$album->setTimeAskEdit($);
-			$album->setIpAskEdit($);
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
 			$album->setAlbumId($rowId)->setWaitingFor(5)->update();
 		}
