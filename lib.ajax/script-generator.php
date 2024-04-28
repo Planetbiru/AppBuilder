@@ -39,7 +39,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $pkApprovalName = $inputPost->getPrimaryKeyApprovalName();
 
     // prepare CRUD section begin
-    if($requireApproval)
+    if($requireApproval == 1)
     {
         $appBuilderApv = new AppBuilderApproval($database, $appConfig, $entityInfo);
 
@@ -93,5 +93,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         ->add($guiSection)
         ;
 
-    error_log("\r\n".$merged);
+    $fp = fopen(dirname(__DIR__)."/README.md", "a");
+    fputs($fp, "\r\n\r\n```php\r\n".$merged."\r\n```\r\n");
+    fclose($fp);
 }
