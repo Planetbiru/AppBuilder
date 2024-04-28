@@ -248,9 +248,9 @@ function generateScript(selector)
 		entityTrash: $('[name="entity_trash_name"]').val(),
 
 		primaryKeyName: masterPrimaryKeyName,
-		requireApproval: requireApproval,
+		requireApproval: requireApproval ? 1 : 0,
 		primaryKeyApprovalName: $('[name="primary_key_approval"]').val(),
-		withTrash: withTrash,
+		withTrash: withTrash ? 1 : 0,
 		tableTrash: $('[name="table_trash_name"]').val(),
 		primaryKeyTrashName: $('[name="primary_key_trash"]').val(),
 		fields: fields

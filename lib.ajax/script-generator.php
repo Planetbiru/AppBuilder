@@ -61,12 +61,14 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $activationSection = $appBuilder->createActivationSection($entityName, $pkName, $activationKey);
         $deactivationSection = $appBuilder->createDeactivationSection($entityName, $pkName, $activationKey);
         
-        if($withStrash)
+        if($withStrash == 1)
         {
+            error_log('aaa');
             $deleteSection = $appBuilder->createDeleteSection($entityName, $pkName, true, $entityNameTrash);
         }
         else
         {
+            error_log('ooo');
             $deleteSection = $appBuilder->createDeleteSection($entityName, $pkName);
         }
         $approvalSection = "";
@@ -93,7 +95,9 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         ->add($guiSection)
         ;
 
+    
     $fp = fopen(dirname(__DIR__)."/README.md", "a");
     fputs($fp, "\r\n\r\n```php\r\n".$merged."\r\n```\r\n");
     fclose($fp);
+    
 }

@@ -100,13 +100,7 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 		foreach($inputPost->getDeletionRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->findOneByAlbumId($rowId);
-			if(album->hasValueAlbumId())
-			{
-				$albumTrash = new AlbumTrash($album, $database);
-				$albumTrash->insert();
-				$album->delete();
-			}
+			$album->deleteOneByAlbumId($rowId);
 		}
 	}
 }
@@ -114,6 +108,7 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 ```
 
 ### CRUD without Approval and with Trash
+
 
 ```php
 if($inputGet->getUserAction() == UserAction::INSERT)
@@ -220,68 +215,167 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setDraft(true);
+	$album->setWaitingFor(1);
 	$album->setAdminCreate($);
 	$album->setTimeCreate($);
 	$album->setIpCreate($);
 	$album->setAdminEdit($);
 	$album->setTimeEdit($);
 	$album->setIpEdit($);
+
 	$album->insert();
+
+	$albumApv = new AlbumApv($album, $database);
+
+	$albumApv->insert();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
 	$album = new Album(null, $database);
-	$album->setAlbumId($inputPost->getAlbumId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setName($inputPost->getName(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setTitle($inputPost->getTitle(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setDescription($inputPost->getDescription(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setProducerId($inputPost->getProducerId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setReleaseDate($inputPost->getReleaseDate(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setNumberOfSong($inputPost->getNumberOfSong(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setDuration($inputPost->getDuration(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setImagePath($inputPost->getImagePath(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setSortOrder($inputPost->getSortOrder(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->update();
+
+	$albumApv = new AlbumApv(null, $database);
+	$albumApv->setAlbumId($inputPost->getAlbumId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setName($inputPost->getName(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setTitle($inputPost->getTitle(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setDescription($inputPost->getDescription(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setProducerId($inputPost->getProducerId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setReleaseDate($inputPost->getReleaseDate(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setNumberOfSong($inputPost->getNumberOfSong(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setDuration($inputPost->getDuration(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setImagePath($inputPost->getImagePath(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setSortOrder($inputPost->getSortOrder(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setAdminEdit($);
+	$albumApv->setTimeEdit($);
+	$albumApv->setIpEdit($);
+
+	$albumApv->insert();
+
+	$album->setAdminAskEdit($);
+	$album->setTimeAskEdit($);
+	$album->setIpAskEdit($);
+
+	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
 }
-else if($inputGet->getUserAction() == UserAction::ACTIVATION)
+else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
 	if($inputPost->countableAtivationRowIds())
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAlbumId($rowId)->setActive(true)->update();
+
+			$album->setAdminAskEdit($);
+			$album->setTimeAskEdit($);
+			$album->setIpAskEdit($);
+
+			$album->setAlbumId($rowId)->setWaitingFor(3)->update();
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::DEACTIVATION)
+else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 {
 	if($inputPost->countableAtivationRowIds())
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAlbumId($rowId)->setActive(false)->update();
+
+			$album->setAdminAskEdit($);
+			$album->setTimeAskEdit($);
+			$album->setIpAskEdit($);
+
+			$album->setAlbumId($rowId)->setWaitingFor(4)->update();
 		}
 	}
 }
 else if($inputGet->getUserAction() == UserAction::DELETE)
 {
-	if($inputPost->countableDeletionRowIds())
+	if($inputPost->countableAtivationRowIds())
 	{
-		foreach($inputPost->getDeletionRowIds() as $rowId)
+		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->findOneByAlbumId($rowId);
-			if(album->hasValueAlbumId())
-			{
-				$albumTrash = new AlbumTrash($album, $database);
-				$albumTrash->insert();
-				$album->delete();
-			}
+
+			$album->setAdminAskEdit($);
+			$album->setTimeAskEdit($);
+			$album->setIpAskEdit($);
+
+			$album->setAlbumId($rowId)->setWaitingFor(5)->update();
+		}
+	}
+}
+else if($inputGet->getUserAction() == UserAction::APPROVE)
+{
+	if($inputPost->issetAlbumId())
+	{
+		$albumId = $inputPost->getAlbumId();
+		$album = new Album(null, $database);
+		$album->findOneByAlbumId($albumId);
+		if($album->issetAlbumId())
+		{
+			$approval = new PicoApproval($album, 
+			function($param1, $param2, $param3){
+				// approval validation here
+				// if return false, approval can not be done
+				
+				return true;
+			}, 
+			function($param1, $param2, $param3){
+				// callback when success
+			}, 
+			function($param1, $param2, $param3){
+				// callback when failed
+			} 
+			);
+
+			// List of properties to be copied from AlbumApv to Album. You can add or remove it
+			$columToBeCopied = array(
+				"name", 
+				"title", 
+				"description", 
+				"producerId", 
+				"releaseDate", 
+				"numberOfSong", 
+				"duration", 
+				"imagePath", 
+				"sortOrder", 
+				"locked", 
+				"asDraft", 
+				"active"
+			);
+
+			$approval->approve($columToBeCopied);
+		}
+	}
+}
+else if($inputGet->getUserAction() == UserAction::REJECT)
+{
+	if($inputPost->issetAlbumId())
+	{
+		$albumId = $inputPost->getAlbumId();
+		$album = new Album(null, $database);
+		$album->findOneByAlbumId($albumId);
+		if($album->issetAlbumId())
+		{
+			$approval = new PicoApproval($album, 
+			function($param1, $param2, $param3){
+				// approval validation here
+				// if return false, approval can not be done
+				
+				return true;
+			}, 
+			function($param1, $param2, $param3){
+				// callback when success
+			}, 
+			function($param1, $param2, $param3){
+				// callback when failed
+			} 
+			);
+			$approval->reject();
 		}
 	}
 }
@@ -308,68 +402,167 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setDraft(true);
+	$album->setWaitingFor(1);
 	$album->setAdminCreate($);
 	$album->setTimeCreate($);
 	$album->setIpCreate($);
 	$album->setAdminEdit($);
 	$album->setTimeEdit($);
 	$album->setIpEdit($);
+
 	$album->insert();
+
+	$albumApv = new AlbumApv($album, $database);
+
+	$albumApv->insert();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
 	$album = new Album(null, $database);
-	$album->setAlbumId($inputPost->getAlbumId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setName($inputPost->getName(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setTitle($inputPost->getTitle(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setDescription($inputPost->getDescription(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setProducerId($inputPost->getProducerId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setReleaseDate($inputPost->getReleaseDate(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setNumberOfSong($inputPost->getNumberOfSong(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setDuration($inputPost->getDuration(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setImagePath($inputPost->getImagePath(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$album->setSortOrder($inputPost->getSortOrder(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
-	$album->update();
+
+	$albumApv = new AlbumApv(null, $database);
+	$albumApv->setAlbumId($inputPost->getAlbumId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setName($inputPost->getName(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setTitle($inputPost->getTitle(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setDescription($inputPost->getDescription(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setProducerId($inputPost->getProducerId(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setReleaseDate($inputPost->getReleaseDate(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setNumberOfSong($inputPost->getNumberOfSong(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setDuration($inputPost->getDuration(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setImagePath($inputPost->getImagePath(PicoRequestConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setSortOrder($inputPost->getSortOrder(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setLocked($inputPost->getLocked(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setAsDraft($inputPost->getAsDraft(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setActive($inputPost->getActive(PicoRequestConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setAdminEdit($);
+	$albumApv->setTimeEdit($);
+	$albumApv->setIpEdit($);
+
+	$albumApv->insert();
+
+	$album->setAdminAskEdit($);
+	$album->setTimeAskEdit($);
+	$album->setIpAskEdit($);
+
+	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
 }
-else if($inputGet->getUserAction() == UserAction::ACTIVATION)
+else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
 	if($inputPost->countableAtivationRowIds())
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAlbumId($rowId)->setActive(true)->update();
+
+			$album->setAdminAskEdit($);
+			$album->setTimeAskEdit($);
+			$album->setIpAskEdit($);
+
+			$album->setAlbumId($rowId)->setWaitingFor(3)->update();
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::DEACTIVATION)
+else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 {
 	if($inputPost->countableAtivationRowIds())
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAlbumId($rowId)->setActive(false)->update();
+
+			$album->setAdminAskEdit($);
+			$album->setTimeAskEdit($);
+			$album->setIpAskEdit($);
+
+			$album->setAlbumId($rowId)->setWaitingFor(4)->update();
 		}
 	}
 }
 else if($inputGet->getUserAction() == UserAction::DELETE)
 {
-	if($inputPost->countableDeletionRowIds())
+	if($inputPost->countableAtivationRowIds())
 	{
-		foreach($inputPost->getDeletionRowIds() as $rowId)
+		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->findOneByAlbumId($rowId);
-			if(album->hasValueAlbumId())
-			{
-				$albumTrash = new AlbumTrash($album, $database);
-				$albumTrash->insert();
-				$album->delete();
-			}
+
+			$album->setAdminAskEdit($);
+			$album->setTimeAskEdit($);
+			$album->setIpAskEdit($);
+
+			$album->setAlbumId($rowId)->setWaitingFor(5)->update();
+		}
+	}
+}
+else if($inputGet->getUserAction() == UserAction::APPROVE)
+{
+	if($inputPost->issetAlbumId())
+	{
+		$albumId = $inputPost->getAlbumId();
+		$album = new Album(null, $database);
+		$album->findOneByAlbumId($albumId);
+		if($album->issetAlbumId())
+		{
+			$approval = new PicoApproval($album, 
+			function($param1, $param2, $param3){
+				// approval validation here
+				// if return false, approval can not be done
+				
+				return true;
+			}, 
+			function($param1, $param2, $param3){
+				// callback when success
+			}, 
+			function($param1, $param2, $param3){
+				// callback when failed
+			} 
+			);
+
+			// List of properties to be copied from AlbumApv to Album. You can add or remove it
+			$columToBeCopied = array(
+				"name", 
+				"title", 
+				"description", 
+				"producerId", 
+				"releaseDate", 
+				"numberOfSong", 
+				"duration", 
+				"imagePath", 
+				"sortOrder", 
+				"locked", 
+				"asDraft", 
+				"active"
+			);
+
+			$approval->approve($columToBeCopied);
+		}
+	}
+}
+else if($inputGet->getUserAction() == UserAction::REJECT)
+{
+	if($inputPost->issetAlbumId())
+	{
+		$albumId = $inputPost->getAlbumId();
+		$album = new Album(null, $database);
+		$album->findOneByAlbumId($albumId);
+		if($album->issetAlbumId())
+		{
+			$approval = new PicoApproval($album, 
+			function($param1, $param2, $param3){
+				// approval validation here
+				// if return false, approval can not be done
+				
+				return true;
+			}, 
+			function($param1, $param2, $param3){
+				// callback when success
+			}, 
+			function($param1, $param2, $param3){
+				// callback when failed
+			} 
+			);
+			$approval->reject();
 		}
 	}
 }
