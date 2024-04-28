@@ -22,6 +22,8 @@ If a module can be created in 30 minutes, then in one day, a developer can creat
 
 Of course, an application cannot contain only simple CRUD modules. But at least, a simple CRUD module won't take a lot of time to create. Existing time can be maximized for other tasks such as data processing, report creation and application testing.
 
+AppBuilder uses the MagicObject library as its backbone. MagicObjects is very useful for creating entities from a table without having to type code. Just select the table and specify the name of the entity to be created. Entities will be created automatically by AppBuilder according to the names and column types of a table.
+
 ## CRUD Example
 
 ### Default CRUD (without Approval and without Trash)
