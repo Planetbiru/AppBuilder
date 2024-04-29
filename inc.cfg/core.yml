@@ -7,6 +7,8 @@ application:
     base_application_namespace: YourApplication
     base_entity_namespace: YourApplication\\Data\\Entity
     base_directory: /var/www/html/your-application
+    base_include_directory: inc.app
+    base_asset_directory: lib.assets
     composer:
         base_directory: inc.lib
         psr0: true

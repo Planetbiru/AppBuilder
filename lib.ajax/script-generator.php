@@ -42,9 +42,6 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $appConf = new AppSecretObject($appConfig->getApplication());
     
     $uses = array();
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityName;";
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameApproval;";
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameTrash;";
     $uses[] = "use MagicObject\\MagicObject;";
     $uses[] = "use MagicObject\\SetterGetter;";
     $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
@@ -52,9 +49,29 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $uses[] = "use MagicObject\\Request\\InputPost;";
     $uses[] = "use AppBuilder\\PicoApproval;";
     $uses[] = "use AppBuilder\\UserAction;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityName;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameApproval;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameTrash;";
+
     $uses[] = "";
     
+    $includes = array();
+    
+    $includeDir = trim($appConf->getBaseIncludeDirectory(), "/\\");
+    if(!empty($includeDir))
+    {
+        $includeDir = '"/'.$includeDir.'/auth.php"';
+    }
+    else 
+    {
+        $includeDir = '"auth.php"';
+    }
+    
+    $includes[] = "require_once __DIR__ . $includeDir;";
+    $includes[] = "";
+    
     $usesSection = implode("\r\n", $uses);
+    $includeSection = implode("\r\n", $includes);
     
     $declarationSection = implode("\r\n", array(
         AppBuilderApproval::VAR."inputGet = new InputGet();",
@@ -113,6 +130,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
 
     $merged = (new AppSection(AppSection::SEPARATOR_NEW_LINE))
     ->add($usesSection)
+    ->add($includeSection)
     ->add($declarationSection)
     ->add($crudSection)
     ->add($guiSection)
@@ -122,6 +140,5 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $fp = fopen(dirname(__DIR__)."/test.php", "w");
     fputs($fp, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
     fclose($fp);
-    error_log("AAAAAAAAAAAA");
     
 }

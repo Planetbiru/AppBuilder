@@ -126,6 +126,12 @@ $(document).ready(function(){
 	});
 	$(document).on('change', 'select[name="source_table"]', function(e2){
 		let masterTableName = $(this).val();
+		let moduleFileName = masterTableName+'.php';
+		let moduleName = masterTableName;
+		
+		moduleFileName = moduleFileName.replaceAll('_', '-');
+		moduleName = moduleName.replaceAll('_', '-');
+		
 		let masterEntityName = upperCamelize(masterTableName);
 		let approvalEntityName = masterEntityName+'Apv';
 		let trashEntityName = masterEntityName+'Trash';
@@ -146,6 +152,8 @@ $(document).ready(function(){
 		$('[name="primary_key_approval"]').val(approvalPrimaryKeyName);
 		$('[name="table_trash_name"]').val(trashTableName);
 		$('[name="primary_key_trash"]').val(trashPrimaryKeyName);
+		$('[name="module_file"]').val(moduleFileName);
+		$('[name="module_name"]').val(moduleName);
 		
 	});
 	$(document).on('click', '#save_application_config', function(e2){
@@ -159,25 +167,6 @@ $(document).ready(function(){
 			sessions:{},
 			entity_info:{}
 		};
-		/*
-		let database = {
-			driver: frm.find('[name="database_driver"]').val(),
-			host: frm.find('[name="database_host"]').val(),
-			port: frm.find('[name="database_port"]').val(),
-			username: frm.find('[name="database_username"]').val(),
-			password: frm.find('[name="database_password"]').val(),
-			database_name: frm.find('[name="database_name"]').val(),
-			database_schema: frm.find('[name="database_schema"]').val(),
-			time_zone: frm.find('[name="database_time_zone"]').val(),
-		};
-		let sessions = {
-			name: frm.find('[name="sessions_name"]').val(),
-			lifetime: frm.find('[name="sessions_lifetime"]').val(),
-			save_handler: frm.find('[name="sessions_save_handler"]').val(),
-			save_path: frm.find('[name="sessions_save_path"]').val(),
-		};
-		let entity_info = {};
-		*/
 
 		for(let i in inputs)
 		{

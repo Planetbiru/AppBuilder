@@ -1,8 +1,5 @@
 <?php
 
-use YourApplication\Data\Entity\Album;
-use YourApplication\Data\Entity\AlbumApv;
-use YourApplication\Data\Entity\AlbumTrash;
 use MagicObject\MagicObject;
 use MagicObject\SetterGetter;
 use MagicObject\Request\PicoFilterConstant;
@@ -10,6 +7,11 @@ use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
+use YourApplication\Data\Entity\Album;
+use YourApplication\Data\Entity\AlbumApv;
+use YourApplication\Data\Entity\AlbumTrash;
+
+require_once __DIR__ . "/inc.app/auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
