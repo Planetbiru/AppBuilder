@@ -174,7 +174,7 @@ require_once __DIR__ . "/inc.app/navs.php";
               <tr>
                 <td></td>
                 <td>
-                  <button type="button" class="btn btn-success">
+                  <button type="button" class="btn btn-success" id="switch-application">
                     Apply
                   </button>
 
@@ -216,11 +216,11 @@ require_once __DIR__ . "/inc.app/navs.php";
                 </tr>
                 <tr>
                   <td>Name</td>
-                  <td><input class="form-control" type="text" name="database_name" id="database_name" value="<?php echo $cfgDatabase->getName(); ?>"></td>
+                  <td><input class="form-control" type="text" name="database_name" id="database_name" value="<?php echo $cfgDatabase->getDatabaseName(); ?>"></td>
                 </tr>
                 <tr>
                   <td>Schema</td>
-                  <td><input class="form-control" type="text" name="database_schema" id="database_schema" value="<?php echo $cfgDatabase->getSchema(); ?>"></td>
+                  <td><input class="form-control" type="text" name="database_schema" id="database_schema" value="<?php echo $cfgDatabase->getDatabaseSchema(); ?>"></td>
                 </tr>
                 <tr>
                   <td>Time Zone</td>

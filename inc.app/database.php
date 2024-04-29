@@ -10,4 +10,11 @@ $databaseConfig = $appConfig->getDatabase();
 $databaseConfig = new AppSecretObject($databaseConfig);
 
 $database = new PicoDatabase($databaseConfig);
-$database->connect();
+try
+{
+    $database->connect();
+}
+catch(Exception $e)
+{
+
+}

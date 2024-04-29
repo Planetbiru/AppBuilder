@@ -1,0 +1,51 @@
+current_application:
+  id: app1
+  name: Application 1
+application:
+    id: app1
+    name: 'Your Application Name'
+    base_application_namespace: YourApplication
+    base_entity_namespace: YourApplication\\Data\\Entity
+    base_directory: /var/www/html/your-application
+    composer:
+        base_directory: inc.lib
+        psr0: true
+        psr4: false
+        psr0_base_directory:
+            -
+                namespace: YourApplication
+                directory: classes
+        psr4_base_directory: null
+database:
+    driver: mysql
+    host: localhost
+    port: '3306'
+    username: root
+    password: password
+    database_name: 'music'
+    database_schema: ''
+    time_zone: Asia/Jakarta
+entity_info:
+    active: active
+    draft: draft
+    waiting_for: waiting_for
+    admin_create: admin_create
+    admin_edit: admin_edit
+    admin_ask_edit: admin_ask_edit
+    time_create: time_create
+    time_edit: time_edit
+    time_ask_edit: time_ask_edit
+    ip_create: ip_create
+    ip_edit: ip_edit
+    ip_ask_edit: ip_ask_edit
+    approval_note: approval_note
+    global_variable_database: global_variable_database
+current_action:
+    user_function: currentAction->getUserId()
+    time_function: currentAction->getTime()
+    ip_function: currentAction->getIp()
+sessions:
+    name: name
+    lifetime: lifetime
+    save_handler: save_handler
+    save_path: save_path

@@ -8,7 +8,7 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 function upperCamelize(input)
 {
-	return input.replaceAll("_", " ").capitalize().prettify().trim();
+	return input.replaceAll("_", " ").capitalize().prettify().replaceAll(" ", "").trim();
 }
 function initCodeMirror()
 {
@@ -149,30 +149,37 @@ $(document).ready(function(){
 		
 	});
 	$(document).on('click', '#save_application_config', function(e2){
+		let frm = $(this).closest('form');
 		let inputs = $(this).closest('form').serializeArray();
-		let database = {};
-		let sessions = {};
+		let database = {
+			driver: frm.find('[name="database_driver"]').val(),
+			host: frm.find('[name="database_host"]').val(),
+			port: frm.find('[name="database_port"]').val(),
+			username: frm.find('[name="database_username"]').val(),
+			password: frm.find('[name="database_password"]').val(),
+			database_name: frm.find('[name="database_name"]').val(),
+			database_schema: frm.find('[name="database_schema"]').val(),
+			time_zone: frm.find('[name="database_time_zone"]').val(),
+		};
+		let sessions = {
+			name: frm.find('[name="sessions_name"]').val(),
+			lifetime: frm.find('[name="sessions_lifetime"]').val(),
+			save_handler: frm.find('[name="sessions_save_handler"]').val(),
+			save_path: frm.find('[name="sessions_save_path"]').val(),
+		};
 		let entity_info = {};
-		let current_application = "";
+
 		for(let i in inputs)
 		{
-			if(inputs[i].name.indexOf('current_application') !== -1)
+			let name = inputs[i].name;
+			if(name.indexOf('entity_constant_') !== -1)
 			{
-				current_application = inputs[i].value;
-			}
-			if(inputs[i].name.indexOf('database_') !== -1)
-			{
-				database[inputs[i].name] = inputs[i].value;
-			}
-			if(inputs[i].name.indexOf('sessions_') !== -1)
-			{
-				sessions[inputs[i].name] = inputs[i].name;
-			}
-			if(inputs[i].name.indexOf('entity_constant_') !== -1)
-			{
-				entity_info[inputs[i].name] = inputs[i].name;
+				entity_info[name.substring(16)] = inputs[i].value;;
 			}
 		}
+
+		let current_application = frm.find('[name="current_application"]').val();
+
 		let dataToPost = {
 			current_application:current_application,
 			database:database,
@@ -186,6 +193,11 @@ $(document).ready(function(){
 	$(document).on('click', '#generate-script', function(e2){
 		generateScript($('.main-table tbody'));
 	});
+
+	$(document).on('click', '#switch-application', function(e2){
+		switchApplication($('#current_application').val());
+	});
+
 	$(document).on('change', '.input-field-filter', function(e2){
 		let checked = $(this)[0].checked;
 		let value = $(this).attr('value');
@@ -198,6 +210,11 @@ $(document).ready(function(){
 
 	loadTable();
 });
+
+function switchApplication(currentApplication)
+{
+	window.location = './?current_application='+currentApplication;
+}
 
 function generateScript(selector)
 {
@@ -276,7 +293,7 @@ function updateCurrentApplivation(dataToPost)
 {
 	$.ajax({
 		type:'post', 
-		url: 'lib.ajax/update-cuurent-application.php',
+		url: 'lib.ajax/update-current-application.php',
 		dataType:'json',
 		data:dataToPost,
 		success: function(data)

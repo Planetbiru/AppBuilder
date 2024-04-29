@@ -278,6 +278,26 @@ class AppBuilderBase
     }
 
     /**
+     * Load or create application config
+     *
+     * @param string $appId
+     * @param string $appBaseConfigPath
+     * @param SecretObject $appConfig
+     */
+    public static function updateConfig($appId, $appBaseConfigPath, $appConfig)
+    {
+        if ($appId != null) {
+            $appConfigPath = $appBaseConfigPath . "/" . $appId . "/default.yml";
+            $appConfigDir = $appBaseConfigPath . "/" . $appId;
+
+            if (!file_exists($appConfigDir)) {
+                mkdir($appConfigDir, 0755, true);
+            }
+            file_put_contents($appConfigPath, $appConfig->dumpYaml());
+        }
+    }
+
+    /**
      * Get appBuilder config
      *
      * @return  SecretObject

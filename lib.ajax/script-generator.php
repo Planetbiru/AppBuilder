@@ -94,8 +94,8 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         ;
 
     
-    $fp = fopen(dirname(__DIR__)."/README.md", "a");
-    fputs($fp, "\r\n\r\n```php\r\n".$merged."\r\n```\r\n");
+    $fp = fopen(dirname(__DIR__)."/test.php", "w");
+    fputs($fp, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
     fclose($fp);
     
 }

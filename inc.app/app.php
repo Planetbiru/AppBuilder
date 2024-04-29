@@ -7,7 +7,7 @@ require_once dirname(__DIR__) . "/inc.lib/vendor/autoload.php";
 
 $builderConfig = new AppSecretObject(null);
 
-$builderConfigPath = dirname(__DIR__) . "/inc.cfg/default.yml";
+$builderConfigPath = dirname(__DIR__) . "/inc.cfg/core.yml";
 $appListPath = dirname(__DIR__) . "/inc.cfg/application-list.yml";
 if(file_exists($builderConfigPath))
 {
