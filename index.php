@@ -89,11 +89,11 @@ require_once __DIR__ . "/inc.app/navs.php";
                 </tr>
                 <tr>
                   <td>Name</td>
-                  <td><input class="form-control" type="text" name="database_name" id="database_name" value="<?php echo $cfgDatabase->getName(); ?>"></td>
+                  <td><input class="form-control" type="text" name="database_database_name" id="database_database_name" value="<?php echo $cfgDatabase->getName(); ?>"></td>
                 </tr>
                 <tr>
                   <td>Schema</td>
-                  <td><input class="form-control" type="text" name="database_schema" id="database_schema" value="<?php echo $cfgDatabase->getSchema(); ?>"></td>
+                  <td><input class="form-control" type="text" name="database_database_schema" id="database_database_schema" value="<?php echo $cfgDatabase->getSchema(); ?>"></td>
                 </tr>
                 <tr>
                   <td>Time Zone</td>
@@ -216,11 +216,11 @@ require_once __DIR__ . "/inc.app/navs.php";
                 </tr>
                 <tr>
                   <td>Name</td>
-                  <td><input class="form-control" type="text" name="database_name" id="database_name" value="<?php echo $cfgDatabase->getDatabaseName(); ?>"></td>
+                  <td><input class="form-control" type="text" name="database_database_name" id="database_database_name" value="<?php echo $cfgDatabase->getDatabaseName(); ?>"></td>
                 </tr>
                 <tr>
                   <td>Schema</td>
-                  <td><input class="form-control" type="text" name="database_schema" id="database_schema" value="<?php echo $cfgDatabase->getDatabaseSchema(); ?>"></td>
+                  <td><input class="form-control" type="text" name="database_database_schema" id="database_database_schema" value="<?php echo $cfgDatabase->getDatabaseSchema(); ?>"></td>
                 </tr>
                 <tr>
                   <td>Time Zone</td>
@@ -271,7 +271,7 @@ require_once __DIR__ . "/inc.app/navs.php";
                 ?>
                     <tr>
                       <td><?php echo $key ?></td>
-                      <td><input class="form-control" type="text" name="entity_constant_<?php echo $key ?>" value="<?php echo $value; ?>"></td>
+                      <td><input class="form-control" type="text" name="entity_info_<?php echo $key ?>" value="<?php echo $value; ?>"></td>
                     </tr>
                 <?php
                   }

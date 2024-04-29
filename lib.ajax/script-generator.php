@@ -3,6 +3,7 @@
 use AppBuilder\AppBuilder;
 use AppBuilder\AppBuilderApproval;
 use AppBuilder\AppField;
+use AppBuilder\AppSecretObject;
 use AppBuilder\AppSection;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
@@ -37,6 +38,28 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $withStrash = $inputPost->getWithTrash();
     $entityNameTrash = $inputPost->getEntityTrash();
     $pkApprovalName = $inputPost->getPrimaryKeyApprovalName();
+    
+    $appConf = new AppSecretObject($appConfig->getApplication());
+    
+    $uses = array();
+    $uses[] = "use ".$appConf->getApplicationBaseNamespace()."\\$entityName;";
+    $uses[] = "use ".$appConf->getApplicationBaseNamespace()."\\$entityNameApproval;";
+    $uses[] = "use ".$appConf->getApplicationBaseNamespace()."\\$entityNameTrash;";
+    $uses[] = "use MagicObject\\MagicObject;";
+    $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
+    $uses[] = "use MagicObject\\Request\\InputGet;";
+    $uses[] = "use MagicObject\\Request\\InputPost;";
+    $uses[] = "use MagicObject\\Request\\UserAction;";
+    $uses[] = "";
+    
+    $usesSection = implode("\r\n", $uses);
+    
+    $declarationSection = implode("\r\n", array(
+        AppBuilderApproval::VAR."inputGet = new InputGet();",
+        AppBuilderApproval::VAR."inputPost = new InputPost();",
+        ""
+    ));
+    
 
     // prepare CRUD section begin
     if($requireApproval == 1)
@@ -75,23 +98,25 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     // prepare CRUD section end
     
     $crudSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
-        ->add($createSection)
-        ->add($updateSection)
-        ->add($activationSection)
-        ->add($deactivationSection)
-        ->add($deleteSection)
-        ->add($approvalSection)
-        ->add($rejectionSection)
-        ;
+    ->add($createSection)
+    ->add($updateSection)
+    ->add($activationSection)
+    ->add($deactivationSection)
+    ->add($deleteSection)
+    ->add($approvalSection)
+    ->add($rejectionSection)
+    ;
         
     $guiSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
     
         ;
 
     $merged = (new AppSection(AppSection::SEPARATOR_NEW_LINE))
-        ->add($crudSection)
-        ->add($guiSection)
-        ;
+    ->add($usesSection)
+    ->add($declarationSection)
+    ->add($crudSection)
+    ->add($guiSection)
+    ;
 
     
     $fp = fopen(dirname(__DIR__)."/test.php", "w");

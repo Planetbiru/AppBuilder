@@ -159,9 +159,9 @@ class AppBuilderBase
         }
         if ($this->style = self::STYLE_SETTER_GETTER) {
             $method = PicoStringUtil::upperCamelize($fieldName);
-            return self::TAB1 . self::VAR . $objectName . "->set" . $method . "(" . self::VAR . "inputPost->get" . $method . "(PicoRequestConstant::" . $fieldFilter . "));";
+            return self::TAB1 . self::VAR . $objectName . "->set" . $method . "(" . self::VAR . "inputPost->get" . $method . "(PicoFilterConstant::" . $fieldFilter . "));";
         } else {
-            return self::TAB1 . self::VAR . $objectName . "->set('" . $fieldName . "', " . self::VAR . "inputPost->get('" . $fieldName . "', PicoRequestConstant::" . $fieldFilter . "));";
+            return self::TAB1 . self::VAR . $objectName . "->set('" . $fieldName . "', " . self::VAR . "inputPost->get('" . $fieldName . "', PicoFilterConstant::" . $fieldFilter . "));";
         }
     }
 

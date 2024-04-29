@@ -151,6 +151,15 @@ $(document).ready(function(){
 	$(document).on('click', '#save_application_config', function(e2){
 		let frm = $(this).closest('form');
 		let inputs = $(this).closest('form').serializeArray();
+		let current_application = frm.find('[name="current_application"]').val();
+
+		let dataToPost = {
+			current_application:current_application,
+			database:{},
+			sessions:{},
+			entity_info:{}
+		};
+		/*
 		let database = {
 			driver: frm.find('[name="database_driver"]').val(),
 			host: frm.find('[name="database_host"]').val(),
@@ -168,24 +177,26 @@ $(document).ready(function(){
 			save_path: frm.find('[name="sessions_save_path"]').val(),
 		};
 		let entity_info = {};
+		*/
 
 		for(let i in inputs)
 		{
 			let name = inputs[i].name;
-			if(name.indexOf('entity_constant_') !== -1)
+			if(name.indexOf('database_') !== -1)
 			{
-				entity_info[name.substring(16)] = inputs[i].value;;
+				dataToPost.database[name.substring(9)] = inputs[i].value;;
+			}
+			if(name.indexOf('sessions_') !== -1)
+			{
+				dataToPost.sessions[name.substring(9)] = inputs[i].value;;
+			}
+			if(name.indexOf('entity_info_') !== -1)
+			{
+				dataToPost.entity_info[name.substring(12)] = inputs[i].value;;
 			}
 		}
 
-		let current_application = frm.find('[name="current_application"]').val();
-
-		let dataToPost = {
-			current_application:current_application,
-			database:database,
-			sessions:sessions,
-			entity_info:entity_info
-		};
+		
 		updateCurrentApplivation(dataToPost);
 		
 	});

@@ -39,3 +39,7 @@ entity_info:
   ip_ask_edit: ip_ask_edit
   approval_note: approval_note
   sort_order: sort_order
+current_action:
+    user_function: currentAction->getUserId()
+    time_function: currentAction->getTime()
+    ip_function: currentAction->getIp()
