@@ -34,7 +34,7 @@ class PicoApproval
      *
      * @var callable
      */
-    private $callbackAnApprove = null;
+    private $callbackOnApprove = null;
     
     /**
      * Callback on reject
@@ -49,15 +49,15 @@ class PicoApproval
      * @param MagicObject $entity
      * @param EntityInfo $entityInfo
      * @param callable $callbackValidation
-     * @param callable $callbackAnApprove
+     * @param callable $callbackOnApprove
      * @param callable $callackOnReject
      */
-    public function __construct($entity, $entityInfo, $callbackValidation = null, $callbackAnApprove = null, $callackOnReject = null)
+    public function __construct($entity, $entityInfo, $callbackValidation = null, $callbackOnApprove = null, $callackOnReject = null)
     {
         $this->entity = $entity;
         $this->entityInfo = $entityInfo;
         $this->callbackValidation = $callbackValidation;
-        $this->callbackAnApprove = $callbackAnApprove;
+        $this->callbackOnApprove = $callbackOnApprove;
         $this->callackOnReject = $callackOnReject;
     }
     
@@ -72,6 +72,7 @@ class PicoApproval
      */
     public function approve($columToBeCopied, $entityApv, $entityTrash, $approvalCallback)
     {
+        $this->validateApproval();
         $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
         if($waitingFor == WaitingFor::CREATE)
         {
@@ -102,6 +103,28 @@ class PicoApproval
             {
                 call_user_func($approvalCallback->getAfterDelete(), $this->entity, null, null);
             }
+        }
+    }
+    
+    public function reject($entityApproval)
+    {
+        $this->validateApproval();
+        $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
+        if($waitingFor == WaitingFor::CREATE)
+        {
+            $this->entity->delete();
+        }
+        if($waitingFor == WaitingFor::UPDATE || $waitingFor == WaitingFor::ACTIVATE || $waitingFor == WaitingFor::DEACTIVATE || $waitingFor == WaitingFor::DELETE)
+        {
+            $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->update();
+        }
+    }
+    
+    private function validateApproval()
+    {
+        if($this->callbackValidation != null && is_callable($this->callbackValidation))
+        {
+            call_user_func($this->callbackValidation, $this->entity, null, null);
         }
     }
     
@@ -136,16 +159,5 @@ class PicoApproval
         }
     }
     
-    public function reject($entityApproval)
-    {
-        $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
-        if($waitingFor == WaitingFor::CREATE)
-        {
-            $this->entity->delete();
-        }
-        if($waitingFor == WaitingFor::UPDATE || $waitingFor == WaitingFor::ACTIVATE || $waitingFor == WaitingFor::DEACTIVATE || $waitingFor == WaitingFor::DELETE)
-        {
-            $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->update();
-        }
-    }
+    
 }
