@@ -205,64 +205,6 @@ class AppBuilderBase
         return $this;
     }
 
-    public function createDefiner()
-    {
-        return '<tr>
-        <td class="field-name">album_id<input type="hidden" name="field" value="album_id"></td>
-        <td><input type="text" name="caption_album_id" value="Album" autocomplete="off" spellcheck="false"></td>
-        <td align="center"><input type="checkbox" class="include_insert" name="include_insert_album_id" value="1" checked="checked"></td>
-        <td align="center"><input type="checkbox" class="include_edit" name="include_edit_album_id" value="1" checked="checked"></td>
-        <td align="center"><input type="checkbox" class="include_detail" name="include_detail_album_id" value="1" checked="checked"></td>
-        <td align="center"><input type="checkbox" class="include_list" name="include_list_album_id" value="1" checked="checked"></td>
-        <td align="center"><input type="checkbox" class="include_key" name="include_key_album_id" value="1"></td>
-        <td align="center"><input type="checkbox" class="include_required" name="include_required_album_id" value="1"></td>
-        <td align="center"><input type="radio" name="element_type_album_id" value="text" checked="checked"></td>
-        <td align="center"><input type="radio" name="element_type_album_id" value="textarea"></td>
-        <td align="center"><input type="radio" name="element_type_album_id" value="select"></td>
-        <td align="center"><input type="radio" name="element_type_album_id" value="checkbox"></td>
-        <td align="center"><input type="checkbox" name="list_filter_album_id" value="text" class="list_filter"></td>
-        <td align="center"><input type="checkbox" name="list_filter_album_id" value="select" class="list_filter"></td>
-        <td>
-            <select name="data_type_album_id" id="data_type_album_id">
-            <option value="text" title="<input type=&quot;text&quot;>" selected="selected">text</option>
-            <option value="email" title="<input type=&quot;email&quot;>">email</option>
-            <option value="tel" title="<input type=&quot;tel&quot;>">tel</option>
-            <option value="password" title="<input type=&quot;password&quot;>">password</option>
-            <option value="int" title="<input type=&quot;number&quot;>">int</option>
-            <option value="float" title="<input type=&quot;number&quot; step=&quot;any&quot;>">float</option>
-            <option value="date" title="<input type=&quot;text&quot;>">date</option>
-            <option value="time" title="<input type=&quot;text&quot;>">time</option>
-            <option value="datetime" title="<input type=&quot;text&quot;>">datetime</option>
-            <option value="color" title="<input type=&quot;text&quot;>">color</option>
-            </select>  
-        </td>
-        <td>
-      <select name="filter_type_album_id" id="filter_type_album_id">
-      <option value="FILTER_SANITIZE_NUMBER_INT">NUMBER_INT</option>
-      <option value="FILTER_SANITIZE_NUMBER_UINT">NUMBER_UINT</option>
-      <option value="FILTER_SANITIZE_NUMBER_OCTAL">NUMBER_OCTAL</option>
-      <option value="FILTER_SANITIZE_NUMBER_HEXADECIMAL">NUMBER_HEXADECIMAL</option>
-      <option value="FILTER_SANITIZE_NUMBER_FLOAT">NUMBER_FLOAT</option>
-      <option value="FILTER_SANITIZE_STRING">STRING</option>
-      <option value="FILTER_SANITIZE_STRING_INLINE">STRING_INLINE</option>
-      <option value="FILTER_SANITIZE_NO_DOUBLE_SPACE">NO_DOUBLE_SPACE</option>
-      <option value="FILTER_SANITIZE_STRIPPED">STRIPPED</option>
-      <option value="FILTER_SANITIZE_SPECIAL_CHARS" selected="selected">SPECIAL_CHARS</option>
-      <option value="FILTER_SANITIZE_ALPHA">ALPHA</option>
-      <option value="FILTER_SANITIZE_ALPHANUMERIC">ALPHANUMERIC</option>
-      <option value="FILTER_SANITIZE_ALPHANUMERICPUNC">ALPHANUMERICPUNC</option>
-      <option value="FILTER_SANITIZE_STRING_BASE64">STRING_BASE64</option>
-      <option value="FILTER_SANITIZE_EMAIL">EMAIL</option>
-      <option value="FILTER_SANITIZE_URL">URL</option>
-      <option value="FILTER_SANITIZE_IP">IP</option>
-      <option value="FILTER_SANITIZE_ENCODED">ENCODED</option>
-      <option value="FILTER_SANITIZE_COLOR">COLOR</option>
-      <option value="FILTER_SANITIZE_MAGIC_QUOTES">MAGIC_QUOTES</option>
-      <option value="FILTER_SANITIZE_PASSWORD">PASSWORD</option>
-      </select>  </td>
-      </tr>';
-    }
-
     /**
      * Load or create application config
      *
@@ -462,8 +404,6 @@ class AppBuilderBase
         $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
         $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule');
         
-        error_log(print_r($insertFields, true));
-
         $space = $dom->createTextNode(" ");
         
         $td2->appendChild($btn1);
