@@ -260,7 +260,7 @@ class AppBuilderApproval extends AppBuilderBase
      * @param array $editFields
      * @return string
      */
-    public function createApprovalSection($entityName, $pkName, $editFields, $entityNameApproval)
+    public function createApprovalSection($entityName, $pkName, $editFields, $entityNameApproval, $entityNameTrash)
     {
         $camelPkName = PicoStringUtil::camelize($pkName);
         $toBeCopied = array();
@@ -272,6 +272,7 @@ class AppBuilderApproval extends AppBuilderBase
                 $toBeCopied[] = $prop;
             }
         }
+        $entityInfoName = "entityInfo";
         $userAction = 'UserAction::APPROVE';
         $objectName = lcfirst($entityName);
         $lines = array();
@@ -289,7 +290,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
-        $lines[] = $this->constructApproval($objectName);
+        $lines[] = $this->constructApproval($objectName, $entityInfoName);
         $lines[] = "";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityNameApproval to $entityName. You can add or remove it".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
@@ -297,9 +298,10 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.");";
         $lines[] = "";
         
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback = new ApprovalCallback();";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback = new SetterGetter();";
         
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterInsert(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterInsert(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback on new data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -307,7 +309,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setBeforeUpdate(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setBeforeUpdate(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback before update data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -315,7 +318,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterUpdate(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterUpdate(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after update data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -323,7 +327,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterActivate(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterActivate(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after activate data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -331,7 +336,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterDeactivate(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterDeactivate(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after deactivate data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -339,7 +345,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setBeforeDelete(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setBeforeDelete(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback before delete data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -347,7 +354,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterDelete(function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterDelete(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after delete data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
@@ -355,10 +363,8 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve(".parent::VAR."columToBeCopied, ".parent::VAR."approvalCallback);";
-        
-
-                                                    
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
+        .parent::VAR."columToBeCopied---, new $entityNameApproval(), new $entityNameTrash());";                                               
  
 
         $lines[] = parent::TAB1.parent::TAB1."}";
@@ -369,9 +375,9 @@ class AppBuilderApproval extends AppBuilderBase
         
     }
 
-    public function createRejectionSection($entityName, $pkName)
+    public function createRejectionSection($entityName, $pkName, $entityNameApproval)
     {
-        
+        $entityInfoName = "entityInfo";
         $userAction = 'UserAction::REJECT';
         $objectName = lcfirst($entityName);
         $lines = array();
@@ -389,8 +395,8 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
-        $lines[] = $this->constructApproval($objectName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject();";
+        $lines[] = $this->constructApproval($objectName, $entityInfoName);
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityNameApproval());";
 
 
         $lines[] = parent::TAB1.parent::TAB1."}";
@@ -401,9 +407,13 @@ class AppBuilderApproval extends AppBuilderBase
 
     }
 
-    protected function constructApproval($objectName)
+    protected function constructApproval($objectName, $entityInfoName)
     {
-        return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::VAR.$objectName.", ".parent::NEW_LINE //NOSONAR
+        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entitiInfo->getWaitingFor());
+        $upperDraft = PicoStringUtil::upperCamelize($this->entitiInfo->getDraft());
+        return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::VAR.$objectName.", "
+        .parent::VAR.$entityInfoName.", "
+            .parent::NEW_LINE //NOSONAR
             .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
             .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE //NOSONAR
             .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if return false, approval can not be done".parent::NEW_LINE //NOSONAR

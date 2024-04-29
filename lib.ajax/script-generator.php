@@ -42,14 +42,16 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $appConf = new AppSecretObject($appConfig->getApplication());
     
     $uses = array();
-    $uses[] = "use ".$appConf->getApplicationBaseNamespace()."\\$entityName;";
-    $uses[] = "use ".$appConf->getApplicationBaseNamespace()."\\$entityNameApproval;";
-    $uses[] = "use ".$appConf->getApplicationBaseNamespace()."\\$entityNameTrash;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityName;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameApproval;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameTrash;";
     $uses[] = "use MagicObject\\MagicObject;";
+    $uses[] = "use MagicObject\\SetterGetter;";
     $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
     $uses[] = "use MagicObject\\Request\\InputGet;";
     $uses[] = "use MagicObject\\Request\\InputPost;";
-    $uses[] = "use MagicObject\\Request\\UserAction;";
+    $uses[] = "use AppBuilder\\PicoApproval;";
+    $uses[] = "use AppBuilder\\UserAction;";
     $uses[] = "";
     
     $usesSection = implode("\r\n", $uses);
@@ -59,7 +61,6 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         AppBuilderApproval::VAR."inputPost = new InputPost();",
         ""
     ));
-    
 
     // prepare CRUD section begin
     if($requireApproval == 1)
@@ -71,9 +72,8 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $activationSection = $appBuilderApv->createActivationApprovalSection($entityName, $pkName);
         $deactivationSection = $appBuilderApv->createDeactivationApprovalSection($entityName, $pkName);     
         $deleteSection = $appBuilderApv->createDeleteApprovalSection($entityName, $pkName);
-        $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityNameApproval);
-        $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName);
-        
+        $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityNameApproval, $entityNameTrash);
+        $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName, $entityNameApproval);  
     }
     else
     {

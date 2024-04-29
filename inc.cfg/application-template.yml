@@ -3,6 +3,7 @@ application:
   name: Your Application Name
   application_base_namespace: YourApplication
   application_base_directory: /var/www/html/your-application
+  entity_base_namespace: YourApplication\\Data\Entity
   composer:
     base_directory: inc.lib
     psr0: true

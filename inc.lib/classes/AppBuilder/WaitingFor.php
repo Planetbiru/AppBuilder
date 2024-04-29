@@ -4,6 +4,7 @@ namespace AppBuilder;
 
 class WaitingFor
 {
+    const NOTHING = 0;
     const CREATE = 1;
     const UPDATE = 2;
     const ACTIVATE = 3;

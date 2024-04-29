@@ -1,13 +1,15 @@
 <?php
 
-use YourApplication\Song;
-use YourApplication\SongApv;
-use YourApplication\SongTrash;
+use YourApplication\Data\Entity\Song;
+use YourApplication\Data\Entity\SongApv;
+use YourApplication\Data\Entity\SongTrash;
 use MagicObject\MagicObject;
+use MagicObject\SetterGetter;
 use MagicObject\Request\PicoFilterConstant;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
-use MagicObject\Request\UserAction;
+use AppBuilder\PicoApproval;
+use AppBuilder\UserAction;
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
@@ -188,7 +190,7 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 		$song->findOneBySongId($songId);
 		if($song->issetSongId())
 		{
-			$approval = new PicoApproval($song, 
+			$approval = new PicoApproval($song, $entityInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
 				// if return false, approval can not be done
@@ -248,7 +250,7 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 				"active"
 			);
 
-			$approvalCallback = new ApprovalCallback();
+			$approvalCallback = new SetterGetter();
 			$approvalCallback->setAfterInsert(function($param1, $param2, $param3){
 				// callback on new data
 				// you code here
@@ -292,7 +294,7 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 				
 			}); 
 
-			$approval->approve($columToBeCopied, $approvalCallback);
+			$approval->approve($columToBeCopied---, new SongApv(), new SongTrash());
 		}
 	}
 }
@@ -305,7 +307,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 		$song->findOneBySongId($songId);
 		if($song->issetSongId())
 		{
-			$approval = new PicoApproval($song, 
+			$approval = new PicoApproval($song, $entityInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
 				// if return false, approval can not be done
@@ -319,7 +321,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 				// callback when failed
 			} 
 			);
-			$approval->reject();
+			$approval->reject(new SongApv());
 		}
 	}
 }
