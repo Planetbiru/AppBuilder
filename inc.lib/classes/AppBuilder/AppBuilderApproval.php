@@ -13,13 +13,13 @@ class AppBuilderApproval extends AppBuilderBase
      * @param AppField[] $appFields
      * @param string $entityName
      * @param string $pkeyName
-     * @param string $entityNameApproval
+     * @param string $entityApprovalName
      * @return string
      */
-    public function createInsertApprovalSection($entityName, $appFields, $pkeyName, $entityNameApproval)
+    public function createInsertApprovalSection($entityName, $appFields, $pkeyName, $entityApprovalName)
     {
         $objectName = lcfirst($entityName);
-        $objectNameApproval = lcfirst($entityNameApproval);
+        $objectNameApproval = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entitiInfo->getWaitingFor());
         $upperDraft = PicoStringUtil::upperCamelize($this->entitiInfo->getDraft());
 
@@ -68,7 +68,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_INSERT_END;
 
         $lines[] = "";
-        $lines[] = parent::TAB1.$this->createConstructor($objectNameApproval, $entityNameApproval, $objectName);
+        $lines[] = parent::TAB1.$this->createConstructor($objectNameApproval, $entityApprovalName, $objectName);
         $lines[] = "";
 
         $lines[] = parent::TAB1.parent::VAR.$objectNameApproval.parent::CALL_INSERT_END;
@@ -83,10 +83,10 @@ class AppBuilderApproval extends AppBuilderBase
      * @param string $entityName
      * @return string
      */
-    public function createUpdateApprovalSection($entityName, $appFields, $pkeyName, $entityNameApproval, $pkeyApprovalName)
+    public function createUpdateApprovalSection($entityName, $appFields, $pkeyName, $entityApprovalName, $pkeyApprovalName)
     {
         $objectName = lcfirst($entityName);
-        $objectNameApproval = lcfirst($entityNameApproval);
+        $objectNameApproval = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entitiInfo->getWaitingFor());
         $lines = array();
         
@@ -94,7 +94,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = "{";
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         $lines[] = "";
-        $lines[] = parent::TAB1.$this->createConstructor($objectNameApproval, $entityNameApproval);
+        $lines[] = parent::TAB1.$this->createConstructor($objectNameApproval, $entityApprovalName);
         foreach($appFields as $field)
         {
             $fieldName = $field->getName();
@@ -260,7 +260,7 @@ class AppBuilderApproval extends AppBuilderBase
      * @param array $editFields
      * @return string
      */
-    public function createApprovalSection($entityName, $pkName, $editFields, $entityNameApproval, $entityNameTrash)
+    public function createApprovalSection($entityName, $pkName, $editFields, $entityApprovalName, $entityTrashName)
     {
         $camelPkName = PicoStringUtil::camelize($pkName);
         $toBeCopied = array();
@@ -292,7 +292,7 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = $this->constructApproval($objectName, $entityInfoName);
         $lines[] = "";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityNameApproval to $entityName. You can add or remove it".parent::NEW_LINE
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName. You can add or remove it".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"'.implode('", '.parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"', $toBeCopied).'"'.parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.");";
@@ -364,7 +364,7 @@ class AppBuilderApproval extends AppBuilderBase
 
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
-        .parent::VAR."columToBeCopied, new $entityNameApproval(), new $entityNameTrash(), ".parent::VAR."approvalCallback);";                                               
+        .parent::VAR."columToBeCopied, new $entityApprovalName(), new $entityTrashName(), ".parent::VAR."approvalCallback);";                                               
  
 
         $lines[] = parent::TAB1.parent::TAB1."}";
@@ -375,7 +375,7 @@ class AppBuilderApproval extends AppBuilderBase
         
     }
 
-    public function createRejectionSection($entityName, $pkName, $entityNameApproval)
+    public function createRejectionSection($entityName, $pkName, $entityApprovalName)
     {
         $entityInfoName = "entityInfo";
         $userAction = 'UserAction::REJECT';
@@ -396,7 +396,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."{";
 
         $lines[] = $this->constructApproval($objectName, $entityInfoName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityNameApproval());";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityApprovalName());";
 
 
         $lines[] = parent::TAB1.parent::TAB1."}";

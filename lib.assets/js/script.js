@@ -389,38 +389,23 @@ function loadColumn(tableName, selector)
 function getSkipedCol()
 {
 	let skiped = [];
-	/**
-	 *   	active: active
-			draft: draft
-			waiting_for: waiting_for
-			admin_create: admin_create
-			admin_edit: admin_edit
-			admin_ask_edit: admin_ask_edit
-			time_create: time_create
-			time_edit: time_edit
-			time_ask_edit: time_ask_edit
-			ip_create: ip_create
-			ip_edit: ip_edit
-			ip_ask_edit: ip_ask_edit
-			approval_note: approval_note
-			global_variable_database: database
-	 */
 
-	skiped.push($('[name="entity_constant_draft"]').val());
-	skiped.push($('[name="entity_constant_waiting_for"]').val());
-	skiped.push($('[name="entity_constant_approval_note"]').val());
+	skiped.push($('[name="entity_info_draft"]').val());
+	skiped.push($('[name="entity_info_waiting_for"]').val());
+	skiped.push($('[name="entity_info_approval_note"]').val());
+	skiped.push($('[name="entity_info_approval_id"]').val());
 
-	skiped.push($('[name="entity_constant_admin_create"]').val());
-	skiped.push($('[name="entity_constant_admin_edit"]').val());
-	skiped.push($('[name="entity_constant_admin_ask_edit"]').val());
+	skiped.push($('[name="entity_info_admin_create"]').val());
+	skiped.push($('[name="entity_info_admin_edit"]').val());
+	skiped.push($('[name="entity_info_admin_ask_edit"]').val());
 
-	skiped.push($('[name="entity_constant_time_create"]').val());
-	skiped.push($('[name="entity_constant_time_edit"]').val())
-	skiped.push($('[name="entity_constant_time_ask_edit"]').val());
+	skiped.push($('[name="entity_info_time_create"]').val());
+	skiped.push($('[name="entity_info_time_edit"]').val())
+	skiped.push($('[name="entity_info_time_ask_edit"]').val());
 
-	skiped.push($('[name="entity_constant_ip_create"]').val());
-	skiped.push($('[name="entity_constant_ip_edit"]').val());
-	skiped.push($('[name="entity_constant_ip_ask_edit"]').val());
+	skiped.push($('[name="entity_info_ip_create"]').val());
+	skiped.push($('[name="entity_info_ip_edit"]').val());
+	skiped.push($('[name="entity_info_ip_ask_edit"]').val());
 	console.log(skiped)
 	return skiped;
 }
@@ -630,13 +615,11 @@ function generateRow(field, args, skipedOnInsertEdit)
 	let editRow = '';
 	if($.inArray(field, skipedOnInsertEdit) != -1)
 	{
-		console.log('ko')
 		insertRow = '  <td align="center"><input type="checkbox" class="include_insert" name="include_insert_'+field+'" value="0" disabled="disabled"></td>\r\n';
 		editRow = '  <td align="center"><input type="checkbox" class="include_edit" name="include_edit_'+field+'" value="0" disabled="disabled"></td>\r\n';
 	}
 	else
 	{
-		console.log('ko')
 		insertRow = '  <td align="center"><input type="checkbox" class="include_insert" name="include_insert_'+field+'" value="1" checked="checked"></td>\r\n';
 		editRow = '  <td align="center"><input type="checkbox" class="include_edit" name="include_edit_'+field+'" value="1" checked="checked"></td>\r\n';
 	}

@@ -31,12 +31,12 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     
     $entityName = $inputPost->getEntity();
     $requireApproval = $inputPost->getRequireApproval();
-    $entityNameApproval = $inputPost->getEntityApproval();
+    $entityApprovalName = $inputPost->getEntityApproval();
     
     $activationKey = $entityInfo->getActive();
     $pkName = $inputPost->getPrimaryKeyName();
     $withStrash = $inputPost->getWithTrash();
-    $entityNameTrash = $inputPost->getEntityTrash();
+    $entityTrashName = $inputPost->getEntityTrash();
     $pkApprovalName = $inputPost->getPrimaryKeyApprovalName();
     
     $appConf = new AppSecretObject($appConfig->getApplication());
@@ -50,8 +50,8 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $uses[] = "use AppBuilder\\PicoApproval;";
     $uses[] = "use AppBuilder\\UserAction;";
     $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityName;";
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameApproval;";
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityNameTrash;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
+    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityTrashName;";
 
     $uses[] = "";
     
@@ -84,13 +84,13 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     {
         $appBuilderApv = new AppBuilderApproval($database, $appConfig, $entityInfo);
 
-        $createSection = $appBuilderApv->createInsertApprovalSection($entityName, $insertFields, $pkName, $entityNameApproval);
-        $updateSection = $appBuilderApv->createUpdateApprovalSection($entityName, $editFields, $pkName, $entityNameApproval, $pkApprovalName);
+        $createSection = $appBuilderApv->createInsertApprovalSection($entityName, $insertFields, $pkName, $entityApprovalName);
+        $updateSection = $appBuilderApv->createUpdateApprovalSection($entityName, $editFields, $pkName, $entityApprovalName, $pkApprovalName);
         $activationSection = $appBuilderApv->createActivationApprovalSection($entityName, $pkName);
         $deactivationSection = $appBuilderApv->createDeactivationApprovalSection($entityName, $pkName);     
         $deleteSection = $appBuilderApv->createDeleteApprovalSection($entityName, $pkName);
-        $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityNameApproval, $entityNameTrash);
-        $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName, $entityNameApproval);  
+        $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityApprovalName, $entityTrashName);
+        $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName, $entityApprovalName);  
     }
     else
     {
@@ -103,7 +103,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         
         if($withStrash == 1)
         {
-            $deleteSection = $appBuilder->createDeleteSection($entityName, $pkName, true, $entityNameTrash);
+            $deleteSection = $appBuilder->createDeleteSection($entityName, $pkName, true, $entityTrashName);
         }
         else
         {
