@@ -219,8 +219,8 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr>
 <td></td>
 <td>
-<input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php echo $currentLanguage->get('button.save'); ?>">
-<input type="button" class="btn btn-primary" value="<?php echo $currentLanguage->get('button.cancel'); ?>" onclick="window.location='<?php echo $currentModule;?>'">
+<input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php echo $currentLanguage->get('button_save'); ?>">
+<input type="button" class="btn btn-primary" value="<?php echo $currentLanguage->get('button_cancel'); ?>" onclick="window.location='<?php echo $currentModule;?>'">
 </td>
 </tr></tbody></table>
 </form>

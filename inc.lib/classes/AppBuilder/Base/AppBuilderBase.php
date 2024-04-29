@@ -441,8 +441,8 @@ class AppBuilderBase
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
         
-        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button.save'), "save-button", "save-insert");
-        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button.cancel'), null, null, 'currentModule');
+        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule');
         
 
 
