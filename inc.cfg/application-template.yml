@@ -39,4 +39,3 @@ entity_info:
   ip_ask_edit: ip_ask_edit
   approval_note: approval_note
   sort_order: sort_order
-  global_variable_database: database

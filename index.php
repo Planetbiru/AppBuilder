@@ -256,7 +256,7 @@ require_once __DIR__ . "/inc.app/navs.php";
               </tbody>
             </table>
 
-            <h4>Constant</h4>
+            <h4>Reserved Columns</h4>
             <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tbody>
                 <?php
