@@ -52,19 +52,19 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album = new Album(null, $database);
 
 	$albumApv = new AlbumApv(null, $database);
-	$albumApv->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setName($inputPost->getName(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setTitle($inputPost->getTitle(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setDescription($inputPost->getDescription(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setProducerId($inputPost->getProducerId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setReleaseDate($inputPost->getReleaseDate(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setNumberOfSong($inputPost->getNumberOfSong(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
-	$albumApv->setDuration($inputPost->getDuration(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setImagePath($inputPost->getImagePath(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$albumApv->setSortOrder($inputPost->getSortOrder(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
-	$albumApv->setLocked($inputPost->getLocked(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
-	$albumApv->setAsDraft($inputPost->getAsDraft(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
-	$albumApv->setActive($inputPost->getActive(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setName($inputPost->getName(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setTitle($inputPost->getTitle(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setDescription($inputPost->getDescription(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setProducerId($inputPost->getProducerId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setReleaseDate($inputPost->getReleaseDate(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setNumberOfSong($inputPost->getNumberOfSong(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setDuration($inputPost->getDuration(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setImagePath($inputPost->getImagePath(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setSortOrder($inputPost->getSortOrder(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setLocked($inputPost->getLocked(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setAsDraft($inputPost->getAsDraft(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setActive($inputPost->getActive(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
 	$albumApv->setAdminEdit($currentAction->getUserId());
 	$albumApv->setTimeEdit($currentAction->getTime());
 	$albumApv->setIpEdit($currentAction->getIp());
@@ -245,7 +245,86 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 ?>
 
 <form name="insertform" id="insertform" action="" method="post">
-  <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%"/>
+  <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tbody>
+      <tr>
+        <td>Album</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Title</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Producer</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Release Date</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Number Of Song</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Image Path</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Sort Order</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Time Create</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Time Edit</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Admin Create</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Admin Edit</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>IP Create</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>IP Edit</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Locked</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>As Draft</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Active</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tbody>
       <tr>

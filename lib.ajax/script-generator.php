@@ -22,11 +22,11 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $field = new AppField($value);
         if($value['includeInsert'])
         {
-            $insertFields[$field->getName()] = $field;
+            $insertFields[$field->getFieldName()] = $field;
         }
         if($value['includeEdit'])
         {
-            $editFields[$field->getName()] = $field;
+            $editFields[$field->getFieldName()] = $field;
         }
     }
     

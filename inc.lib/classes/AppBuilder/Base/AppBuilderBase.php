@@ -4,6 +4,7 @@ namespace AppBuilder\Base;
 
 use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
+use AppBuilder\ElementType;
 use AppBuilder\EntityApvInfo;
 use AppBuilder\EntityInfo;
 use DOMDocument;
@@ -391,32 +392,10 @@ class AppBuilderBase
         
         $form = $this->createElementForm($dom);
         
-        $table1 = $this->createElementTableResponsive($dom);
-        $table2 = $this->createElementTableResponsive($dom);
-        
-        
-        $tbody2 = $dom->createElement('tbody');
-        
-        $tr2 = $dom->createElement('tr');
-        $td1 = $dom->createElement('td');
-        $td2 = $dom->createElement('td');
-        
-        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
-        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule');
-        
-        $space = $dom->createTextNode(" ");
-        
-        $td2->appendChild($btn1);
-        $td2->appendChild($space);
-        $td2->appendChild($btn2);
-        
-        
-        $tr2->appendChild($td1);
-        $tr2->appendChild($td2);
-        
-        $tbody2->appendChild($tr2);
-        
-        $table2->appendChild($tbody2);
+        $table1 = $this->createInsertFormTable($dom, $entityName, $insertFields, $pkName);
+
+
+        $table2 = $this->createButtonContainerTable($dom);
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -467,6 +446,139 @@ class AppBuilderBase
         ."{\r\n"
         .'?'.">\r\n".$html.'<'.'?'."php\r\n"
         ."}\r\n";
+    }
+
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param string $entityName
+     * @param AppField[] $insertFields
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createInsertFormTable($dom, $entityName, $insertFields, $pkName)
+    {
+        $table = $this->createElementTableResponsive($dom);
+
+        $tbody = $dom->createElement('tbody');
+
+        foreach($insertFields as $field)
+        {
+            $tr = $this->createInsertRow($dom, $entityName, $field, $pkName);
+            $tbody->appendChild($tr);
+        }
+
+
+        $table->appendChild($tbody);
+        return $table;
+    }
+
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param string $entityName
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createInsertRow($dom, $entityName, $field, $pkName)
+    {
+        $tr = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+
+        $label = $dom->createTextNode($field->getFieldLabel());
+
+        $td1->appendChild($label);
+
+        $input = $this->createInsertControl($dom, $entityName, $field, $pkName);
+        $td2->appendChild($input);
+
+        $tr->appendChild($td1);
+        $tr->appendChild($td2);
+
+        return $tr;
+    }
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param string $entityName
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createInsertControl($dom, $entityName, $field, $pkName)
+    {
+        if($field->getElementType() == ElementType::TEXT)
+        {
+            $input = $dom->createElement('input');
+            $this->setInputTypeAttribute($input, $field->getDataType()); 
+        }
+    }
+
+    /**
+     * Set input attribute
+     *
+     * @param DOMElement $input
+     * @param string $dataType
+     * @return void
+     */
+    private function setInputTypeAttribute($input, $dataType)
+    {
+        /*
+        <select class="form-control input-field-data-type" name="data_type_title" id="data_type_title">
+        <option value="text" title="<input type=&quot;text&quot;>" selected="selected">text</option>
+        <option value="email" title="<input type=&quot;email&quot;>">email</option>
+        <option value="tel" title="<input type=&quot;tel&quot;>">tel</option>
+        <option value="password" title="<input type=&quot;password&quot;>">password</option>
+        <option value="int" title="<input type=&quot;number&quot;>">int</option>
+        <option value="float" title="<input type=&quot;number&quot; step=&quot;any&quot;>">float</option>
+        <option value="date" title="<input type=&quot;text&quot;>">date</option>
+        <option value="time" title="<input type=&quot;text&quot;>">time</option>
+        <option value="datetime" title="<input type=&quot;text&quot;>">datetime</option>
+        <option value="color" title="<input type=&quot;text&quot;>">color</option>
+        </select>
+        */
+    }
+
+    /**
+     * Create button container table
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createButtonContainerTable($dom)
+    {
+        $table = $this->createElementTableResponsive($dom);
+        
+        
+        $tbody2 = $dom->createElement('tbody');
+        
+        $tr2 = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        
+        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule');
+        
+        $space = $dom->createTextNode(" ");
+        
+        $td2->appendChild($btn1);
+        $td2->appendChild($space);
+        $td2->appendChild($btn2);
+        
+        
+        $tr2->appendChild($td1);
+        $tr2->appendChild($td2);
+        
+        $tbody2->appendChild($tr2);
+        
+        $table->appendChild($tbody2);
+
+        return $table;
     }
 
     public function xmlToHtml($xml)

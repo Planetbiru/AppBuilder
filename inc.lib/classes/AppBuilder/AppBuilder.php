@@ -25,9 +25,7 @@ class AppBuilder extends AppBuilderBase
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)
         {
-            $fieldName = $field->getName();
-            $fieldFilter = $field->getFilter();
-            $line = $this->createSetter($objectName, $fieldName, $fieldFilter);
+            $line = $this->createSetter($objectName, $field->getFieldName(), $field->getInputFilter());
             if($line != null)
             {
                 $lines[] = $line;
@@ -72,9 +70,7 @@ class AppBuilder extends AppBuilderBase
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)
         {
-            $fieldName = $field->getName();
-            $fieldFilter = $field->getFilter();
-            $line = $this->createSetter($objectName, $fieldName, $fieldFilter);
+            $line = $this->createSetter($objectName, $field->getFieldName(), $field->getInputFilter());
             if($line != null)
             {
                 $lines[] = $line;

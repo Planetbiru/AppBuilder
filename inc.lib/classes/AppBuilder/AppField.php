@@ -6,41 +6,214 @@ use MagicObject\Util\PicoGenericObject;
 
 class AppField
 {
-    public $name;
-    public $dataType;
-    public $elementType;
-    public $filter;
-    public $fieldLabel;
+
+    /**
+     * Field name
+     *
+     * @var string
+     */
+    private $fieldName;
+
+    /**
+     * Field label
+     *
+     * @var string
+     */
+    private $fieldLabel;
+
+    /**
+     * Include insert
+     *
+     * @var boolean
+     */
+    private $includeInsert;
+
+    /**
+     * Include edit
+     *
+     * @var boolean
+     */
+    private $includeEdit;
+
+    /**
+     * Include detail
+     *
+     * @var boolean
+     */
+    private $includeDetail;
+
+    /**
+     * Include list
+     *
+     * @var boolean
+     */
+    private $includeList;
+
+    /**
+     * Key
+     *
+     * @var boolean
+     */
+    private $key;
+
+    /**
+     * Required
+     *
+     * @var boolean
+     */
+    private $required;
+
+    /**
+     * Element type
+     *
+     * @var string
+     */
+    private $elementType;
+
+    /**
+     * Filter element type
+     *
+     * @var string
+     */
+    private $filterElementType;
+
+    /**
+     * Data type
+     *
+     * @var string
+     */
+    private $dataType;
+
+    /**
+     * Input filter
+     *
+     * @var string
+     */
+    private $inputFilter;
+
     public function __construct($value)
     {
-        $json = new PicoGenericObject($value);
-        $this->name = $json->getFieldName();
-        $this->dataType = $json->getDataType();
-        $this->elementType = $json->getElementType();
-        $this->filter = $json->getInputFilter();
-        $this->fieldLabel = $json->getFieldLabel();
+        error_log(print_r($value, true));
+        $this->fieldName = $value['fieldName'];
+        $this->fieldLabel = $value['fieldLabel'];
+        $this->includeInsert = $value['includeInsert'];
+        $this->includeEdit = $value['includeEdit'];
+        $this->includeDetail = $value['includeDetail'];
+        $this->includeList = $value['includeList'];
+        $this->key = $value['isKey'];
+        $this->required = $value['isInputRequired'];
+        $this->elementType = $value['elementType'];
+        $this->filterElementType = $value['filterElementType'];
+        $this->inputFilter = $value['inputFilter'];
+
+        /*
+        Array
+        (
+            [fieldName] => album_id
+            [fieldLabel] => Album
+            [includeInsert] => true
+            [includeEdit] => true
+            [includeDetail] => true
+            [includeList] => true
+            [isKey] => false
+            [isInputRequired] => false
+            [elementType] => text
+            [filterElementType] => 
+            [dataType] => text
+            [inputFilter] => FILTER_SANITIZE_SPECIAL_CHARS
+        )
+
+        
+        */
+
     }
 
-    
+
 
     /**
-     * Get the value of name
+     * Get field name
+     *
+     * @return  string
      */ 
-    public function getName()
+    public function getFieldName()
     {
-        return $this->name;
+        return $this->fieldName;
     }
 
     /**
-     * Get the value of dataType
+     * Get field label
+     *
+     * @return  string
      */ 
-    public function getDataType()
+    public function getFieldLabel()
     {
-        return $this->dataType;
+        return $this->fieldLabel;
     }
 
     /**
-     * Get the value of elementType
+     * Get include insert
+     *
+     * @return  boolean
+     */ 
+    public function getIncludeInsert()
+    {
+        return $this->includeInsert;
+    }
+
+    /**
+     * Get include edit
+     *
+     * @return  boolean
+     */ 
+    public function getIncludeEdit()
+    {
+        return $this->includeEdit;
+    }
+
+    /**
+     * Get include detail
+     *
+     * @return  boolean
+     */ 
+    public function getIncludeDetail()
+    {
+        return $this->includeDetail;
+    }
+
+    /**
+     * Get include list
+     *
+     * @return  boolean
+     */ 
+    public function getIncludeList()
+    {
+        return $this->includeList;
+    }
+
+    /**
+     * Get key
+     *
+     * @return  boolean
+     */ 
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Get required
+     *
+     * @return  boolean
+     */ 
+    public function getRequired()
+    {
+        return $this->required;
+    }
+
+    /**
+     * Get element type
+     *
+     * @return  string
      */ 
     public function getElementType()
     {
@@ -48,10 +221,32 @@ class AppField
     }
 
     /**
-     * Get the value of filter
+     * Get filter element type
+     *
+     * @return  string
      */ 
-    public function getFilter()
+    public function getFilterElementType()
     {
-        return $this->filter;
+        return $this->filterElementType;
+    }
+
+    /**
+     * Get data type
+     *
+     * @return  string
+     */ 
+    public function getDataType()
+    {
+        return $this->dataType;
+    }
+
+    /**
+     * Get input filter
+     *
+     * @return  string
+     */ 
+    public function getInputFilter()
+    {
+        return $this->inputFilter;
     }
 }
