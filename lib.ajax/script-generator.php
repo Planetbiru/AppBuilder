@@ -92,10 +92,8 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityApprovalName, $entityTrashName);
         $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName, $entityApprovalName);  
         
-        $guiInsert = '?'.">\r\n".$appBuilderApv->createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName)->saveHTML().'<'.'?'."php\r\n";
+        $guiInsert = $appBuilderApv->createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName);
         
-        $guiInsert = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $guiInsert);
-        error_log($guiInsert);
         
     }
     else

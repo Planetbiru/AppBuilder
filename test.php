@@ -7,57 +7,75 @@ use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
-use YourApplication\Data\Entity\DraftRating;
-use YourApplication\Data\Entity\DraftRatingApv;
-use YourApplication\Data\Entity\DraftRatingTrash;
+use YourApplication\Data\Entity\Album;
+use YourApplication\Data\Entity\AlbumApv;
+use YourApplication\Data\Entity\AlbumTrash;
 
-require_once __DIR__ . "/inc.app/auth.php";
+require_once __DIR__ . "auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
 
 if($inputGet->getUserAction() == UserAction::INSERT)
 {
-	$draftRating = new DraftRating(null, $database);
-	$draftRating->setDraftRatingId($inputPost->getDraftRatingId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRating->setUserId($inputPost->getUserId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRating->setSongDraftId($inputPost->getSongDraftId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRating->setRating($inputPost->getRating(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRating->setDraft(true);
-	$draftRating->setWaitingFor(1);
-	$draftRating->setAdminCreate($currentAction->getUserId());
-	$draftRating->setTimeCreate($currentAction->getTime());
-	$draftRating->setIpCreate($currentAction->getIp());
-	$draftRating->setAdminEdit($currentAction->getUserId());
-	$draftRating->setTimeEdit($currentAction->getTime());
-	$draftRating->setIpEdit($currentAction->getIp());
+	$album = new Album(null, $database);
+	$album->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setName($inputPost->getName(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setTitle($inputPost->getTitle(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setDescription($inputPost->getDescription(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setProducerId($inputPost->getProducerId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setReleaseDate($inputPost->getReleaseDate(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setNumberOfSong($inputPost->getNumberOfSong(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setDuration($inputPost->getDuration(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setImagePath($inputPost->getImagePath(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$album->setSortOrder($inputPost->getSortOrder(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setLocked($inputPost->getLocked(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setAsDraft($inputPost->getAsDraft(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setActive($inputPost->getActive(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$album->setDraft(true);
+	$album->setWaitingFor(1);
+	$album->setAdminCreate($currentAction->getUserId());
+	$album->setTimeCreate($currentAction->getTime());
+	$album->setIpCreate($currentAction->getIp());
+	$album->setAdminEdit($currentAction->getUserId());
+	$album->setTimeEdit($currentAction->getTime());
+	$album->setIpEdit($currentAction->getIp());
 
-	$draftRating->insert();
+	$album->insert();
 
-	$draftRatingApv = new DraftRatingApv($draftRating, $database);
+	$albumApv = new AlbumApv($album, $database);
 
-	$draftRatingApv->insert();
+	$albumApv->insert();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
-	$draftRating = new DraftRating(null, $database);
+	$album = new Album(null, $database);
 
-	$draftRatingApv = new DraftRatingApv(null, $database);
-	$draftRatingApv->setDraftRatingId($inputPost->getDraftRatingId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRatingApv->setUserId($inputPost->getUserId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRatingApv->setSongDraftId($inputPost->getSongDraftId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRatingApv->setRating($inputPost->getRating(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
-	$draftRatingApv->setAdminEdit($currentAction->getUserId());
-	$draftRatingApv->setTimeEdit($currentAction->getTime());
-	$draftRatingApv->setIpEdit($currentAction->getIp());
+	$albumApv = new AlbumApv(null, $database);
+	$albumApv->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setName($inputPost->getName(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setTitle($inputPost->getTitle(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setDescription($inputPost->getDescription(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setProducerId($inputPost->getProducerId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setReleaseDate($inputPost->getReleaseDate(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setNumberOfSong($inputPost->getNumberOfSong(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setDuration($inputPost->getDuration(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setImagePath($inputPost->getImagePath(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setSortOrder($inputPost->getSortOrder(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setLocked($inputPost->getLocked(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setAsDraft($inputPost->getAsDraft(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setActive($inputPost->getActive(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
+	$albumApv->setAdminEdit($currentAction->getUserId());
+	$albumApv->setTimeEdit($currentAction->getTime());
+	$albumApv->setIpEdit($currentAction->getIp());
 
-	$draftRatingApv->insert();
+	$albumApv->insert();
 
-	$draftRating->setAdminAskEdit($currentAction->getUserId());
-	$draftRating->setTimeAskEdit($currentAction->getTime());
-	$draftRating->setIpAskEdit($currentAction->getIp());
+	$album->setAdminAskEdit($currentAction->getUserId());
+	$album->setTimeAskEdit($currentAction->getTime());
+	$album->setIpAskEdit($currentAction->getIp());
 
-	$draftRating->setDraftRatingId($draftRating->getDraftRatingId())->setWaitingFor(3)->update();
+	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -65,13 +83,13 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
-			$draftRating = new DraftRating(null, $database);
+			$album = new Album(null, $database);
 
-			$draftRating->setAdminAskEdit($currentAction->getUserId());
-			$draftRating->setTimeAskEdit($currentAction->getTime());
-			$draftRating->setIpAskEdit($currentAction->getIp());
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
-			$draftRating->setDraftRatingId($rowId)->setWaitingFor(3)->update();
+			$album->setAlbumId($rowId)->setWaitingFor(3)->update();
 		}
 	}
 }
@@ -81,13 +99,13 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
-			$draftRating = new DraftRating(null, $database);
+			$album = new Album(null, $database);
 
-			$draftRating->setAdminAskEdit($currentAction->getUserId());
-			$draftRating->setTimeAskEdit($currentAction->getTime());
-			$draftRating->setIpAskEdit($currentAction->getIp());
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
-			$draftRating->setDraftRatingId($rowId)->setWaitingFor(4)->update();
+			$album->setAlbumId($rowId)->setWaitingFor(4)->update();
 		}
 	}
 }
@@ -97,26 +115,26 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 	{
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
-			$draftRating = new DraftRating(null, $database);
+			$album = new Album(null, $database);
 
-			$draftRating->setAdminAskEdit($currentAction->getUserId());
-			$draftRating->setTimeAskEdit($currentAction->getTime());
-			$draftRating->setIpAskEdit($currentAction->getIp());
+			$album->setAdminAskEdit($currentAction->getUserId());
+			$album->setTimeAskEdit($currentAction->getTime());
+			$album->setIpAskEdit($currentAction->getIp());
 
-			$draftRating->setDraftRatingId($rowId)->setWaitingFor(5)->update();
+			$album->setAlbumId($rowId)->setWaitingFor(5)->update();
 		}
 	}
 }
 else if($inputGet->getUserAction() == UserAction::APPROVE)
 {
-	if($inputPost->issetDraftRatingId())
+	if($inputPost->issetAlbumId())
 	{
-		$draftRatingId = $inputPost->getDraftRatingId();
-		$draftRating = new DraftRating(null, $database);
-		$draftRating->findOneByDraftRatingId($draftRatingId);
-		if($draftRating->issetDraftRatingId())
+		$albumId = $inputPost->getAlbumId();
+		$album = new Album(null, $database);
+		$album->findOneByAlbumId($albumId);
+		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($draftRating, $entityInfo, 
+			$approval = new PicoApproval($album, $entityInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
 				// if return false, approval can not be done
@@ -131,11 +149,20 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 			} 
 			);
 
-			// List of properties to be copied from DraftRatingApv to DraftRating. You can add or remove it
+			// List of properties to be copied from AlbumApv to Album. You can add or remove it
 			$columToBeCopied = array(
-				"userId", 
-				"songDraftId", 
-				"rating"
+				"name", 
+				"title", 
+				"description", 
+				"producerId", 
+				"releaseDate", 
+				"numberOfSong", 
+				"duration", 
+				"imagePath", 
+				"sortOrder", 
+				"locked", 
+				"asDraft", 
+				"active"
 			);
 
 			$approvalCallback = new SetterGetter();
@@ -182,20 +209,20 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 				
 			}); 
 
-			$approval->approve($columToBeCopied, new DraftRatingApv(), new DraftRatingTrash(), $approvalCallback);
+			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), $approvalCallback);
 		}
 	}
 }
 else if($inputGet->getUserAction() == UserAction::REJECT)
 {
-	if($inputPost->issetDraftRatingId())
+	if($inputPost->issetAlbumId())
 	{
-		$draftRatingId = $inputPost->getDraftRatingId();
-		$draftRating = new DraftRating(null, $database);
-		$draftRating->findOneByDraftRatingId($draftRatingId);
-		if($draftRating->issetDraftRatingId())
+		$albumId = $inputPost->getAlbumId();
+		$album = new Album(null, $database);
+		$album->findOneByAlbumId($albumId);
+		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($draftRating, $entityInfo, 
+			$approval = new PicoApproval($album, $entityInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
 				// if return false, approval can not be done
@@ -209,21 +236,26 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 				// callback when failed
 			} 
 			);
-			$approval->reject(new DraftRatingApv());
+			$approval->reject(new AlbumApv());
 		}
 	}
 }
+if($inputGet->getUserAction() == UserAction::INSERT)
+{
 ?>
+
 <form name="insertform" id="insertform" action="" method="post">
-<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%"></table>
-<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr>
-<td></td>
-<td>
-<input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php echo $currentLanguage->get('button_save'); ?>">
-<input type="button" class="btn btn-primary" value="<?php echo $currentLanguage->get('button_cancel'); ?>" onclick="window.location='<?php echo $currentModule;?>'">
-</td>
-</tr></tbody></table>
+  <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%"/>
+  <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tbody>
+      <tr>
+        <td></td>
+        <td><input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule;?>';"/></td>
+      </tr>
+    </tbody>
+  </table>
 </form>
 <?php
+}
 
 

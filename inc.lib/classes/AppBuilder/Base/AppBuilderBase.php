@@ -2,6 +2,7 @@
 
 namespace AppBuilder\Base;
 
+use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
 use AppBuilder\EntityInfo;
 use DOMDocument;
@@ -396,11 +397,10 @@ class AppBuilderBase
         {
             $input->setAttribute('id', $id);
         }
-        error_log($value);
         $input->setAttribute('value', $value);
         if($onclickUrlVariable != null)
         {
-            $input->setAttribute('onclick', "window.location='<"."?"."php echo ".self::VAR.$onclickUrlVariable.";?".">'");
+            $input->setAttribute('onclick', "window.location='<"."?"."php echo ".self::VAR.$onclickUrlVariable.";?".">';");
         }
         return $input;
     }
@@ -413,7 +413,15 @@ class AppBuilderBase
      */
     private function getTextOfLanguage($id)
     {
-        return '<'.'?'.'php echo '.self::VAR."currentLanguage->get('".$id."'); ?".'>';
+        if($this->style == self::STYLE_SETTER_GETTER)
+        {
+            $param = PicoStringUtil::upperCamelize($id);
+            return '<'.'?'.'php echo '.self::VAR."currentLanguage->get$param"."(); ?".'>';
+        }
+        else
+        {
+            return '<'.'?'.'php echo '.self::VAR."currentLanguage->get('".$id."'); ?".'>';
+        }
     }
     
     /**
@@ -423,7 +431,7 @@ class AppBuilderBase
      * @param string $entityName
      * @param string $pkeyName
      * @param string $entityApprovalName
-     * @return DOMDocument
+     * @return string
      */
     public function createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName)
     {
@@ -444,9 +452,9 @@ class AppBuilderBase
         $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
         $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule');
         
+        error_log(print_r($insertFields, true));
 
-
-        $space = $dom->createTextNode("\r\n");
+        $space = $dom->createTextNode(" ");
         
         $td2->appendChild($btn1);
         $td2->appendChild($space);
@@ -492,20 +500,36 @@ class AppBuilderBase
                     <td><textarea id="apv_note" name="apv_note" class="form-control"></textarea></td>
                 </tr>
             </table>
-            <table class="responsive responsive-two-cols responsive-button-area" border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                        <input type="submit" class="btn btn-success" id="save" name="button_save" value="Simpan">
-                        <input type="button" class="btn btn-primary" id="showall" value="Tampilkan Semua" onclick="window.location='<?php echo $picoSelfName; ?>'">
-                    </td>
-                </tr>
-            </table>
+
             </form>
             */
         $dom->appendChild($form);
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
-        return $dom;
+
+        $xml = $dom->saveXML();
+
+        $html = $this->xmlToHtml($xml);
+        $html = str_replace('<td/>', '<td></td>', $html);
+        $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
+
+        return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
+        ."{\r\n"
+        .'?'.">\r\n".$html.'<'.'?'."php\r\n"
+        ."}\r\n";
+    }
+
+    public function xmlToHtml($xml)
+    {
+        $start = stripos($xml, '<?xml');
+        if($start !== false)
+        {
+            $end = stripos($xml, '?>', $start);
+            if($end !== false)
+            {
+                return substr($xml, $end+2);
+            }
+        }
+        return $xml;
     }
 }

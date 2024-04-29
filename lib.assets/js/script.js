@@ -493,7 +493,7 @@ function generateSelectType(field, args)
 	}
 
 	virtualDOM = $(
-	'<select class="form-control  input-field-data-type" name="data_type_'+field+'" id="data_type_'+field+'">\r\n'+
+	'<select class="form-control input-field-data-type" name="data_type_'+field+'" id="data_type_'+field+'">\r\n'+
 		'<option value="text" title="&lt;input type=&quot;text&quot;&gt;">text</option>\r\n'+
 		'<option value="email" title="&lt;input type=&quot;email&quot;&gt;">email</option>\r\n'+
 		'<option value="tel" title="&lt;input type=&quot;tel&quot;&gt;">tel</option>\r\n'+

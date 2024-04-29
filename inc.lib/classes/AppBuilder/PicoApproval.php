@@ -96,7 +96,14 @@ class PicoApproval
             {
                 call_user_func($approvalCallback->getBeforeDelete(), $this->entity, null, null);
             }
-            
+            if($entityTrash != null)
+            {
+                // copy database connection from entity to entityApv
+                $entityTrash->currentDatabase($this->entity->currentDatabase());
+
+                // copy data from entity to entityApv
+                $entityTrash->loadData($this->entity)->insert();
+            }
             $this->entity->delete();
             
             if($approvalCallback != null && $approvalCallback->getAfterDelete() != null && is_callable($approvalCallback->getAfterDelete()))
@@ -133,6 +140,7 @@ class PicoApproval
         $approvalId = $this->entity->get($this->entityInfo->getApprovalId());
         if($approvalId != null)
         {
+            // copy database connection from entity to entityApv
             $entityApv->currentDatabase($this->entity->currentDatabase());
             try
             {

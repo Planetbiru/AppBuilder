@@ -7,15 +7,21 @@ use MagicObject\Util\PicoGenericObject;
 class AppField
 {
     public $name;
-    public $type;
+    public $dataType;
+    public $elementType;
     public $filter;
+    public $fieldLabel;
     public function __construct($value)
     {
         $json = new PicoGenericObject($value);
         $this->name = $json->getFieldName();
-        $this->type = $json->getFieldType();
+        $this->dataType = $json->getDataType();
+        $this->elementType = $json->getElementType();
         $this->filter = $json->getInputFilter();
+        $this->fieldLabel = $json->getFieldLabel();
     }
+
+    
 
     /**
      * Get the value of name
@@ -26,35 +32,19 @@ class AppField
     }
 
     /**
-     * Set the value of name
-     *
-     * @return  self
+     * Get the value of dataType
      */ 
-    public function setName($name)
+    public function getDataType()
     {
-        $this->name = $name;
-
-        return $this;
+        return $this->dataType;
     }
 
     /**
-     * Get the value of type
+     * Get the value of elementType
      */ 
-    public function getType()
+    public function getElementType()
     {
-        return $this->type;
-    }
-
-    /**
-     * Set the value of type
-     *
-     * @return  self
-     */ 
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
+        return $this->elementType;
     }
 
     /**
@@ -63,17 +53,5 @@ class AppField
     public function getFilter()
     {
         return $this->filter;
-    }
-
-    /**
-     * Set the value of filter
-     *
-     * @return  self
-     */ 
-    public function setFilter($filter)
-    {
-        $this->filter = $filter;
-
-        return $this;
     }
 }
