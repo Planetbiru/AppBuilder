@@ -11,76 +11,76 @@ class EntityInfo extends SecretObject
      *
      * @var string
      */
-    public $active;
+    protected $active;
     /**
      * Draft key
      *
      * @var string
      */
-    public $draft;
+    protected $draft;
     
     /**
      * Admin create
      *
      * @var string
      */
-    public $adminCreate;
+    protected $adminCreate;
     
     /**
      * Admin edit
      *
      * @var string
      */
-    public $adminEdit;
+    protected $adminEdit;
     
     /**
      * Admin ask edit
      *
      * @var string
      */
-    public $adminAskEdit;
+    protected $adminAskEdit;
     
     /**
      * IP create
      *
      * @var string
      */
-    public $ipCreate;
+    protected $ipCreate;
     
     /**
      * IP edit
      *
      * @var string
      */
-    public $ipEdit;
+    protected $ipEdit;
     
     /**
      * IP ask edit
      *
      * @var string
      */
-    public $ipAskEdit;
+    protected $ipAskEdit;
     
     /**
      * Time create
      *
      * @var string
      */
-    public $timeCreate;
+    protected $timeCreate;
     
     /**
      * Time edit
      *
      * @var string
      */
-    public $timeEdit;
+    protected $timeEdit;
     
     /**
      * Time ask edit
      *
      * @var string
      */
-    public $timeAskEdit;
+    protected $timeAskEdit;
 
     
     /**
@@ -88,19 +88,19 @@ class EntityInfo extends SecretObject
      *
      * @var string
      */
-    public $waitingFor;
+    protected $waitingFor;
     
     /**
      * Approval ID key
      *
      * @var string
      */
-    public $approvalId;
+    protected $approvalId;
     
     /**
      * Variable name of database
      *
      * @var string
      */
-    public $database = "database";
+    protected $database = "database";
 }

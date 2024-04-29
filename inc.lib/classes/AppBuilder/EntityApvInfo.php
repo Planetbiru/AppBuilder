@@ -11,5 +11,5 @@ class EntityApvInfo extends SecretObject
      *
      * @var string
      */
-    public $approvalStatus;
+    protected $approvalStatus;
 }
