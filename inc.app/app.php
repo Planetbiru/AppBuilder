@@ -1,6 +1,7 @@
 <?php
 
 use AppBuilder\AppSecretObject;
+use AppBuilder\EntityApvInfo;
 use AppBuilder\EntityInfo;
 
 require_once dirname(__DIR__) . "/inc.lib/vendor/autoload.php";
@@ -47,3 +48,4 @@ if(file_exists($appListPath))
 require_once __DIR__ . "/database.php";
 
 $entityInfo = new EntityInfo($appConfig->getEntityInfo());
+$entityApvInfo = new EntityApvInfo($appConfig->getEntityApvInfo());

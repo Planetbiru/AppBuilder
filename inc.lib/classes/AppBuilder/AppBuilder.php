@@ -34,13 +34,13 @@ class AppBuilder extends AppBuilderBase
             }
         }
 
-        $upperAdminCreate = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminCreate());
-        $upperTimeCreate = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeCreate());
-        $upperIpCreate = PicoStringUtil::upperCamelize($this->entitiInfo->getIpCreate());
+        $upperAdminCreate = PicoStringUtil::upperCamelize($this->entityInfo->getAdminCreate());
+        $upperTimeCreate = PicoStringUtil::upperCamelize($this->entityInfo->getTimeCreate());
+        $upperIpCreate = PicoStringUtil::upperCamelize($this->entityInfo->getIpCreate());
 
-        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminEdit());
-        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeEdit());
-        $upperIpEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getIpEdit());
+        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminEdit());
+        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeEdit());
+        $upperIpEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpEdit());
 
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminCreate."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeCreate."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";

@@ -5,6 +5,7 @@ use AppBuilder\AppBuilderApproval;
 use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
 use AppBuilder\AppSection;
+use AppBuilder\Base\AppBuilderBase;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 
@@ -74,15 +75,15 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $includeSection = implode("\r\n", $includes);
     
     $declarationSection = implode("\r\n", array(
-        AppBuilderApproval::VAR."inputGet = new InputGet();",
-        AppBuilderApproval::VAR."inputPost = new InputPost();",
+        AppBuilderBase::VAR."inputGet = new InputGet();",
+        AppBuilderBase::VAR."inputPost = new InputPost();",
         ""
     ));
 
     // prepare CRUD section begin
     if($requireApproval == 1)
     {
-        $appBuilderApv = new AppBuilderApproval($database, $appConfig, $entityInfo);
+        $appBuilderApv = new AppBuilderApproval($database, $appConfig, $entityInfo, $entityApvInfo);
 
         $createSection = $appBuilderApv->createInsertApprovalSection($entityName, $insertFields, $pkName, $entityApprovalName);
         $updateSection = $appBuilderApv->createUpdateApprovalSection($entityName, $editFields, $pkName, $entityApprovalName, $pkApprovalName);
@@ -98,7 +99,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     }
     else
     {
-        $appBuilder = new AppBuilder($database, $appConfig, $entityInfo);
+        $appBuilder = new AppBuilder($database, $appConfig, $entityInfo, $entityApvInfo);
 
         $createSection = $appBuilder->createInsertSection($entityName, $insertFields);
         $updateSection = $appBuilder->createUpdateSection($entityName, $editFields);

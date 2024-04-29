@@ -20,8 +20,8 @@ class AppBuilderApproval extends AppBuilderBase
     {
         $objectName = lcfirst($entityName);
         $objectNameApproval = lcfirst($entityApprovalName);
-        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entitiInfo->getWaitingFor());
-        $upperDraft = PicoStringUtil::upperCamelize($this->entitiInfo->getDraft());
+        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
+        $upperDraft = PicoStringUtil::upperCamelize($this->entityInfo->getDraft());
 
 
 
@@ -47,13 +47,13 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName."->set".$upperDraft."(true);";
         $lines[] = parent::TAB1.parent::VAR.$objectName."->set".$upperWaitingFor."(".WaitingFor::CREATE.");";
 
-        $upperAdminCreate = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminCreate());
-        $upperTimeCreate = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeCreate());
-        $upperIpCreate = PicoStringUtil::upperCamelize($this->entitiInfo->getIpCreate());
+        $upperAdminCreate = PicoStringUtil::upperCamelize($this->entityInfo->getAdminCreate());
+        $upperTimeCreate = PicoStringUtil::upperCamelize($this->entityInfo->getTimeCreate());
+        $upperIpCreate = PicoStringUtil::upperCamelize($this->entityInfo->getIpCreate());
 
-        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminEdit());
-        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeEdit());
-        $upperIpEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getIpEdit());
+        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminEdit());
+        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeEdit());
+        $upperIpEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpEdit());
 
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminCreate."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeCreate."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
@@ -87,7 +87,7 @@ class AppBuilderApproval extends AppBuilderBase
     {
         $objectName = lcfirst($entityName);
         $objectNameApproval = lcfirst($entityApprovalName);
-        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entitiInfo->getWaitingFor());
+        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         $lines = array();
         
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::UPDATE)";
@@ -106,9 +106,9 @@ class AppBuilderApproval extends AppBuilderBase
             }
         }
 
-        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminEdit());
-        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeEdit());
-        $upperIpEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getIpEdit());
+        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminEdit());
+        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeEdit());
+        $upperIpEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpEdit());
 
 
         $lines[] = parent::TAB1.parent::VAR.$objectNameApproval.parent::CALL_SET.$upperAdminEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
@@ -121,9 +121,9 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = "";
 
-        $upperAdminAskEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminAskEdit());
-        $upperTimeAskEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeAskEdit());
-        $upperIpAskEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getIpAskEdit());
+        $upperAdminAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit());
+        $upperTimeAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeAskEdit());
+        $upperIpAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpAskEdit());
         $upperPkeyApprovalName = PicoStringUtil::upperCamelize($pkeyApprovalName);
 
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
@@ -191,11 +191,11 @@ class AppBuilderApproval extends AppBuilderBase
         $objectName = lcfirst($entityName);
         $lines = array();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
-        $upperWaitingFor = PicoStringUtil::upperCamelize($this->getEntitiInfo()->getWaitingFor());
+        $upperWaitingFor = PicoStringUtil::upperCamelize($this->getentityInfo()->getWaitingFor());
 
-        $upperAdminAskEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getAdminAskEdit());
-        $upperTimeAskEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getTimeAskEdit());
-        $upperIpAskEdit = PicoStringUtil::upperCamelize($this->entitiInfo->getIpAskEdit());
+        $upperAdminAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit());
+        $upperTimeAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeAskEdit());
+        $upperIpAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpAskEdit());
 
 
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
@@ -409,8 +409,8 @@ class AppBuilderApproval extends AppBuilderBase
 
     protected function constructApproval($objectName, $entityInfoName)
     {
-        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entitiInfo->getWaitingFor());
-        $upperDraft = PicoStringUtil::upperCamelize($this->entitiInfo->getDraft());
+        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
+        $upperDraft = PicoStringUtil::upperCamelize($this->entityInfo->getDraft());
         return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::VAR.$objectName.", "
         .parent::VAR.$entityInfoName.", "
             .parent::NEW_LINE //NOSONAR

@@ -4,6 +4,7 @@ namespace AppBuilder\Base;
 
 use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
+use AppBuilder\EntityApvInfo;
 use AppBuilder\EntityInfo;
 use DOMDocument;
 use DOMElement;
@@ -41,7 +42,14 @@ class AppBuilderBase
      *
      * @var EntityInfo
      */
-    protected $entitiInfo;
+    protected $entityInfo;
+
+    /**
+     * Entity approval info
+     *
+     * @var EntityApvInfo
+     */
+    protected $entityApvInfo;
 
     /**
      * Database
@@ -69,27 +77,29 @@ class AppBuilderBase
      *
      * @param PicoDatabase $database
      * @param SecretObject $appBuilderConfig
-     * @param EntityInfo $entitiInfo
+     * @param EntityInfo $entityInfo
+     * @param EntityApvInfo $entityApvInfo
      */
-    public function __construct($database, $appBuilderConfig, $entitiInfo)
+    public function __construct($database, $appBuilderConfig, $entityInfo, $entityApvInfo)
     {
         $this->database = $database;
         $this->appBuilderConfig = $appBuilderConfig;
         $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
-        $this->entitiInfo = $entitiInfo;
+        $this->entityInfo = $entityInfo;
+        $this->entityApvInfo = $entityApvInfo;
         $this->skipedAutoSetter = array(
-            $entitiInfo->draft,
-            $entitiInfo->adminCreate,
-            $entitiInfo->adminEdit,
-            $entitiInfo->adminAskEdit,
-            $entitiInfo->ipCreate,
-            $entitiInfo->ipEdit,
-            $entitiInfo->ipAskEdit,
-            $entitiInfo->timeCreate,
-            $entitiInfo->timeEdit,
-            $entitiInfo->timeAskEdit,
-            $entitiInfo->waitingFor
+            $entityInfo->draft,
+            $entityInfo->adminCreate,
+            $entityInfo->adminEdit,
+            $entityInfo->adminAskEdit,
+            $entityInfo->ipCreate,
+            $entityInfo->ipEdit,
+            $entityInfo->ipAskEdit,
+            $entityInfo->timeCreate,
+            $entityInfo->timeEdit,
+            $entityInfo->timeAskEdit,
+            $entityInfo->waitingFor
         );
     }
     /**
@@ -144,7 +154,7 @@ class AppBuilderBase
         } else {
             $dataToLoad = self::VAR . $dataToLoad;
         }
-        return self::VAR . $objectName . " = new $entityName($dataToLoad, " . self::VAR . $this->entitiInfo->getDatabase() . ");";
+        return self::VAR . $objectName . " = new $entityName($dataToLoad, " . self::VAR . $this->entityInfo->getDatabase() . ");";
     }
 
     /**
@@ -176,21 +186,21 @@ class AppBuilderBase
      *
      * @return  EntityInfo
      */
-    public function getEntitiInfo()
+    public function getentityInfo()
     {
-        return $this->entitiInfo;
+        return $this->entityInfo;
     }
 
     /**
      * Set entity info
      *
-     * @param  EntityInfo  $entitiInfo  Entity info
+     * @param  EntityInfo  $entityInfo  Entity info
      *
      * @return  self
      */
-    public function setEntitiInfo($entitiInfo)
+    public function setentityInfo($entityInfo)
     {
-        $this->entitiInfo = $entitiInfo;
+        $this->entityInfo = $entityInfo;
 
         return $this;
     }

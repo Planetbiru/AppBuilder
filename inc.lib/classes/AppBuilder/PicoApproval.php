@@ -8,6 +8,8 @@ use MagicObject\SetterGetter;
 
 class PicoApproval
 {
+    const APPROVAL_APPROVE = 1;
+    const APPROVAL_REJECT = 2;
     /**
      * Master entity
      *
@@ -21,7 +23,14 @@ class PicoApproval
      * @var EntityInfo
      */
     private $entityInfo;
-    
+   
+    /**
+     * Entity approval info
+     *
+     * @var EntityApvInfo
+     */
+    private $entityApvInfo;
+
     /**
      * Callback validation
      *
@@ -48,14 +57,16 @@ class PicoApproval
      *
      * @param MagicObject $entity
      * @param EntityInfo $entityInfo
+     * @param EntityApvInfo $entityApvInfo
      * @param callable $callbackValidation
      * @param callable $callbackOnApprove
      * @param callable $callackOnReject
      */
-    public function __construct($entity, $entityInfo, $callbackValidation = null, $callbackOnApprove = null, $callackOnReject = null)
+    public function __construct($entity, $entityInfo, $entityApvInfo, $callbackValidation = null, $callbackOnApprove = null, $callackOnReject = null)
     {
         $this->entity = $entity;
         $this->entityInfo = $entityInfo;
+        $this->entityApvInfo = $entityApvInfo;
         $this->callbackValidation = $callbackValidation;
         $this->callbackOnApprove = $callbackOnApprove;
         $this->callackOnReject = $callackOnReject;
@@ -68,7 +79,7 @@ class PicoApproval
      * @param MagicObject $entityApv
      * @param MagicObject $entityTrash
      * @param SetterGetter $approvalCallback
-     * @return void
+     * @return self
      */
     public function approve($columToBeCopied, $entityApv, $entityTrash, $approvalCallback)
     {
@@ -76,6 +87,7 @@ class PicoApproval
         $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
         if($waitingFor == WaitingFor::CREATE)
         {
+            
             $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->set($this->entityInfo->getDraft(), false)->update();
         }
         if($waitingFor == WaitingFor::ACTIVATE)
@@ -111,30 +123,54 @@ class PicoApproval
                 call_user_func($approvalCallback->getAfterDelete(), $this->entity, null, null);
             }
         }
+        return $this;
     }
     
-    public function reject($entityApproval)
+    /**
+     * Reject
+     *
+     * @param MagicObject $entityApv
+     * @return self
+     */
+    public function reject($entityApv)
     {
         $this->validateApproval();
         $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
+        $entityApv->currentDatabase($this->entity->currentDatabase());
         if($waitingFor == WaitingFor::CREATE)
         {
+            $entityApv->set($this->entityApvInfo->getApprovalStatus(), self::APPROVAL_REJECT)->update();
             $this->entity->delete();
         }
-        if($waitingFor == WaitingFor::UPDATE || $waitingFor == WaitingFor::ACTIVATE || $waitingFor == WaitingFor::DEACTIVATE || $waitingFor == WaitingFor::DELETE)
+        else if($waitingFor == WaitingFor::UPDATE || $waitingFor == WaitingFor::ACTIVATE || $waitingFor == WaitingFor::DEACTIVATE || $waitingFor == WaitingFor::DELETE)
         {
+            $entityApv->set($this->entityApvInfo->getApprovalStatus(), self::APPROVAL_REJECT)->update();
             $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->update();
         }
+        return $this;
     }
     
+    /**
+     * Validate approval
+     *
+     * @return boolean
+     */
     private function validateApproval()
     {
         if($this->callbackValidation != null && is_callable($this->callbackValidation))
         {
-            call_user_func($this->callbackValidation, $this->entity, null, null);
+            return call_user_func($this->callbackValidation, $this->entity, null, null);
         }
+        return true;
     }
     
+    /**
+     * Approve update
+     *
+     * @param MagicObject $entityApv
+     * @param string[] $columToBeCopied
+     * @return self
+     */
     private function approveUpdate($entityApv, $columToBeCopied)
     {
         $approvalId = $this->entity->get($this->entityInfo->getApprovalId());
@@ -159,12 +195,14 @@ class PicoApproval
                 {
                     $this->entity->update();
                 }
+                $entityApv->set($this->entityApvInfo->getApprovalStatus(), self::APPROVAL_REJECT)->update();
             }
             catch(Exception $e)
             {
                 // do nothing
             }
         }
+        return $this;
     }
     
     
