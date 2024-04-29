@@ -4,6 +4,8 @@ namespace AppBuilder\Base;
 
 use AppBuilder\AppSecretObject;
 use AppBuilder\EntityInfo;
+use DOMDocument;
+use DOMElement;
 use MagicObject\Database\PicoDatabase;
 use MagicObject\MagicObject;
 use MagicObject\SecretObject;
@@ -316,5 +318,194 @@ class AppBuilderBase
     public function getCurrentAction()
     {
         return $this->currentAction;
+    }
+    
+    /**
+     * Create element form
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createElementForm($dom)
+    {
+        $form = $dom->createElement('form');
+        $form->setAttribute('name', 'insertform');
+        $form->setAttribute('id', 'insertform');
+        $form->setAttribute('action', '');
+        $form->setAttribute('method', 'post');
+        return $form; 
+    }
+    
+    /**
+     * Create element table responsive
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createElementTableResponsive($dom)
+    {
+        $table = $dom->createElement('table');
+        $table->setAttribute('class', 'responsive responsive-two-cols');
+        $table->setAttribute('border', '0');
+        $table->setAttribute('cellpadding', '0');
+        $table->setAttribute('cellspacing', '0');
+        $table->setAttribute('width', '100%');
+        return $table;
+    }
+    
+    /**
+     * Create element submit button
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createSubmitButton($dom, $value, $name = null, $id = null)
+    {
+        // <input type="submit" class="btn btn-success" id="save" name="button_save" value="Simpan">
+        $input = $dom->createElement('input');
+        $input->setAttribute('type', 'submit');
+        $input->setAttribute('class', 'btn btn-success');
+        if($name != null)
+        {
+            $input->setAttribute('name', $name);
+        }
+        if($id != null)
+        {
+            $input->setAttribute('id', $id);
+        }
+        $input->setAttribute('value', $value);
+        return $input;
+    }
+    
+    /**
+     * Create element cancel button
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createCancelButton($dom, $value, $name = null, $id = null, $onclickUrlVariable = null)
+    {
+        $input = $dom->createElement('input');
+        $input->setAttribute('type', 'button');
+        $input->setAttribute('class', 'btn btn-primary');
+        if($name != null)
+        {
+            $input->setAttribute('name', $name);
+        }
+        if($id != null)
+        {
+            $input->setAttribute('id', $id);
+        }
+        error_log($value);
+        $input->setAttribute('value', $value);
+        if($onclickUrlVariable != null)
+        {
+            $input->setAttribute('onclick', "window.location='<"."?"."php echo ".self::VAR.$onclickUrlVariable.";?".">'");
+        }
+        return $input;
+    }
+    
+    /**
+     * Get text
+     *
+     * @param string $id
+     * @return string
+     */
+    private function getTextOfLanguage($id)
+    {
+        return '<'.'?'.'php echo '.self::VAR."currentLanguage->get('".$id."'); ?".'>';
+    }
+    
+    /**
+     * Create GUI INSERT section without approval
+     *
+     * @param AppField[] $appFields
+     * @param string $entityName
+     * @param string $pkeyName
+     * @param string $entityApprovalName
+     * @return DOMDocument
+     */
+    public function createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName)
+    {
+        $dom = new DOMDocument();
+        
+        $form = $this->createElementForm($dom);
+        
+        $table1 = $this->createElementTableResponsive($dom);
+        $table2 = $this->createElementTableResponsive($dom);
+        
+        
+        $tbody2 = $dom->createElement('tbody');
+        
+        $tr2 = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        
+        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button.save'), "save-button", "save-insert");
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button.cancel'), null, null, 'currentModule');
+        
+
+
+        $space = $dom->createTextNode("\r\n");
+        
+        $td2->appendChild($btn1);
+        $td2->appendChild($space);
+        $td2->appendChild($btn2);
+        
+        
+        $tr2->appendChild($td1);
+        $tr2->appendChild($td2);
+        
+        $tbody2->appendChild($tr2);
+        
+        $table2->appendChild($tbody2);
+
+        $form->appendChild($table1);
+        $form->appendChild($table2);
+        
+        
+        /*
+        <form name="editform" id="editform" action="" method="post">
+            <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td>Kode</td>
+                    <td><input type="text" class="form-control input-text input-text-plain" required="required" name="pendidikan_id" id="pendidikan_id" value="<?php echo $d_pendidikan_id; ?>"></td>
+                </tr>
+                <tr>
+                    <td>Nama</td>
+                    <td><input type="text" class="form-control input-text input-text-plain" required="required" name="nama" id="nama" value="<?php echo $d_nama; ?>"></td>
+                </tr>
+                <tr>
+                    <td>Order</td>
+                    <td><input type="number" class="form-control input-text input-text-plain" name="sort_order" id="sort_order" value="<?php echo $d_sort_order; ?>"></td>
+                </tr>
+                <tr>
+                    <td>Default</td>
+                    <td><label><input type="checkbox" name="default_data" id="default_data" value="1"<?php echo ($d_default_data == "1")?" checked=\"checked\"":""; ?>> Default</label></td>
+                </tr>
+                <tr>
+                    <td>Aktif</td>
+                    <td><label><input type="checkbox" name="aktif" id="aktif" value="1"<?php echo $cms->formChecked($d_aktif); ?>> Aktif</label></td>
+                </tr>
+                <tr>
+                    <td>Catatan</td>
+                    <td><textarea id="apv_note" name="apv_note" class="form-control"></textarea></td>
+                </tr>
+            </table>
+            <table class="responsive responsive-two-cols responsive-button-area" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit" class="btn btn-success" id="save" name="button_save" value="Simpan">
+                        <input type="button" class="btn btn-primary" id="showall" value="Tampilkan Semua" onclick="window.location='<?php echo $picoSelfName; ?>'">
+                    </td>
+                </tr>
+            </table>
+            </form>
+            */
+        $dom->appendChild($form);
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        return $dom;
     }
 }

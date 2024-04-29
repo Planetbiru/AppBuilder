@@ -91,6 +91,12 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $deleteSection = $appBuilderApv->createDeleteApprovalSection($entityName, $pkName);
         $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityApprovalName, $entityTrashName);
         $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName, $entityApprovalName);  
+        
+        $guiInsert = '?'.">\r\n".$appBuilderApv->createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName)->saveHTML().'<'.'?'."php\r\n";
+        
+        $guiInsert = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $guiInsert);
+        error_log($guiInsert);
+        
     }
     else
     {
@@ -112,6 +118,9 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $approvalSection = "";
         $rejectionSection = "";
     }
+    
+   
+    
     // prepare CRUD section end
     
     $crudSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
@@ -125,8 +134,8 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     ;
         
     $guiSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
-    
-        ;
+    ->add($guiInsert)
+    ;
 
     $merged = (new AppSection(AppSection::SEPARATOR_NEW_LINE))
     ->add($usesSection)
