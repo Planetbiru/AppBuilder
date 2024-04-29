@@ -122,5 +122,6 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $fp = fopen(dirname(__DIR__)."/test.php", "w");
     fputs($fp, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
     fclose($fp);
+    error_log("AAAAAAAAAAAA");
     
 }

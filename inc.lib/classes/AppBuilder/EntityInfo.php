@@ -91,6 +91,13 @@ class EntityInfo extends SecretObject
     public $waitingFor;
     
     /**
+     * Approval ID key
+     *
+     * @var string
+     */
+    public $approvalId;
+    
+    /**
      * Variable name of database
      *
      * @var string

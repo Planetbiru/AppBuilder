@@ -364,7 +364,7 @@ class AppBuilderApproval extends AppBuilderBase
 
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
-        .parent::VAR."columToBeCopied---, new $entityNameApproval(), new $entityNameTrash());";                                               
+        .parent::VAR."columToBeCopied, new $entityNameApproval(), new $entityNameTrash(), ".parent::VAR."approvalCallback);";                                               
  
 
         $lines[] = parent::TAB1.parent::TAB1."}";

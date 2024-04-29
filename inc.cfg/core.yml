@@ -38,6 +38,7 @@ entity_info:
     ip_create: ip_create
     ip_edit: ip_edit
     ip_ask_edit: ip_ask_edit
+    approval_id: approval_id
     approval_note: approval_note
     global_variable_database: global_variable_database
 current_action:
