@@ -134,7 +134,7 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 		$album->findOneByAlbumId($albumId);
 		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($album, $entityInfo, 
+			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
 				// if return false, approval can not be done
@@ -222,7 +222,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 		$album->findOneByAlbumId($albumId);
 		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($album, $entityInfo, 
+			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
 				// if return false, approval can not be done

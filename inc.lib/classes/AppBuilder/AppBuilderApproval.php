@@ -273,6 +273,7 @@ class AppBuilderApproval extends AppBuilderBase
             }
         }
         $entityInfoName = "entityInfo";
+        $entityApvInfoName = "entityApvInfo";
         $userAction = 'UserAction::APPROVE';
         $objectName = lcfirst($entityName);
         $lines = array();
@@ -290,7 +291,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
-        $lines[] = $this->constructApproval($objectName, $entityInfoName);
+        $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
         $lines[] = "";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName. You can add or remove it".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
@@ -378,6 +379,7 @@ class AppBuilderApproval extends AppBuilderBase
     public function createRejectionSection($entityName, $pkName, $entityApprovalName)
     {
         $entityInfoName = "entityInfo";
+        $entityApvInfoName = "entityApvInfo";
         $userAction = 'UserAction::REJECT';
         $objectName = lcfirst($entityName);
         $lines = array();
@@ -395,7 +397,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
-        $lines[] = $this->constructApproval($objectName, $entityInfoName);
+        $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityApprovalName());";
 
 
@@ -407,25 +409,23 @@ class AppBuilderApproval extends AppBuilderBase
 
     }
 
-    protected function constructApproval($objectName, $entityInfoName)
+    protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName)
     {
-        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
-        $upperDraft = PicoStringUtil::upperCamelize($this->entityInfo->getDraft());
         return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::VAR.$objectName.", "
-        .parent::VAR.$entityInfoName.", "
-            .parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if return false, approval can not be done".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when success".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when failed".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE //NOSONAR
-            .parent::TAB1.parent::TAB1.parent::TAB1.");"; //NOSONAR
+        .parent::VAR.$entityInfoName.", ".parent::VAR.$entityApvInfoName.", "
+        .parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if return false, approval can not be done".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when success".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when failed".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.");"; //NOSONAR
     }
 }

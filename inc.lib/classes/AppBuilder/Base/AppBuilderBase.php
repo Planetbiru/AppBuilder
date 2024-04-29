@@ -89,17 +89,17 @@ class AppBuilderBase
         $this->entityInfo = $entityInfo;
         $this->entityApvInfo = $entityApvInfo;
         $this->skipedAutoSetter = array(
-            $entityInfo->draft,
-            $entityInfo->adminCreate,
-            $entityInfo->adminEdit,
-            $entityInfo->adminAskEdit,
-            $entityInfo->ipCreate,
-            $entityInfo->ipEdit,
-            $entityInfo->ipAskEdit,
-            $entityInfo->timeCreate,
-            $entityInfo->timeEdit,
-            $entityInfo->timeAskEdit,
-            $entityInfo->waitingFor
+            $entityInfo->getDraft(),
+            $entityInfo->getAdminCreate(),
+            $entityInfo->getAdminEdit(),
+            $entityInfo->getAdminAskEdit(),
+            $entityInfo->getIpCreate(),
+            $entityInfo->getIpEdit(),
+            $entityInfo->getIpAskEdit(),
+            $entityInfo->getTimeCreate(),
+            $entityInfo->getTimeEdit(),
+            $entityInfo->getTimeAskEdit(),
+            $entityInfo->getWaitingFor()
         );
     }
     /**
