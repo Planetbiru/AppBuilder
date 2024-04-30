@@ -52,6 +52,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
     $uses[] = "use MagicObject\\Request\\InputGet;";
     $uses[] = "use MagicObject\\Request\\InputPost;";
+    $uses[] = "use MagicObject\\Util\\AttrUtil;";
     $uses[] = "use AppBuilder\\PicoApproval;";
     $uses[] = "use AppBuilder\\UserAction;";
     $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityName;";

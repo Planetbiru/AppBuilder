@@ -27,9 +27,20 @@ class AppBuilderBase
     const CALL_UPDATE_END = "->update();";
     const CALL_DELETE_END = "->delete();";
     const CALL_SET = "->set";
+    
+    const PHP_OPEN_TAG = '<'.'?'.'php ';
+    const PHP_CLOSE_TAG = ' ?'.'>';
+    
     const STYLE_NATIVE = 'native';
     const STYLE_SETTER_GETTER = 'setter-getter';
+    
+    /**
+     * Set and get value style
+     *
+     * @var string
+     */
     protected $style = self::STYLE_NATIVE;
+    
     /**
      * Config base directory
      *
@@ -354,7 +365,7 @@ class AppBuilderBase
         $input->setAttribute('value', $value);
         if($onclickUrlVariable != null)
         {
-            $input->setAttribute('onclick', "window.location='<"."?"."php echo ".self::VAR.$onclickUrlVariable.";?".">';");
+            $input->setAttribute('onclick', "window.location='".self::PHP_OPEN_TAG." echo ".self::VAR.$onclickUrlVariable.";".self::PHP_CLOSE_TAG."';");
         }
         return $input;
     }
@@ -370,11 +381,11 @@ class AppBuilderBase
         if($this->style == self::STYLE_SETTER_GETTER)
         {
             $param = PicoStringUtil::upperCamelize($id);
-            return '<'.'?'.'php echo '.self::VAR."currentLanguage->get$param"."(); ?".'>';
+            return self::PHP_OPEN_TAG.' echo '.self::VAR."currentLanguage->get$param"."(); ".self::PHP_CLOSE_TAG;
         }
         else
         {
-            return '<'.'?'.'php echo '.self::VAR."currentLanguage->get('".$id."'); ?".'>';
+            return self::PHP_OPEN_TAG.' echo '.self::VAR."currentLanguage->get('".$id."'); ".self::PHP_CLOSE_TAG;
         }
     }
     
@@ -389,11 +400,12 @@ class AppBuilderBase
      */
     public function createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName)
     {
+        $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
         $form = $this->createElementForm($dom);
         
-        $table1 = $this->createInsertFormTable($dom, $entityName, $insertFields, $pkName);
+        $table1 = $this->createInsertFormTable($dom, $entityName, $objectName, $insertFields, $pkName);
 
 
         $table2 = $this->createButtonContainerTable($dom);
@@ -422,11 +434,12 @@ class AppBuilderBase
      *
      * @param DOMDocument $dom
      * @param string $entityName
+     * @param string $objectName
      * @param AppField[] $insertFields
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertFormTable($dom, $entityName, $insertFields, $pkName)
+    private function createInsertFormTable($dom, $entityName, $objectName, $insertFields, $pkName)
     {
         $table = $this->createElementTableResponsive($dom);
 
@@ -436,7 +449,7 @@ class AppBuilderBase
         {
             if($field->getIncludeInsert())
             {
-                $tr = $this->createInsertRow($dom, $entityName, $field, $pkName);
+                $tr = $this->createInsertRow($dom, $entityName, $objectName, $field, $pkName);
                 $tbody->appendChild($tr);
             }
         }
@@ -451,11 +464,12 @@ class AppBuilderBase
      *
      * @param DOMDocument $dom
      * @param string $entityName
+     * @param string $objectName
      * @param AppField $insertField
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertRow($dom, $entityName, $field, $pkName)
+    private function createInsertRow($dom, $entityName, $objectName, $field, $pkName)
     {
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
@@ -465,7 +479,7 @@ class AppBuilderBase
 
         $td1->appendChild($label);
 
-        $input = $this->createInsertControl($dom, $entityName, $field, $pkName, $field->getFieldName());
+        $input = $this->createInsertControl($dom, $entityName, $objectName, $field, $pkName, $field->getFieldName());
         if($input != null)
         {
             $td2->appendChild($input);
@@ -481,11 +495,12 @@ class AppBuilderBase
      *
      * @param DOMDocument $dom
      * @param string $entityName
+     * @param string $objectName
      * @param AppField $insertField
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertControl($dom, $entityName, $insertField, $pkName, $id = null)
+    private function createInsertControl($dom, $entityName, $objectName, $insertField, $pkName, $id = null)
     {
         $input = $dom->createElement('input');
         if($insertField->getElementType() == ElementType::TEXT)
@@ -530,22 +545,24 @@ class AppBuilderBase
             $textLabel = $dom->createTextNode('- Select One -');
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
-            $newLine = $dom->createTextNode("\n\t");
             $value->appendChild($textLabel);
             $input->appendChild($value);
             
-            
-            $input = $this->appendOptionList($dom, $input, 
-            array('SEN'=>'Senin','SEL'=>'Selasa','RAB'=>'Rabu','KAM'=>'Kamis','JUM'=>'Jumat','SAB'=>'Sabtu','MIN'=>'Minggu'),
-            '$apa->getApa()'
-            );
+            $upperPkName = PicoStringUtil::upperCamelize($insertField->getFieldName());
             
             /*
-            $input = $this->appendOptionEntity($dom, $input, 
-            array('name'=>'Producer','value'=>'producerId','text'=>'name'),
-            'JUM'
+            $input = $this->appendOptionList($dom, $input, $objectName, 
+            array('SEN'=>'Senin','SEL'=>'Selasa','RAB'=>'Rabu','KAM'=>'Kamis','JUM'=>'Jumat','SAB'=>'Sabtu','MIN'=>'Minggu'),
+            self::VAR.$objectName.'->get'.$upperPkName.'()'
             );
             */
+            
+            $input = $this->appendOptionEntity($dom, $input, $objectName, 
+            array('name'=>'Producer','value'=>'producerId','text'=>'name'),
+            self::VAR.$objectName.'->get'.$upperPkName.'()'
+            );
+            
+            
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
@@ -578,11 +595,12 @@ class AppBuilderBase
      *
      * @param DOMDocument $dom
      * @param DOMElement $input
+     * @param string $objectName
      * @param AppField $insertField
      * @param string $pkName
      * @return DOMElement
      */
-    private function appendOptionList($dom, $input, $values, $selected = null)
+    private function appendOptionList($dom, $input, $objectName, $values, $selected = null)
     {
         foreach($values as $key=>$value)
         {       
@@ -592,24 +610,36 @@ class AppBuilderBase
             $option->appendChild($textLabel);
             if($selected != null)
             {
-                $option->setAttribute("data-encoded-script", base64_encode($key)."____".base64_encode($selected));
+                $option->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo AttrUtil::selected('.$selected.', '."'".$key."'".');'.self::PHP_CLOSE_TAG));
             }
             $input->appendChild($option);
-            $input->setAttribute('data-encoded-script', base64_encode('<'.'?'.'php echo '.$selected.'; ?'.'>'));
+            $input->setAttribute('data-app-builder-encoded-script', base64_encode('data-value="'.self::PHP_OPEN_TAG.'echo '.$selected.';'.self::PHP_CLOSE_TAG.'"'));
         }
         return $input;
     }
     
-    private function appendOptionEntity($dom, $input, $entity, $selected = null)
+    /**
+     * Append option from entiry
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $input
+     * @param string $objectName
+     * @param MagicObject $entity
+     * @param string $selected
+     * @return DOMElement
+     */
+    private function appendOptionEntity($dom, $input, $objectName, $entity, $selected = null)
     {
         if($entity != null)
         {
+            $paramSelected = ($selected != null) ? ", $selected": "";
             $option = $dom->createTextNode(self::NEW_LINE_R.self::TAB3
             .'<'.'?'.'php echo '.self::VAR.'selecOptionReference'
             .'->showList(new '.$entity['name'].'(null, '.self::VAR.'database), '.self::NEW_LINE_R.self::TAB3
-            .'(new PicoSpecification())->addAnd(new PicoPredicate("active", true)), '.self::NEW_LINE_R.self::TAB3
+            .'(new PicoSpecification())->addAnd(new PicoPredicate("'.$this->entityInfo->getActive().'", true))'
+            .'->addAnd(new PicoPredicate("'.$this->entityInfo->getDraft().'", false)), '.self::NEW_LINE_R.self::TAB3
             .'(new PicoSortable())->add(new PicoSort("'.$entity['value'].'", PicoSort::ORDER_TYPE_ASC)), '.self::NEW_LINE_R.self::TAB3
-            .'"'.$entity['value'].'", "'.$entity['text'].'"); '.'?'.'>');
+            .'"'.$entity['value'].'", "'.$entity['text'].'"'.$paramSelected.'); '.'?'.'>');
             $input->appendChild($option);
         }
         return $input;
@@ -702,9 +732,41 @@ class AppBuilderBase
             $end = stripos($xml, '?>', $start);
             if($end !== false)
             {
-                return substr($xml, $end+2);
+                $xml = substr($xml, $end+2);
             }
         }
+        
+        do
+        {
+            $search = 'data-app-builder-encoded-script="';
+            $startPos = strpos($xml, $search);
+            if($startPos !== false)
+            {
+                $endPos = stripos($xml, '"', $startPos + strlen($search));
+                $stringFound = substr($xml, $startPos, 1+$endPos-$startPos);
+                $successor = $this->decodeString($stringFound);
+                $xml = str_replace($stringFound, $successor, $xml);
+                $replaced = true;
+            }
+        }
+        while($startPos !== false);
+        
+        
         return $xml;
     }
+    
+    public function decodeString($stringFound)
+    {
+        $search = 'data-app-builder-encoded-script="';
+        if(PicoStringUtil::startsWith($stringFound, $search))
+        {
+            $code = substr($stringFound, strlen($search), strlen($stringFound) - strlen($search) - 1);     
+        }
+        else
+        {
+            $code = $stringFound;
+        }
+        return base64_decode($code);
+    }
+    
 }
