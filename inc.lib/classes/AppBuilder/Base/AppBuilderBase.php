@@ -400,38 +400,6 @@ class AppBuilderBase
         $form->appendChild($table1);
         $form->appendChild($table2);
         
-        
-        /*
-        <form name="editform" id="editform" action="" method="post">
-            <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                    <td>Kode</td>
-                    <td><input type="text" class="form-control input-text input-text-plain" required="required" name="pendidikan_id" id="pendidikan_id" value="<?php echo $d_pendidikan_id; ?>"></td>
-                </tr>
-                <tr>
-                    <td>Nama</td>
-                    <td><input type="text" class="form-control input-text input-text-plain" required="required" name="nama" id="nama" value="<?php echo $d_nama; ?>"></td>
-                </tr>
-                <tr>
-                    <td>Order</td>
-                    <td><input type="number" class="form-control input-text input-text-plain" name="sort_order" id="sort_order" value="<?php echo $d_sort_order; ?>"></td>
-                </tr>
-                <tr>
-                    <td>Default</td>
-                    <td><label><input type="checkbox" name="default_data" id="default_data" value="1"<?php echo ($d_default_data == "1")?" checked=\"checked\"":""; ?>> Default</label></td>
-                </tr>
-                <tr>
-                    <td>Aktif</td>
-                    <td><label><input type="checkbox" name="aktif" id="aktif" value="1"<?php echo $cms->formChecked($d_aktif); ?>> Aktif</label></td>
-                </tr>
-                <tr>
-                    <td>Catatan</td>
-                    <td><textarea id="apv_note" name="apv_note" class="form-control"></textarea></td>
-                </tr>
-            </table>
-
-            </form>
-            */
         $dom->appendChild($form);
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
@@ -562,6 +530,18 @@ class AppBuilderBase
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
             $input->appendChild($value);
+            
+            /*
+            $input = $this->appendOptionList($dom, $input, 
+            array('SEN'=>'Senin','SEL'=>'Selasa','RAB'=>'Rabu','KAM'=>'Kamis','JUM'=>'Jumat','SAB'=>'Sabtu','MIN'=>'Minggu'),
+            'JUM'
+            );
+            */
+            
+            $input = $this->appendOptionEntity($dom, $input, 
+            array('name'=>'Producer','value'=>'producerId','text'=>'name'),
+            'JUM'
+            );
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
@@ -586,6 +566,37 @@ class AppBuilderBase
         if($insertField->getRequired())
         {
             $input->setAttribute('required', 'required');
+        }
+        return $input;
+    }
+    
+    private function appendOptionList($dom, $input, $values, $selected = null)
+    {
+        foreach($values as $key=>$value)
+        {       
+            $option = $dom->createElement('option');
+            $option->setAttribute('value', $key);
+            $textLabel = $dom->createTextNode($value);
+            $option->appendChild($textLabel);
+            if($selected != null && $selected == $key)
+            {
+                $option->setAttribute('selected', 'selected');
+            }
+            $input->appendChild($option);
+        }
+        return $input;
+    }
+    
+    private function appendOptionEntity($dom, $input, $entity, $selected = null)
+    {
+
+        if($entity != null)
+        {
+            $option = $dom->createTextNode('<'.'?'.'php echo '.self::VAR.'selecOptionReference'
+            .'->showList(new '.$entity['name'].'(null, '.self::VAR.'database), (new PicoSpecification())->addAnd(new PicoPredicate("active", true)), "'.$entity['value'].'", "'.$entity['text'].'"); '.'?'.'>');
+            
+            
+            $input->appendChild($option);
         }
         return $input;
     }
