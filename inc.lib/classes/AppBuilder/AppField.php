@@ -90,6 +90,13 @@ class AppField
      * @var string
      */
     private $inputFilter;
+    
+    /**
+     * Reference
+     *
+     * @var array
+     */
+    private $reference = array();
 
     public function __construct($value)
     {
@@ -105,6 +112,7 @@ class AppField
         $this->dataType = $value['dataType'];
         $this->filterElementType = $value['filterElementType'];
         $this->inputFilter = $value['inputFilter'];
+        $this->reference = $value['reference'];
 
         /*
         Array
@@ -257,5 +265,15 @@ class AppField
     public function getInputFilter()
     {
         return $this->inputFilter;
+    }
+
+    /**
+     * Get reference
+     *
+     * @return  array
+     */ 
+    public function getReference()
+    {
+        return $this->reference;
     }
 }
