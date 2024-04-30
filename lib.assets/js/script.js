@@ -496,6 +496,7 @@ function generateSelectType(field, args)
 	'<select class="form-control input-field-data-type" name="data_type_'+field+'" id="data_type_'+field+'">\r\n'+
 		'<option value="text" title="&lt;input type=&quot;text&quot;&gt;">text</option>\r\n'+
 		'<option value="email" title="&lt;input type=&quot;email&quot;&gt;">email</option>\r\n'+
+		'<option value="url" title="&lt;input type=&quot;email&quot;&gt;">url</option>\r\n'+
 		'<option value="tel" title="&lt;input type=&quot;tel&quot;&gt;">tel</option>\r\n'+
 		'<option value="password" title="&lt;input type=&quot;password&quot;&gt;">password</option>\r\n'+
 		'<option value="int" title="&lt;input type=&quot;number&quot;&gt;">int</option>\r\n'+
@@ -636,8 +637,8 @@ function generateRow(field, args, skipedOnInsertEdit)
 	'  <td align="center"><input type="checkbox" class="include_required" name="include_required_'+field+'" value="1"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="text" checked="checked"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="textarea"></td>\r\n'+
-	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="select"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="checkbox"></td>\r\n'+
+	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="select"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="text" class="input-field-filter"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="select" class="input-field-filter"></td>\r\n'+
 	'  <td>\r\n'+

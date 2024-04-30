@@ -415,8 +415,8 @@ require_once __DIR__ . "/inc.app/navs.php";
                   <tr>
                     <td align="center" width="32" title="Input Text">TE</td>
                     <td align="center" width="32" title="Textarea">TA</td>
-                    <td align="center" width="32" title="Select">SE</td>
                     <td align="center" width="32" title="Checkbox">CB</td>
+                    <td align="center" width="32" title="Select">SE</td>
                     <td align="center" width="30">TE</td>
                     <td align="center" width="30">SE</td>
                   </tr>

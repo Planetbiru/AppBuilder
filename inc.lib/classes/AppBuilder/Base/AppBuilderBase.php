@@ -465,8 +465,11 @@ class AppBuilderBase
 
         foreach($insertFields as $field)
         {
-            $tr = $this->createInsertRow($dom, $entityName, $field, $pkName);
-            $tbody->appendChild($tr);
+            if($field->getIncludeInsert())
+            {
+                $tr = $this->createInsertRow($dom, $entityName, $field, $pkName);
+                $tbody->appendChild($tr);
+            }
         }
 
 
@@ -493,8 +496,11 @@ class AppBuilderBase
 
         $td1->appendChild($label);
 
-        $input = $this->createInsertControl($dom, $entityName, $field, $pkName);
-        $td2->appendChild($input);
+        $input = $this->createInsertControl($dom, $entityName, $field, $pkName, $field->getFieldName());
+        if($input != null)
+        {
+            $td2->appendChild($input);
+        }
 
         $tr->appendChild($td1);
         $tr->appendChild($td2);
@@ -510,13 +516,78 @@ class AppBuilderBase
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertControl($dom, $entityName, $field, $pkName)
+    private function createInsertControl($dom, $entityName, $insertField, $pkName, $id = null)
     {
-        if($field->getElementType() == ElementType::TEXT)
+        $input = $dom->createElement('input');
+        if($insertField->getElementType() == ElementType::TEXT)
         {
             $input = $dom->createElement('input');
-            $this->setInputTypeAttribute($input, $field->getDataType()); 
+            $this->setInputTypeAttribute($input, $insertField->getDataType()); 
+            $input->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $input->setAttribute('id', $id);
+            }   
         }
+        else if($insertField->getElementType() == ElementType::TEXTAREA)
+        {
+            $input = $dom->createElement('textarea');
+            $classes = array();
+            $classes[] = 'form-control';
+            $input->setAttribute('class', implode(' ', $classes));
+            $input->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $input->setAttribute('id', $id);
+            }   
+            $value = $dom->createTextNode('');
+            $input->appendChild($value);
+        }
+        else if($insertField->getElementType() == ElementType::SELECT)
+        {
+            $input = $dom->createElement('select');
+            $classes = array();
+            $classes[] = 'form-control';
+            $input->setAttribute('class', implode(' ', $classes));
+            $input->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $input->setAttribute('id', $id);
+            }   
+            $value = $dom->createElement('option');
+            $textLabel = $dom->createTextNode('- Select One -');
+            $value->appendChild($textLabel);
+            $value->setAttribute('value', '');
+            $input->appendChild($value);
+        }
+        else if($insertField->getElementType() == ElementType::CHECKBOX)
+        {
+            $input = $dom->createElement('label');
+            $inputStrl = $dom->createElement('input');
+            $classes = array();
+            $classes[] = 'form-check-input';
+            $inputStrl->setAttribute('class', implode(' ', $classes));
+            $inputStrl->setAttribute('type', 'checkbox');
+            $inputStrl->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $inputStrl->setAttribute('id', $id);
+            }   
+            $inputStrl->setAttribute('value', '1');
+            $input->appendChild($inputStrl);
+            $textLabel = $dom->createTextNode(' '.$insertField->getFieldLabel());
+            $input->appendChild($textLabel);
+
+        }
+        if($insertField->getRequired())
+        {
+            $input->setAttribute('required', 'required');
+        }
+        return $input;
     }
 
     /**
@@ -524,7 +595,7 @@ class AppBuilderBase
      *
      * @param DOMElement $input
      * @param string $dataType
-     * @return void
+     * @return DOMElement
      */
     private function setInputTypeAttribute($input, $dataType)
     {
@@ -542,6 +613,24 @@ class AppBuilderBase
         <option value="color" title="<input type=&quot;text&quot;>">color</option>
         </select>
         */
+        $classes = array();
+        $classes[] = 'form-control';
+        $input->setAttribute('class', implode(' ', $classes));
+        if($dataType == 'int' || $dataType == 'integer')
+        {
+            $input->setAttribute('type', 'number');
+        }
+        else if($dataType == 'float' || $dataType == 'double')
+        {
+            $input->setAttribute('type', 'number');
+            $input->setAttribute('step', 'any');
+        }
+        else
+        {
+            $input->setAttribute('type', $dataType);
+        }
+        
+        return $input;
     }
 
     /**

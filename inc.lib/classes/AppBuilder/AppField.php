@@ -93,16 +93,16 @@ class AppField
 
     public function __construct($value)
     {
-        error_log(print_r($value, true));
         $this->fieldName = $value['fieldName'];
         $this->fieldLabel = $value['fieldLabel'];
-        $this->includeInsert = $value['includeInsert'];
-        $this->includeEdit = $value['includeEdit'];
-        $this->includeDetail = $value['includeDetail'];
-        $this->includeList = $value['includeList'];
-        $this->key = $value['isKey'];
-        $this->required = $value['isInputRequired'];
+        $this->includeInsert = $this->isTrue($value['includeInsert']);
+        $this->includeEdit = $this->isTrue($value['includeEdit']);
+        $this->includeDetail = $this->isTrue($value['includeDetail']);
+        $this->includeList = $this->isTrue($value['includeList']);
+        $this->key = $this->isTrue($value['isKey']);
+        $this->required = $this->isTrue($value['isInputRequired']);
         $this->elementType = $value['elementType'];
+        $this->dataType = $value['dataType'];
         $this->filterElementType = $value['filterElementType'];
         $this->inputFilter = $value['inputFilter'];
 
@@ -122,10 +122,19 @@ class AppField
             [dataType] => text
             [inputFilter] => FILTER_SANITIZE_SPECIAL_CHARS
         )
-
-        
         */
 
+    }
+
+    /**
+     * Check if value is true
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    private function isTrue($value)
+    {
+        return $value == '1' || strtolower($value) == 'true' || $value === 1 || $value === true;
     }
 
 
