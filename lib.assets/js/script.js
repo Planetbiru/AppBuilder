@@ -406,7 +406,6 @@ function getSkipedCol()
 	skiped.push($('[name="entity_info_ip_create"]').val());
 	skiped.push($('[name="entity_info_ip_edit"]').val());
 	skiped.push($('[name="entity_info_ip_ask_edit"]').val());
-	console.log(skiped)
 	return skiped;
 }
 
@@ -639,8 +638,10 @@ function generateRow(field, args, skipedOnInsertEdit)
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="textarea"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="checkbox"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="select"></td>\r\n'+
+	'  <td align="center"><button type="button" class="btn btn-sm btn-primary">Entity</button></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="text" class="input-field-filter"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="select" class="input-field-filter"></td>\r\n'+
+	'  <td align="center"><button type="button" class="btn btn-sm btn-primary">Entity</button></td>\r\n'+
 	'  <td>\r\n'+
 	generateSelectType(field, args)+
 	'  </td>\r\n'+

@@ -101,3 +101,7 @@ input, select, textarea, button{
 .config-table tbody > tr:nth-child(1) > td:nth-child(1){
 	width: 200px;
 }
+
+.main-table tr td button{
+	display: none;
+}

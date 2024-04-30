@@ -407,8 +407,8 @@ require_once __DIR__ . "/inc.app/navs.php";
                     <td rowspan="2" align="center" width="32" title="List">L</td>
                     <td rowspan="2" align="center" width="32" title="Key">K</td>
                     <td rowspan="2" align="center" width="32" title="Required">R</td>
-                    <td colspan="4" align="center">Element Type</td>
-                    <td colspan="2" align="center" width="60">Search</td>
+                    <td colspan="5" align="center">Element Type</td>
+                    <td colspan="3" align="center" width="60">Search</td>
                     <td rowspan="2" align="center" width="100">Data Type</td>
                     <td rowspan="2" align="center" width="180">Filter Type</td>
                   </tr>
@@ -417,8 +417,10 @@ require_once __DIR__ . "/inc.app/navs.php";
                     <td align="center" width="32" title="Textarea">TA</td>
                     <td align="center" width="32" title="Checkbox">CB</td>
                     <td align="center" width="32" title="Select">SE</td>
+                    <td align="center" width="60" title="Select">Source</td>
                     <td align="center" width="30">TE</td>
                     <td align="center" width="30">SE</td>
+                    <td align="center" width="60" title="Select">Source</td>
                   </tr>
                 </thead>
 
