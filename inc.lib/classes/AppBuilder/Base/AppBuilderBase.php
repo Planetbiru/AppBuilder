@@ -21,6 +21,7 @@ class AppBuilderBase
     const TAB3 = "\t\t\t";
     const TAB4 = "\t\t\t\t";
     const NEW_LINE = "\r\n";
+    const NEW_LINE_R = "\n";
     const VAR = "$";
     const CALL_INSERT_END = "->insert();";
     const CALL_UPDATE_END = "->update();";
@@ -529,19 +530,22 @@ class AppBuilderBase
             $textLabel = $dom->createTextNode('- Select One -');
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
+            $newLine = $dom->createTextNode("\n\t");
+            $value->appendChild($textLabel);
             $input->appendChild($value);
             
-            /*
+            
             $input = $this->appendOptionList($dom, $input, 
             array('SEN'=>'Senin','SEL'=>'Selasa','RAB'=>'Rabu','KAM'=>'Kamis','JUM'=>'Jumat','SAB'=>'Sabtu','MIN'=>'Minggu'),
-            'JUM'
+            '$apa->getApa()'
             );
-            */
             
+            /*
             $input = $this->appendOptionEntity($dom, $input, 
             array('name'=>'Producer','value'=>'producerId','text'=>'name'),
             'JUM'
             );
+            */
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
@@ -569,7 +573,15 @@ class AppBuilderBase
         }
         return $input;
     }
-    
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $input
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
     private function appendOptionList($dom, $input, $values, $selected = null)
     {
         foreach($values as $key=>$value)
@@ -578,24 +590,26 @@ class AppBuilderBase
             $option->setAttribute('value', $key);
             $textLabel = $dom->createTextNode($value);
             $option->appendChild($textLabel);
-            if($selected != null && $selected == $key)
+            if($selected != null)
             {
-                $option->setAttribute('selected', 'selected');
+                $option->setAttribute("data-encoded-script", base64_encode($key)."____".base64_encode($selected));
             }
             $input->appendChild($option);
+            $input->setAttribute('data-encoded-script', base64_encode('<'.'?'.'php echo '.$selected.'; ?'.'>'));
         }
         return $input;
     }
     
     private function appendOptionEntity($dom, $input, $entity, $selected = null)
     {
-
         if($entity != null)
         {
-            $option = $dom->createTextNode('<'.'?'.'php echo '.self::VAR.'selecOptionReference'
-            .'->showList(new '.$entity['name'].'(null, '.self::VAR.'database), (new PicoSpecification())->addAnd(new PicoPredicate("active", true)), "'.$entity['value'].'", "'.$entity['text'].'"); '.'?'.'>');
-            
-            
+            $option = $dom->createTextNode(self::NEW_LINE_R.self::TAB3
+            .'<'.'?'.'php echo '.self::VAR.'selecOptionReference'
+            .'->showList(new '.$entity['name'].'(null, '.self::VAR.'database), '.self::NEW_LINE_R.self::TAB3
+            .'(new PicoSpecification())->addAnd(new PicoPredicate("active", true)), '.self::NEW_LINE_R.self::TAB3
+            .'(new PicoSortable())->add(new PicoSort("'.$entity['value'].'", PicoSort::ORDER_TYPE_ASC)), '.self::NEW_LINE_R.self::TAB3
+            .'"'.$entity['value'].'", "'.$entity['text'].'"); '.'?'.'>');
             $input->appendChild($option);
         }
         return $input;
@@ -640,7 +654,6 @@ class AppBuilderBase
         {
             $input->setAttribute('type', $dataType);
         }
-        
         return $input;
     }
 

@@ -2,13 +2,15 @@
 
 use MagicObject\MagicObject;
 use MagicObject\SetterGetter;
+use MagicObject\Database\PicoPredicate;
+use MagicObject\Database\PicoSort;
+use MagicObject\Database\PicoSortable;
+use MagicObject\Database\PicoSpecification;
 use MagicObject\Request\PicoFilterConstant;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
-use MagicObject\Database\PicoPredicate;
-use MagicObject\Database\PicoSpecification;
 use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
@@ -276,7 +278,16 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Producer</td>
         <td>
-          <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option><?php echo $selecOptionReference->showList(new Producer(null, $database), (new PicoSpecification())->addAnd(new PicoPredicate("active", true)), "producerId", "name"); ?></select>
+          <select class="form-control" name="producer_id" id="producer_id" data-encoded-script="PD9waHAgZWNobyAkYXBhLT5nZXRBcGEoKTsgPz4=">
+            <option value="">- Select One -</option>
+            <option value="SEN" data-encoded-script="U0VO____JGFwYS0+Z2V0QXBhKCk=">Senin</option>
+            <option value="SEL" data-encoded-script="U0VM____JGFwYS0+Z2V0QXBhKCk=">Selasa</option>
+            <option value="RAB" data-encoded-script="UkFC____JGFwYS0+Z2V0QXBhKCk=">Rabu</option>
+            <option value="KAM" data-encoded-script="S0FN____JGFwYS0+Z2V0QXBhKCk=">Kamis</option>
+            <option value="JUM" data-encoded-script="SlVN____JGFwYS0+Z2V0QXBhKCk=">Jumat</option>
+            <option value="SAB" data-encoded-script="U0FC____JGFwYS0+Z2V0QXBhKCk=">Sabtu</option>
+            <option value="MIN" data-encoded-script="TUlO____JGFwYS0+Z2V0QXBhKCk=">Minggu</option>
+          </select>
         </td>
       </tr>
       <tr>

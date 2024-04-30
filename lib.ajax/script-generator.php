@@ -45,6 +45,10 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     $uses = array();
     $uses[] = "use MagicObject\\MagicObject;";
     $uses[] = "use MagicObject\\SetterGetter;";
+    $uses[] = "use MagicObject\\Database\\PicoPredicate;";
+    $uses[] = "use MagicObject\\Database\\PicoSort;";
+    $uses[] = "use MagicObject\\Database\\PicoSortable;";
+    $uses[] = "use MagicObject\\Database\\PicoSpecification;";
     $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
     $uses[] = "use MagicObject\\Request\\InputGet;";
     $uses[] = "use MagicObject\\Request\\InputPost;";
