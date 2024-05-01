@@ -205,11 +205,44 @@ $(document).ready(function(){
 		{
 			let parentObj = $(this).closest('tr'); 
 			parentObj.find('.input-field-filter[value!="'+value+'"]')[0].checked = false;
+			prepareReferenceFilter(value, $(this));
 		}
+	});
+
+	$(document).on('change', '.input-element-type', function(){
+		let checkedValue = $(this).attr('value');
+		prepareReferenceData(checkedValue, $(this));
 	});
 
 	loadTable();
 });
+
+function prepareReferenceData(checkedValue, ctrl)
+{
+	let tr = ctrl.closest('tr');
+
+	if(checkedValue == 'select')
+	{
+		tr.find('.reference-button-data').css('display', 'inline');
+	}
+	else
+	{
+		tr.find('.reference-button-data').css('display', 'none');
+	}
+}
+function prepareReferenceFilter(checkedValue, ctrl)
+{
+	let tr = ctrl.closest('tr');
+
+	if(checkedValue == 'select')
+	{
+		tr.find('.reference-button-filter').css('display', 'inline');
+	}
+	else
+	{
+		tr.find('.reference-button-filter').css('display', 'none');
+	}
+}
 
 function switchApplication(currentApplication)
 {
@@ -638,10 +671,10 @@ function generateRow(field, args, skipedOnInsertEdit)
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="textarea"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="checkbox"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="select"></td>\r\n'+
-	'  <td align="center"><button type="button" class="btn btn-sm btn-primary">Source</button></td>\r\n'+
+	'  <td align="center"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-data">Source</button></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="text" class="input-field-filter"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="select" class="input-field-filter"></td>\r\n'+
-	'  <td align="center"><button type="button" class="btn btn-sm btn-primary">Source</button></td>\r\n'+
+	'  <td align="center"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-filter">Source</button></td>\r\n'+
 	'  <td>\r\n'+
 	generateSelectType(field, args)+
 	'  </td>\r\n'+
