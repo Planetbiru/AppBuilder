@@ -417,10 +417,10 @@ require_once __DIR__ . "/inc.app/navs.php";
                     <td align="center" width="32" title="Textarea">TA</td>
                     <td align="center" width="32" title="Checkbox">CB</td>
                     <td align="center" width="32" title="Select">SE</td>
-                    <td align="center" width="60" title="Select">Source</td>
+                    <td align="center" width="82" title="Select">Source</td>
                     <td align="center" width="30">TE</td>
                     <td align="center" width="30">SE</td>
-                    <td align="center" width="60" title="Select">Source</td>
+                    <td align="center" width="82" title="Select">Source</td>
                   </tr>
                 </thead>
 
