@@ -590,14 +590,10 @@ class AppBuilderBase
     {
         $reference = $insertField->getReference();
         $upperPkName = PicoStringUtil::upperCamelize($insertField->getFieldName());
-
         if($reference->getType() == 'map')
         {
             $map = $reference->getMap();
-            $input = $this->appendOptionList($dom, $input, $objectName, 
-            $map,
-            self::VAR.$objectName.'->get'.$upperPkName.'()'
-            );
+            $input = $this->appendOptionList($dom, $input, $objectName, $map, self::VAR.$objectName.'->get'.$upperPkName.'()');
         }
         else if($reference->getType() == 'entity')
         {
@@ -606,10 +602,7 @@ class AppBuilderBase
             $sortable = $reference->getSortable();
             if(isset($entity) && $entity->getName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
             {
-                $input = $this->appendOptionEntity($dom, $input, 
-                $map, $specification, $sortable, 
-                self::VAR.$objectName.'->get'.$upperPkName.'()'
-                );
+                $input = $this->appendOptionEntity($dom, $input, $map, $specification, $sortable, self::VAR.$objectName.'->get'.$upperPkName.'()');
             }
         }
         return $input;
@@ -661,7 +654,7 @@ class AppBuilderBase
             $paramSelected = ($selected != null) ? ", $selected": "";
             
             $specStr = $this->buildSpecification($specification);
-            $sortStr = $this->buildSortable($specification);
+            $sortStr = $this->buildSortable($sortable);
             
             
             $option = $dom->createTextNode(self::NEW_LINE_R.self::TAB3
@@ -692,10 +685,10 @@ class AppBuilderBase
     {
         $specs = array();
         $specs[] = '(new PicoSortable())';
-        foreach($sortable as $spc)
+        foreach($sortable as $srt)
         {
-            $field = PicoStringUtil::upperCamelize($spc->getSortBy());
-            $type = $spc->getSortType();
+            $field = PicoStringUtil::upperCamelize($srt->getSortBy());
+            $type = $srt->getSortType();
             $specs[]  = "->add(new PicoSort(\"$field\", $type))";
         }
         return implode("", $specs);
@@ -753,29 +746,27 @@ class AppBuilderBase
     {
         $table = $this->createElementTableResponsive($dom);
         
-        
-        $tbody2 = $dom->createElement('tbody');
+        $tbody = $dom->createElement('tbody');
         
         $tr2 = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
         
         $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
-        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModuleUrl');
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'selfPath');
         
         $space = $dom->createTextNode(" ");
         
         $td2->appendChild($btn1);
         $td2->appendChild($space);
         $td2->appendChild($btn2);
-        
-        
+              
         $tr2->appendChild($td1);
         $tr2->appendChild($td2);
         
-        $tbody2->appendChild($tr2);
+        $tbody->appendChild($tr2);
         
-        $table->appendChild($tbody2);
+        $table->appendChild($tbody);
 
         return $table;
     }
@@ -790,8 +781,7 @@ class AppBuilderBase
             {
                 $xml = substr($xml, $end+2);
             }
-        }
-        
+        }      
         do
         {
             $search = 'data-app-builder-encoded-script="';
@@ -802,12 +792,9 @@ class AppBuilderBase
                 $stringFound = substr($xml, $startPos, 1+$endPos-$startPos);
                 $successor = $this->decodeString($stringFound);
                 $xml = str_replace($stringFound, $successor, $xml);
-                $replaced = true;
             }
         }
         while($startPos !== false);
-        
-        
         return $xml;
     }
     
