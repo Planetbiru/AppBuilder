@@ -6,6 +6,7 @@ use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
 use AppBuilder\AppSection;
 use AppBuilder\Base\AppBuilderBase;
+use MagicObject\MagicObject;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 
@@ -13,6 +14,9 @@ require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
+
+$inputPost = new MagicObject(json_decode(file_get_contents("input.json")));
+echo $inputPost;
 if($inputPost->issetFields() && $inputPost->countableFields())
 {
     $insertFields = array();
