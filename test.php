@@ -340,7 +340,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
     <tbody>
       <tr>
         <td></td>
-        <td><input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave();  ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel();  ?>" onclick="window.location='<?php  echo $currentModuleUrl; ?>';"/></td>
+        <td><input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave();  ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel();  ?>" onclick="window.location='<?php  echo $selfPath; ?>';"/></td>
       </tr>
     </tbody>
   </table>
