@@ -208,10 +208,15 @@ $(document).ready(function(){
 		}
 	});
 
-	$(document).on('change', '.input-element-type', function(){
+	$(document).on('change', '.input-element-type', function(e2){
 		let checkedValue = $(this).attr('value');
 		prepareReferenceData(checkedValue, $(this));
 	});
+
+	$(document).on('click', '.reference-button-data', function(e2){
+		let parentObj = $(this).closest('td'); 
+		$('#modal-create-reference-data').modal('show');
+	})
 
 	loadTable();
 });
@@ -284,8 +289,8 @@ function generateScript(selector)
 		fields.push(field);
 	});
 
-	let requireApproval = $('#with_approval')[0].checked;
-	let withTrash = $('#with_trash')[0].checked;
+	let requireApproval = $('#with_approval')[0].checked && true;
+	let withTrash = $('#with_trash')[0].checked && true;
 	let entity = {
 		mainEntity:{
 			entityName: $('[name="entity_master_name"]').val(),

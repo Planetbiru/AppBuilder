@@ -50,7 +50,6 @@ if($request->issetFields())
     $entityTrash = new MagicObject();
 
     $entityMainName = $entityMain->getEntityName();
-    
     $approvalRequired = AppBuilderBase::isTrue($entity->getApprovalRequired());
     $trashRequired = AppBuilderBase::isTrue($entity->getTrashRequired());
     

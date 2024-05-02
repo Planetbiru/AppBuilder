@@ -505,7 +505,7 @@ require_once __DIR__ . "/inc.app/navs.php";
   </div>
 
 
-  <div class="modal fade" id="modal-create-application" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modal-create-application" tabindex="-1" aria-labelledby="application_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -544,6 +544,65 @@ require_once __DIR__ . "/inc.app/navs.php";
                 </tr>
               </tbody>
             </table>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal-create-reference-data" tabindex="-1" aria-labelledby="reference_data_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Data Reference</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <label for="ref-entity"><input type="radio" id="ref-entity"> Entity</label>
+            <div class="entity-section">
+              <h4>Entity</h4>
+              <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td>Entity Name</td>
+                    <td><input class="form-control" type="text" class="rd-entity-name"></td>
+                  </tr>
+                  <tr>
+                    <td>Table Name</td>
+                    <td><input class="form-control" type="text" class="rd-table-name"></td>
+                  </tr>
+                  <tr>
+                    <td>Primary Key</td>
+                    <td><input class="form-control" type="text" class="rd-primary-key"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <h4>Specfification</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td>Column</td>
+                    <td>Value</td>
+                  </tr>
+                </thead>
+              </table>
+              <h4>Sortable</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td>Sort By</td>
+                    <td>Sort Type</td>
+                  </tr>
+                </thead>
+              </table>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
