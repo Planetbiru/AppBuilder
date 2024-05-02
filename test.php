@@ -248,7 +248,6 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 if($inputGet->getUserAction() == UserAction::INSERT)
 {
 ?>
-
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tbody>
@@ -344,8 +343,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       </tr>
     </tbody>
   </table>
-</form>
-<?php 
+</form><?php 
 }
 
 
