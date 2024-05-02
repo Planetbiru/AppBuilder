@@ -1130,7 +1130,7 @@ class AppBuilderBase
         $entityName = $entity->getentityName();
         $tableName = $entity->getTableName();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateMainEntity();
+        $generator->generateCustomEntity();
     }
     
     /**
@@ -1149,7 +1149,7 @@ class AppBuilderBase
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateApprovalEntity();
+        $generator->generateCustomEntity();
     }
     
     /**
@@ -1168,7 +1168,7 @@ class AppBuilderBase
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateTrashEntity();
+        $generator->generateCustomEntity();
     }
     
 }
