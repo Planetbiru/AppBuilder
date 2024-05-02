@@ -2,6 +2,7 @@
 
 namespace AppBuilder;
 
+use MagicObject\MagicObject;
 use MagicObject\Util\PicoGenericObject;
 
 class AppField
@@ -94,7 +95,7 @@ class AppField
     /**
      * Reference
      *
-     * @var array
+     * @var MagicObject
      */
     private $reference = array();
 

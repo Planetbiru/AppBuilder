@@ -16,7 +16,7 @@ use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
 
-require_once __DIR__ . "auth.php";
+require_once __DIR__ . "/inc.app/auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
@@ -80,7 +80,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
 
-	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
+	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(3)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -247,7 +247,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 }
 if($inputGet->getUserAction() == UserAction::INSERT)
 {
- ?>
+?>
 
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -279,9 +279,11 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Producer</td>
         <td>
-          <select class="form-control" name="producer_id" id="producer_id">
-            <option value="">- Select One -</option>
-          </select>
+          <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option>
+			<?php echo $selecOptionReference->showList(new Producer(null, $database), 
+			(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3)), 
+			(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
+			"producer_id", "name"); ?></select>
         </td>
       </tr>
       <tr>
@@ -338,7 +340,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
     <tbody>
       <tr>
         <td></td>
-        <td><input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave();  ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel();  ?>" onclick="window.location='<?php echo $selfPath; ?>';"/></td>
+        <td><input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
       </tr>
     </tbody>
   </table>

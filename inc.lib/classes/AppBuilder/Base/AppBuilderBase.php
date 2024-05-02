@@ -31,7 +31,7 @@ class AppBuilderBase
     const CALL_SET = "->set";
     
     const PHP_OPEN_TAG = '<'.'?'.'php ';
-    const PHP_CLOSE_TAG = ' ?'.'>';
+    const PHP_CLOSE_TAG = '?'.'>';
     
     const STYLE_NATIVE = 'native';
     const STYLE_SETTER_GETTER = 'setter-getter';
@@ -387,10 +387,11 @@ class AppBuilderBase
      *
      * @param AppField[] $appFields
      * @param MagicObject $mainEntity
-     * @param string $entityApprovalName
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiInsert($mainEntity, $insertFields, $entityApprovalName)
+    public function createGuiInsert($mainEntity, $insertFields, $approvalRequired, $approvalEntity)
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
@@ -400,7 +401,7 @@ class AppBuilderBase
         
         $form = $this->createElementForm($dom);
         
-        $table1 = $this->createInsertFormTable($dom, $entityName, $objectName, $insertFields, $pkName);
+        $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
 
         $table2 = $this->createButtonContainerTable($dom);
@@ -428,13 +429,13 @@ class AppBuilderBase
      * Create insert form table
      *
      * @param DOMDocument $dom
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $insertFields
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertFormTable($dom, $entityName, $objectName, $insertFields, $pkName)
+    private function createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
     {
         $table = $this->createElementTableResponsive($dom);
 
@@ -444,7 +445,7 @@ class AppBuilderBase
         {
             if($field->getIncludeInsert())
             {
-                $tr = $this->createInsertRow($dom, $entityName, $objectName, $field, $pkName);
+                $tr = $this->createInsertRow($dom, $mainEntity, $objectName, $field, $pkName);
                 $tbody->appendChild($tr);
             }
         }
@@ -458,13 +459,13 @@ class AppBuilderBase
      * Create insert form table
      *
      * @param DOMDocument $dom
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertRow($dom, $entityName, $objectName, $field, $pkName)
+    private function createInsertRow($dom, $mainEntity, $objectName, $field, $pkName)
     {
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
@@ -474,7 +475,7 @@ class AppBuilderBase
 
         $td1->appendChild($label);
 
-        $input = $this->createInsertControl($dom, $entityName, $objectName, $field, $pkName, $field->getFieldName());
+        $input = $this->createInsertControl($dom, $mainEntity, $objectName, $field, $pkName, $field->getFieldName());
         if($input != null)
         {
             $td2->appendChild($input);
@@ -489,14 +490,16 @@ class AppBuilderBase
      * Create insert form table
      *
      * @param DOMDocument $dom
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
      * @param string $pkName
      * @return DOMElement
      */
-    private function createInsertControl($dom, $entityName, $objectName, $insertField, $pkName, $id = null)
+    private function createInsertControl($dom, $mainEntity, $objectName, $insertField, $pkName, $id = null)
     {
+        $upperPkName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
+        $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
         $input = $dom->createElement('input');
         if($insertField->getElementType() == ElementType::TEXT)
         {
@@ -542,15 +545,9 @@ class AppBuilderBase
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-            
-            
+
+            //$input = $this->appendOption($dom, $input, $objectName, $insertField, self::VAR.$objectName.'->get'.$upperFieldName.'()');
             $input = $this->appendOption($dom, $input, $objectName, $insertField);
-            
-            
-            
-            
-            
-            
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
@@ -579,7 +576,7 @@ class AppBuilderBase
         return $input;
     }
     
-    private function appendOption($dom, $input, $objectName, $insertField)
+    private function appendOption($dom, $input, $objectName, $insertField, $selected = null)
     {
         $reference = $insertField->getReference();
         if($reference != null)
@@ -588,46 +585,51 @@ class AppBuilderBase
             if($reference->getType() == 'map')
             {
                 $map = $reference->getMap();
-                $input = $this->appendOptionList($dom, $input, $objectName, $map, self::VAR.$objectName.'->get'.$upperPkName.'()');
+                $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
             else if($reference->getType() == 'entity')
             {
-                $map = $reference->getMap();
-                $specification = $reference->getSpecfication();
+                
+                $entity = $reference->getEntity();
+                $specification = $reference->getSpecification();
                 $sortable = $reference->getSortable();
-                if(isset($entity) && $entity->getName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
+                if(isset($entity) && $entity->getEntityName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
                 {
-                    $input = $this->appendOptionEntity($dom, $input, $map, $specification, $sortable, self::VAR.$objectName.'->get'.$upperPkName.'()');
+                    $input = $this->appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected);
                 }
             }
         }
         return $input;
-        
     }
     /**
      * Create insert form table
      *
      * @param DOMDocument $dom
      * @param DOMElement $input
-     * @param string $objectName
-     * @param AppField $insertField
-     * @param string $pkName
+     * @param MagicObject $map
+     * @param string $selected
      * @return DOMElement
      */
-    private function appendOptionList($dom, $input, $objectName, $values, $selected = null)
+    private function appendOptionList($dom, $input, $map, $selected = null)
     {
-        foreach($values as $key=>$value)
-        {       
+        foreach($map as $opt)
+        {
+            $value = $opt->getValue();
+            $caption = $opt->getLabel();
             $option = $dom->createElement('option');
-            $option->setAttribute('value', $key);
-            $textLabel = $dom->createTextNode($value);
+            $option->setAttribute('value', $value);
+            $textLabel = $dom->createTextNode($caption);
             $option->appendChild($textLabel);
             if($selected != null)
             {
-                $option->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo AttrUtil::selected('.$selected.', '."'".$key."'".');'.self::PHP_CLOSE_TAG));
+                $input->setAttribute('data-app-builder-encoded-script', base64_encode('data-value="'.self::PHP_OPEN_TAG.'echo '.$selected.';'.self::PHP_CLOSE_TAG.'"'));
+                $option->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo AttrUtil::selected('.$selected.', '."'".$value."'".');'.self::PHP_CLOSE_TAG));
+            }
+            else if($opt->isSelected())
+            {
+                $option->setAttribute('selected', 'selected');
             }
             $input->appendChild($option);
-            $input->setAttribute('data-app-builder-encoded-script', base64_encode('data-value="'.self::PHP_OPEN_TAG.'echo '.$selected.';'.self::PHP_CLOSE_TAG.'"'));
         }
         return $input;
     }
@@ -643,22 +645,21 @@ class AppBuilderBase
      * @param string $selected
      * @return DOMElement
      */
-    private function appendOptionEntity($dom, $input, $map, $specification, $sortable, $selected = null)
+    private function appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected = null)
     {
-        if($map != null)
+        if($entity != null)
         {
             $paramSelected = ($selected != null) ? ", $selected": "";
             
             $specStr = $this->buildSpecification($specification);
             $sortStr = $this->buildSortable($sortable);
             
-            
             $option = $dom->createTextNode(self::NEW_LINE_R.self::TAB3
             .'<'.'?'.'php echo '.self::VAR.'selecOptionReference'
-            .'->showList(new '.$map->getEntity().'(null, '.self::VAR.'database), '.self::NEW_LINE_R.self::TAB3
+            .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.'database), '.self::NEW_LINE_R.self::TAB3
             .$specStr.', '.self::NEW_LINE_R.self::TAB3
             .$sortStr.', '.self::NEW_LINE_R.self::TAB3
-            .'"'.$map->getPrimaryKey().'", "'.$map->getValue().'"'.$paramSelected.'); '.'?'.'>');
+            .'"'.$entity->getPrimaryKey().'", "'.$entity->getValue().'"'.$paramSelected.'); '.'?'.'>');
             $input->appendChild($option);
         }
         return $input;
@@ -668,11 +669,17 @@ class AppBuilderBase
     {
         $specs = array();
         $specs[] = '(new PicoSpecification())';
-        foreach($specification as $spc)
+        if($specification != null && is_array($specification))
         {
-            $field = PicoStringUtil::upperCamelize($spc->getPrimaryKey());
-            $value = $spc->getValue();
-            $specs[]  = '->addAnd(new PicoPredicate("'.$field.", $value))";
+            foreach($specification as $spc)
+            {
+                if($spc->getColumn() != null && $spc->getValue() != null)
+                {
+                    $field = PicoStringUtil::camelize($spc->getColumn());
+                    $value = $spc->getValue();
+                    $specs[]  = '->addAnd(new PicoPredicate("'.$field.'"'.", $value))";
+                }
+            }
         }
         return implode("", $specs);
     }
@@ -681,13 +688,31 @@ class AppBuilderBase
     {
         $specs = array();
         $specs[] = '(new PicoSortable())';
-        foreach($sortable as $srt)
+        if($sortable != null && is_array($sortable))
         {
-            $field = PicoStringUtil::upperCamelize($srt->getSortBy());
-            $type = $srt->getSortType();
-            $specs[]  = "->add(new PicoSort(\"$field\", $type))";
+            foreach($sortable as $srt)
+            {
+                if($srt->getSortBy() != null && $srt->getSortType() != null)
+                {
+                    $field = PicoStringUtil::camelize($srt->getSortBy());
+                    $type = $this->getSortType($srt->getSortType());
+                    $specs[]  = "->add(new PicoSort(\"$field\", $type))";
+                }
+            }
         }
         return implode("", $specs);
+    }
+    
+    public function getSortType($sortType)
+    {
+        if(stripos($sortType, 'PicoSort::') !== false)
+        {
+            return $sortType;
+        }
+        else
+        {
+            return '"'.$sortType.'"';
+        }
     }
 
     /**

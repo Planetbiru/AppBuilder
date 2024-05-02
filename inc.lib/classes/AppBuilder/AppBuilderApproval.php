@@ -11,16 +11,19 @@ class AppBuilderApproval extends AppBuilderBase
     /**
      * Create INSERT section without approval and trash
      *
-     * @param AppField[] $appFields
      * @param MagicObject $mainEntity
-     * @param string $pkeyName
-     * @param string $entityApprovalName
+     * @param AppField[] $appFields
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createInsertApprovalSection($mainEntity, $appFields, $entityApprovalName)
+    public function createInsertApprovalSection($mainEntity, $appFields, $approvalRequired, $approvalEntity)
     {
         $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
+        
+        $entityApprovalName = $approvalEntity->getEntityName();
+        
         $objectApprovalName = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         $upperDraft = PicoStringUtil::upperCamelize($this->entityInfo->getDraft());
@@ -75,14 +78,20 @@ class AppBuilderApproval extends AppBuilderBase
     /**
      * Create UPDATE section without approval and trash
      *
-     * @param AppField[] $appFields
      * @param MagicObject $mainEntity
+     * @param AppField[] $appFields
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createUpdateApprovalSection($mainEntity, $appFields, $entityApprovalName, $pkeyApprovalName)
+    public function createUpdateApprovalSection($mainEntity, $appFields, $approvalRequired, $approvalEntity)    
     {
+        //print_r($approvalEntity);
         $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
+        $entityApprovalName = $approvalEntity->getEntityName();
+        $pkeyApprovalName = $approvalEntity->getPrimaryKey();
+
         $objectApprovalName = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         $lines = array();
@@ -262,13 +271,21 @@ class AppBuilderApproval extends AppBuilderBase
      * Undocumented function
      *
      * @param MagicObject $mainEntity
-     * @param array $editFields
+     * @param AppField[] $editFields
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
+     * @param boolean $trashRequired
+     * @param MagicObject $trashEntity
      * @return string
      */
-    public function createApprovalSection($mainEntity, $editFields, $entityApprovalName, $entityTrashName)
+    public function createApprovalSection($mainEntity, $editFields, $approvalRequired, $approvalEntity, $trashRequired, $trashEntity)
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
+        
+        $entityApprovalName = $approvalEntity->getEntityName();
+        $entityTrashName = $trashEntity->getEntityName();
+        
         $camelPkName = PicoStringUtil::camelize($pkName);
         $toBeCopied = array();
         foreach(array_keys($editFields) as $val)
@@ -388,12 +405,14 @@ class AppBuilderApproval extends AppBuilderBase
      * Undocumented function
      *
      * @param MagicObject $mainEntity
-     * @param string $entityApprovalName
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createRejectionSection($mainEntity, $entityApprovalName)
+    public function createRejectionSection($mainEntity, $approvalRequired, $approvalEntity)
     {
         $entityName = $mainEntity->getEntityName();
+        $entityApprovalName = $approvalEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
         $entityInfoName = "entityInfo";
         $entityApvInfoName = "entityApvInfo";

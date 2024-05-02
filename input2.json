@@ -102,17 +102,23 @@
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS",
             "reference": {
-                "type": "map",
-                "map": [
+                "type": "entity",
+                "entity": {
+                    "entityName": "Producer",
+                    "tableName": "producer",
+                    "primaryKey": "producer_id",
+                    "value": "name"
+                },
+                "specification": [
                     {
-                        "value": "P1",
-                        "label": "Producer 1",
-                        "selected": false
-                    },
+                        "column": "number_of_song",
+                        "value": 3
+                    }
+                ],
+                "sortable": [
                     {
-                        "value": "P2",
-                        "label": "Producer 2",
-                        "selected": true
+                        "sortBy": "time_create",
+                        "sortType": "ASC"
                     }
                 ]
             }

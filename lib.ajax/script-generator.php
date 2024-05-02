@@ -17,7 +17,7 @@ require_once dirname(__DIR__) . "/inc.app/app.php";
 $inputGet = new InputGet();
 //$request = new InputPost(true);
 
-$request = PicoObjectParser::parseJsonRecursive(json_decode(file_get_contents("input.json")));
+$request = PicoObjectParser::parseJsonRecursive(json_decode(file_get_contents("input2.json")));
 //echo $request;
 //error_log(print_r($request, true));
 
@@ -37,11 +37,18 @@ if($request->issetFields())
             $editFields[$field->getFieldName()] = $field;
         }
     }
-    $entityMain = $request->getEntity()->getMain();
+    
+    $entity = $request->getEntity();
+    
+    $entityMain = $entity->getMainEntity();
+    
+    $entityApproval = new MagicObject();
+    $entityTrash = new MagicObject();
 
-    $entityMainName = $request->getEntity()->getMain()->getEntityName();
-    $requireApproval = $request->getRequireApproval();
-    $entityApprovalName = $request->getEntityApproval();
+    $entityMainName = $entityMain->getEntityName();
+    
+    $approvalRequired = $entity->getApprovalRequired();
+    $trashRequired = $entity->getTrashRequired();
     
     $activationKey = $entityInfo->getActive();
     $pkName = $request->getPrimaryKeyName();
@@ -65,9 +72,21 @@ if($request->issetFields())
     $uses[] = "use AppBuilder\\PicoApproval;";
     $uses[] = "use AppBuilder\\UserAction;";
     $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
-    $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityTrashName;";
-
+    
+    if($approvalRequired)
+    {
+        $entityApproval = $entity->getApprovalEntity();
+        $entityApprovalName = $entityApproval->getEntityName();
+        $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
+    }
+    
+    if($trashRequired)
+    {
+        $entityTrash = $entity->getTrashEntity();
+        $entityTrashName = $entityTrash->getEntityName();
+        $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityTrashName;";
+    }
+    
     $uses[] = "";
     
     $includes = array();
@@ -95,21 +114,21 @@ if($request->issetFields())
     ));
 
     // prepare CRUD section begin
-    if($requireApproval == 1)
+    if($approvalRequired == 1)
     {
         $appBuilderApv = new AppBuilderApproval($appConfig, $entityInfo, $entityApvInfo);
 
         // CRUD
-        $createSection = $appBuilderApv->createInsertApprovalSection($entityMain, $insertFields, $entityApprovalName);
-        $updateSection = $appBuilderApv->createUpdateApprovalSection($entityMain, $editFields, $entityApprovalName, $pkApprovalName);
+        $createSection = $appBuilderApv->createInsertApprovalSection($entityMain, $insertFields, $approvalRequired, $entityApproval);
+        $updateSection = $appBuilderApv->createUpdateApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval);
         $activationSection = $appBuilderApv->createActivationApprovalSection($entityMain);
         $deactivationSection = $appBuilderApv->createDeactivationApprovalSection($entityMain);     
         $deleteSection = $appBuilderApv->createDeleteApprovalSection($entityMain);
-        $approvalSection = $appBuilderApv->createApprovalSection($entityMain, $editFields, $entityApprovalName, $entityTrashName);
-        $rejectionSection = $appBuilderApv->createRejectionSection($entityMain, $entityApprovalName);  
+        $approvalSection = $appBuilderApv->createApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval, $trashRequired, $entityTrash);
+        $rejectionSection = $appBuilderApv->createRejectionSection($entityMain, $approvalRequired, $entityApproval);  
         
         // GUI
-        $guiInsert = $appBuilderApv->createGuiInsert($entityMain, $insertFields, $entityApprovalName); 
+        $guiInsert = $appBuilderApv->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
     }
     else
     {
@@ -123,7 +142,7 @@ if($request->issetFields())
         
         if($withStrash == 1)
         {
-            $deleteSection = $appBuilder->createDeleteSection($entityMain, true, $entityTrashName);
+            $deleteSection = $appBuilder->createDeleteSection($entityMain, true, $entityTrash);
         }
         else
         {

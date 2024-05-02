@@ -40,6 +40,7 @@ entity_info:
   ip_create: ip_create
   ip_edit: ip_edit
   ip_ask_edit: ip_ask_edit
+  sort_order: sort_order
   approval_id: approval_id
   approval_note: approval_note
   sort_order: sort_order
