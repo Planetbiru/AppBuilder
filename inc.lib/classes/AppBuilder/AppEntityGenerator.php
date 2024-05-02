@@ -14,7 +14,7 @@ class AppEntityGenerator extends PicoEntityGenerator
      *
      * @return string
      */
-    public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null)
+    public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false)
     {
         $typeMap = $this->getTypeMap();
         $picoTableName = $this->tableName;
@@ -46,7 +46,7 @@ class AppEntityGenerator extends PicoEntityGenerator
         
         if($predecessorField != null || $successorField != null)
         {
-            $rows = $this->updateField($rows, $predecessorField, $successorField);
+            $rows = $this->updateField($rows, $predecessorField, $successorField, $removePk);
         }
 
         $attrs = array();
@@ -109,9 +109,8 @@ class '.$className.' extends MagicObject
      * @param array $successor
      * @return array
      */
-    private function updateField($rows, $predecessor = null, $successor = null)
+    private function updateField($rows, $predecessor = null, $successor = null, $removePk = false)
     {
-        print_r($rows);
         $tmp = array();
         if($predecessor && is_array($predecessor))
         {
@@ -122,8 +121,11 @@ class '.$className.' extends MagicObject
         }
         foreach($rows as $row)
         {
-            $row['Key'] = "";
-            $row['Extra'] = "";
+            if($removePk)
+            {
+                $row['Key'] = "";
+                $row['Extra'] = "";
+            }
             $tmp[] = $row;
         }
         if($successor && is_array($successor))
@@ -133,7 +135,6 @@ class '.$className.' extends MagicObject
                 $tmp[] = $row;
             }
         }
-        
         return $tmp;
     }
 }
