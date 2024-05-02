@@ -418,6 +418,7 @@ class AppBuilderBase
         $html = $this->xmlToHtml($xml);
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
+        $html = trim($html, "\r\n");
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
         ."{\r\n"
