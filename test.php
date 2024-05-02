@@ -17,7 +17,7 @@ use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
 use YourApplication\Data\Entity\Producer;
 
-require_once __DIR__ . "/inc.app/auth.php";
+require_once __DIR__ . "auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
@@ -280,7 +280,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
         <td>Producer</td>
         <td>
           <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option>
-			<?php echo $selecOptionReference->showList(new Producer(null, $database), 
+			<?php echo $selecOptionReference->showList(new Producer(null, $), 
 			(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3)), 
 			(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
 			"producer_id", "name"); ?></select>
@@ -381,7 +381,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
         <td>Producer</td>
         <td>
           <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option>
-			<?php echo $selecOptionReference->showList(new Producer(null, $database), 
+			<?php echo $selecOptionReference->showList(new Producer(null, $), 
 			(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3)), 
 			(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
 			"producer_id", "name", $album->getProducerId()); ?></select>

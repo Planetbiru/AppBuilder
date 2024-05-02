@@ -1118,17 +1118,18 @@ class AppBuilderBase
      * Create main entity function
      *
      * @param PicoDatabase $database
-     * @param MagicObject $builderConfig
-     * @param MagicObject $appConf
+     * @param SecretObject $builderConfig
+     * @param SecretObject $appConf
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
-     * @return boolean
+     * @return void
      */
     public static function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
+        echo "$baseDir\r\n";
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
         $generator->generateCustomEntity();
@@ -1138,12 +1139,12 @@ class AppBuilderBase
      * Create approval entity function
      *
      * @param PicoDatabase $database
-     * @param MagicObject $builderConfig
-     * @param MagicObject $appConf
+     * @param SecretObject $builderConfig
+     * @param SecretObject $appConf
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityApproval
-     * @return boolean
+     * @return void
      */
     public static function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval)
     {
@@ -1159,12 +1160,12 @@ class AppBuilderBase
      * Create trash entity function
      *
      * @param PicoDatabase $database
-     * @param MagicObject $builderConfig
-     * @param MagicObject $appConf
+     * @param SecretObject $builderConfig
+     * @param SecretObject $appConf
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityTrash
-     * @return boolean
+     * @return void
      */
     public static function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash)
     {
