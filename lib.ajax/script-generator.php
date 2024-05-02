@@ -25,6 +25,7 @@ if($request->issetFields())
 {
     $insertFields = array();
     $editFields = array();
+    $referenceEntity = array();
     foreach($request->getFields() as $index=>$value)
     {
         $field = new AppField($value);
@@ -35,6 +36,13 @@ if($request->issetFields())
         if($value->getIncludeEdit())
         {
             $editFields[$field->getFieldName()] = $field;
+        }
+        if($value->getReference() != null 
+        && $value->getReference()->getType() == 'entity' 
+        && $value->getReference()->getEntity() != null 
+        && $value->getReference()->getEntity()->getEntityName() != null)
+        {
+            $referenceEntity[] = $value->getReference()->getEntity()->getEntityName();
         }
     }
     
@@ -80,11 +88,18 @@ if($request->issetFields())
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
     }
     
+    
+    
+    
     if($trashRequired)
     {
         $entityTrash = $entity->getTrashEntity();
         $entityTrashName = $entityTrash->getEntityName();
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityTrashName;";
+    }
+    foreach($referenceEntity as $ref)
+    {
+        $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$ref;";
     }
     
     $uses[] = "";
@@ -129,6 +144,7 @@ if($request->issetFields())
         
         // GUI
         $guiInsert = $appBuilderApv->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
+        $guiUpdate = $appBuilderApv->createGuiUpdate($entityMain, $insertFields, $approvalRequired, $entityApproval); 
     }
     else
     {
@@ -168,6 +184,7 @@ if($request->issetFields())
         
     $guiSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
     ->add($guiInsert)
+    ->add($guiUpdate)
     ;
 
     $merged = (new AppSection(AppSection::SEPARATOR_NEW_LINE))

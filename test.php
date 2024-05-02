@@ -15,6 +15,7 @@ use AppBuilder\UserAction;
 use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
+use YourApplication\Data\Entity\Producer;
 
 require_once __DIR__ . "/inc.app/auth.php";
 
@@ -254,25 +255,25 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Album</td>
         <td>
-          <input class="form-control" type="text" name="album_id" id="album_id"/>
+          <input autocomplete="off" class="form-control" type="text" name="album_id" id="album_id"/>
         </td>
       </tr>
       <tr>
         <td>Name</td>
         <td>
-          <input class="form-control" type="text" name="name" id="name"/>
+          <input autocomplete="off" class="form-control" type="text" name="name" id="name"/>
         </td>
       </tr>
       <tr>
         <td>Title</td>
         <td>
-          <input class="form-control" type="text" name="title" id="title"/>
+          <input autocomplete="off" class="form-control" type="text" name="title" id="title"/>
         </td>
       </tr>
       <tr>
         <td>Description</td>
         <td>
-          <textarea class="form-control" name="description" id="description"></textarea>
+          <textarea class="form-control" name="description" id="description" spellcheck="false"></textarea>
         </td>
       </tr>
       <tr>
@@ -288,31 +289,31 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Release Date</td>
         <td>
-          <input class="form-control" type="date" name="release_date" id="release_date"/>
+          <input autocomplete="off" class="form-control" type="date" name="release_date" id="release_date"/>
         </td>
       </tr>
       <tr>
         <td>Number Of Song</td>
         <td>
-          <input class="form-control" type="number" name="number_of_song" id="number_of_song"/>
+          <input autocomplete="off" class="form-control" type="number" name="number_of_song" id="number_of_song"/>
         </td>
       </tr>
       <tr>
         <td>Duration</td>
         <td>
-          <input class="form-control" type="text" name="duration" id="duration"/>
+          <input autocomplete="off" class="form-control" type="text" name="duration" id="duration"/>
         </td>
       </tr>
       <tr>
         <td>Image Path</td>
         <td>
-          <input class="form-control" type="text" name="image_path" id="image_path"/>
+          <input autocomplete="off" class="form-control" type="text" name="image_path" id="image_path"/>
         </td>
       </tr>
       <tr>
         <td>Sort Order</td>
         <td>
-          <input class="form-control" type="number" name="sort_order" id="sort_order"/>
+          <input autocomplete="off" class="form-control" type="number" name="sort_order" id="sort_order"/>
         </td>
       </tr>
       <tr>
@@ -339,11 +340,112 @@ if($inputGet->getUserAction() == UserAction::INSERT)
     <tbody>
       <tr>
         <td></td>
-        <td><input type="submit" class="btn btn-success" name="save-button" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+        <td><input type="submit" class="btn btn-success" name="save-insert" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
       </tr>
     </tbody>
   </table>
-</form><?php 
+</form>
+<?php 
 }
-
+else if($inputGet->getUserAction() == UserAction::UPDATE)
+{
+?>
+<form name="insertform" id="insertform" action="" method="post">
+  <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tbody>
+      <tr>
+        <td>Album</td>
+        <td>
+          <input class="form-control" type="text" name="album_id" id="album_id" value="<?php echo $album->getAlbumId();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>
+          <input class="form-control" type="text" name="name" id="name" value="<?php echo $album->getName();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Title</td>
+        <td>
+          <input class="form-control" type="text" name="title" id="title" value="<?php echo $album->getTitle();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td>
+          <textarea class="form-control" name="description" id="description" spellcheck="false"><?php echo $album->getDescription();?></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>Producer</td>
+        <td>
+          <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option>
+			<?php echo $selecOptionReference->showList(new Producer(null, $database), 
+			(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3)), 
+			(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
+			"producer_id", "name", $album->getProducerId()); ?></select>
+        </td>
+      </tr>
+      <tr>
+        <td>Release Date</td>
+        <td>
+          <input class="form-control" type="date" name="release_date" id="release_date" value="<?php echo $album->getReleaseDate();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Number Of Song</td>
+        <td>
+          <input class="form-control" type="number" name="number_of_song" id="number_of_song" value="<?php echo $album->getNumberOfSong();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td>
+          <input class="form-control" type="text" name="duration" id="duration" value="<?php echo $album->getDuration();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Image Path</td>
+        <td>
+          <input class="form-control" type="text" name="image_path" id="image_path" value="<?php echo $album->getImagePath();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Sort Order</td>
+        <td>
+          <input class="form-control" type="number" name="sort_order" id="sort_order" value="<?php echo $album->getSortOrder();?>" autocomplete="off"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Locked</td>
+        <td>
+          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> Locked</label>
+        </td>
+      </tr>
+      <tr>
+        <td>As Draft</td>
+        <td>
+          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> As Draft</label>
+        </td>
+      </tr>
+      <tr>
+        <td>Active</td>
+        <td>
+          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> Active</label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tbody>
+      <tr>
+        <td></td>
+        <td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<?php 
+}
 

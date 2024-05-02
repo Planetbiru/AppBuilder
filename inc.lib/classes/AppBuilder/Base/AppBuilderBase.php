@@ -412,7 +412,7 @@ class AppBuilderBase
         $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
 
-        $table2 = $this->createButtonContainerTable($dom);
+        $table2 = $this->createButtonContainerTable($dom, "save-insert", "save-insert");
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -430,8 +430,52 @@ class AppBuilderBase
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
         ."{\r\n"
-        .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::PHP_OPEN_TAG.self::NEW_LINE
-        ."}\r\n";
+        .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
+        ."}";
+    }
+    
+    /**
+     * Create GUI INSERT section without approval
+     *
+     * @param AppField[] $appFields
+     * @param MagicObject $mainEntity
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
+     * @return string
+     */
+    public function createGuiUpdate($mainEntity, $insertFields, $approvalRequired, $approvalEntity)
+    {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
+
+        $objectName = lcfirst($entityName);
+        $dom = new DOMDocument();
+        
+        $form = $this->createElementForm($dom);
+        
+        $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+
+
+        $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+
+        $form->appendChild($table1);
+        $form->appendChild($table2);
+        
+        $dom->appendChild($form);
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        $xml = $dom->saveXML();
+
+        $html = $this->xmlToHtml($xml);
+        $html = str_replace('<td/>', '<td></td>', $html);
+        $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
+        $html = trim($html, "\r\n");
+
+        return "if(".self::VAR."inputGet->getUserAction() == UserAction::UPDATE)\r\n"
+        ."{\r\n"
+        .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
+        ."}";
     }
 
     /**
@@ -455,6 +499,36 @@ class AppBuilderBase
             if($field->getIncludeInsert())
             {
                 $tr = $this->createInsertRow($dom, $mainEntity, $objectName, $field, $pkName);
+                $tbody->appendChild($tr);
+            }
+        }
+
+
+        $table->appendChild($tbody);
+        return $table;
+    }
+    
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField[] $insertFields
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
+    {
+        $table = $this->createElementTableResponsive($dom);
+
+        $tbody = $dom->createElement('tbody');
+
+        foreach($insertFields as $field)
+        {
+            if($field->getIncludeInsert())
+            {
+                $tr = $this->createUpdateRow($dom, $mainEntity, $objectName, $field, $pkName);
                 $tbody->appendChild($tr);
             }
         }
@@ -495,6 +569,38 @@ class AppBuilderBase
 
         return $tr;
     }
+    
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createUpdateRow($dom, $mainEntity, $objectName, $field, $pkName)
+    {
+        $tr = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+
+        $label = $dom->createTextNode($field->getFieldLabel());
+
+        $td1->appendChild($label);
+
+        $input = $this->createUpdateControl($dom, $mainEntity, $objectName, $field, $pkName, $field->getFieldName());
+        if($input != null)
+        {
+            $td2->appendChild($input);
+        }
+
+        $tr->appendChild($td1);
+        $tr->appendChild($td2);
+
+        return $tr;
+    }
     /**
      * Create insert form table
      *
@@ -513,13 +619,15 @@ class AppBuilderBase
         if($insertField->getElementType() == ElementType::TEXT)
         {
             $input = $dom->createElement('input');
+            $input->setAttribute('autocomplete', 'off');
             $this->setInputTypeAttribute($input, $insertField->getDataType()); 
             $input->setAttribute('name', $insertField->getFieldName());
 
             if($id != null)
             {
                 $input->setAttribute('id', $id);
-            }   
+            }  
+            $input->setAttribute('autocomplete', 'off'); 
         }
         else if($insertField->getElementType() == ElementType::TEXTAREA)
         {
@@ -535,6 +643,7 @@ class AppBuilderBase
             }   
             $value = $dom->createTextNode('');
             $input->appendChild($value);
+            $input->setAttribute('spellcheck', 'false');
         }
         else if($insertField->getElementType() == ElementType::SELECT)
         {
@@ -573,6 +682,103 @@ class AppBuilderBase
                 $inputStrl->setAttribute('id', $id);
             }   
             $inputStrl->setAttribute('value', '1');
+            $input->appendChild($inputStrl);
+            $textLabel = $dom->createTextNode(' '.$insertField->getFieldLabel());
+            $input->appendChild($textLabel);
+
+        }
+        if($insertField->getRequired())
+        {
+            $input->setAttribute('required', 'required');
+        }
+        return $input;
+    }
+    
+    /**
+     * Create insert form table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createUpdateControl($dom, $mainEntity, $objectName, $insertField, $pkName, $id = null)
+    {
+        $upperPkName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
+        $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
+        $input = $dom->createElement('input');
+        if($insertField->getElementType() == ElementType::TEXT)
+        {
+            $input = $dom->createElement('input');
+            $this->setInputTypeAttribute($input, $insertField->getDataType()); 
+            $input->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $input->setAttribute('id', $id);
+            }   
+            
+            $input->setAttribute('value', $this->createPhpOutputValue(self::VAR.$objectName.'->get'.$upperFieldName.'()'));
+            $input->setAttribute('autocomplete', 'off');
+        }
+        else if($insertField->getElementType() == ElementType::TEXTAREA)
+        {
+            $input = $dom->createElement('textarea');
+            $classes = array();
+            $classes[] = 'form-control';
+            $input->setAttribute('class', implode(' ', $classes));
+            $input->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $input->setAttribute('id', $id);
+            }   
+            
+            $value = $dom->createTextNode('');
+            $input->appendChild($value);
+            $value = $dom->createTextNode($this->createPhpOutputValue(self::VAR.$objectName.'->get'.$upperFieldName.'()'));
+            $input->appendChild($value);
+            $input->setAttribute('spellcheck', 'false');
+        }
+        else if($insertField->getElementType() == ElementType::SELECT)
+        {
+            $input = $dom->createElement('select');
+            $classes = array();
+            $classes[] = 'form-control';
+            $input->setAttribute('class', implode(' ', $classes));
+            $input->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $input->setAttribute('id', $id);
+            }   
+            $value = $dom->createElement('option');
+            $textLabel = $dom->createTextNode('- Select One -');
+            $value->appendChild($textLabel);
+            $value->setAttribute('value', '');
+            $value->appendChild($textLabel);
+            $input->appendChild($value);
+
+            $input = $this->appendOption($dom, $input, $objectName, $insertField, self::VAR.$objectName.'->get'.$upperFieldName.'()');
+        }
+        else if($insertField->getElementType() == ElementType::CHECKBOX)
+        {
+            $input = $dom->createElement('label');
+            $inputStrl = $dom->createElement('input');
+            $classes = array();
+            $classes[] = 'form-check-input';
+            $inputStrl->setAttribute('class', implode(' ', $classes));
+            $inputStrl->setAttribute('type', 'checkbox');
+            $inputStrl->setAttribute('name', $insertField->getFieldName());
+
+            if($id != null)
+            {
+                $inputStrl->setAttribute('id', $id);
+            }   
+            $inputStrl->setAttribute('value', '1');
+            $inputStrl->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo '.self::VAR.$objectName.'->createChecked'.$upperFieldName.'();'.self::PHP_CLOSE_TAG));
             $input->appendChild($inputStrl);
             $textLabel = $dom->createTextNode(' '.$insertField->getFieldLabel());
             $input->appendChild($textLabel);
@@ -772,7 +978,7 @@ class AppBuilderBase
      * @param DOMDocument $dom
      * @return DOMElement
      */
-    private function createButtonContainerTable($dom)
+    private function createButtonContainerTable($dom, $name, $id)
     {
         $table = $this->createElementTableResponsive($dom);
         
@@ -782,7 +988,7 @@ class AppBuilderBase
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
         
-        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), "save-button", "save-insert");
+        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), $name, $id);
         $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'selfPath');
         
         $space = $dom->createTextNode(" ");
@@ -840,6 +1046,70 @@ class AppBuilderBase
             $code = $stringFound;
         }
         return base64_decode($code);
+    }
+    
+    /**
+     * Create PHP output
+     *
+     * @param string $value
+     * @return string
+     */
+    public function createPhpOutputValue($value)
+    {
+        return self::PHP_OPEN_TAG.'echo '.$value.';'.self::PHP_CLOSE_TAG;
+    }
+    
+    /**
+     * Get class function
+     *
+     * @param DOMElement $node
+     * @return string[]
+     */
+    public function getClass($node)
+    {
+        $attr = $node->getAttribute('class');
+        if($attr != null)
+        {
+            return explode(' ', $attr);
+        }
+        return array();
+    }
+    
+    /**
+     * Add class function
+     *
+     * @param DOMElement $node
+     * @param string $class
+     * @return DOMElement
+     */
+    public function addClass($node, $class)
+    {
+        $classes = $this->getClass($node);
+        $classes[] = $class;
+        $node->setAttribute('class', implode(' ', $classes));
+        return $node;
+    }
+    
+    /**
+     * Remove class function
+     *
+     * @param DOMElement $node
+     * @param string $class
+     * @return DOMElement
+     */
+    public function removeClass($node, $class)
+    {
+        $classes = $this->getClass($node);
+        $classesCopy = array();
+        foreach($classes as $cls)
+        {
+            if($cls != $class)
+            {
+                $classesCopy[] = $cls;
+            }
+        }
+        $node->setAttribute('class', implode(' ', $classesCopy));
+        return $node;
     }
     
 }
