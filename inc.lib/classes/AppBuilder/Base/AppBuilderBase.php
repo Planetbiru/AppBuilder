@@ -1121,14 +1121,15 @@ class AppBuilderBase
      * @param MagicObject $builderConfig
      * @param MagicObject $appConf
      * @param MagicObject $entityMain
-     * @param MagicObject $entityApproval
      * @param EntityInfo $entityInfo
      * @return boolean
      */
     public static function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
     {
-        $entityName = $entity->getentityName();
-        $tableName = $entity->getTableName();
+        $entityName = $entityMain->getentityName();
+        $tableName = $entityMain->getTableName();
+        $baseDir = $appConf->getEntityBaseDirectory();
+        $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
         $generator->generateCustomEntity();
     }
@@ -1140,16 +1141,18 @@ class AppBuilderBase
      * @param MagicObject $builderConfig
      * @param MagicObject $appConf
      * @param MagicObject $entityMain
-     * @param MagicObject $entityApproval
      * @param EntityInfo $entityInfo
+     * @param MagicObject $entityApproval
      * @return boolean
      */
-    public static function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    public static function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
+        $baseDir = $appConf->getEntityBaseDirectory();
+        $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity();
+        $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName());
     }
     
     /**
@@ -1159,16 +1162,18 @@ class AppBuilderBase
      * @param MagicObject $builderConfig
      * @param MagicObject $appConf
      * @param MagicObject $entityMain
-     * @param MagicObject $entityApproval
      * @param EntityInfo $entityInfo
+     * @param MagicObject $entityTrash
      * @return boolean
      */
-    public static function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    public static function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
+        $baseDir = $appConf->getEntityBaseDirectory();
+        $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity();
+        $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName());
     }
     
 }

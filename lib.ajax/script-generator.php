@@ -203,9 +203,9 @@ if($request->issetFields())
     
     require_once dirname(__DIR__) . "/inc.app/database.php";
         
-    AppBuilderBase::generateMainEntity($database, $builderConfig, $appConf, $entityApproval, $entityInfo);
-    AppBuilderBase::generateApprovalEntity($database, $builderConfig, $appConf, $entityApproval, $entityInfo);
-    AppBuilderBase::generateTrashEntity($database, $builderConfig, $appConf, $entityApproval, $entityInfo);
+    AppBuilderBase::generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
+    AppBuilderBase::generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
+    AppBuilderBase::generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
     
 }
 

@@ -3,9 +3,11 @@ application:
   name: Your Application Name
   application_base_namespace: YourApplication
   application_base_directory: /var/www/html/your-application
+  entity_base_namespace: YourApplication\Data\Entity
+  entity_base_directory: /var/www/html/your-application/inc.lib/YourApplication/Data/Entity
   entity_base_namespace: YourApplication\\Data\Entity
-    base_include_directory: inc.app
-    base_asset_directory: lib.assets
+  base_include_directory: inc.app
+  base_asset_directory: lib.assets
   composer:
     base_directory: inc.lib
     psr0: true
