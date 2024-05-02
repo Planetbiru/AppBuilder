@@ -13,22 +13,24 @@ use MagicObject\Request\InputPost;
 require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
-$inputPost = new InputPost();
+$inputPost = new InputPost(true);
 
-$inputPost = new MagicObject(json_decode(file_get_contents("input.json")));
-echo $inputPost;
-if($inputPost->issetFields() && $inputPost->countableFields())
+//$inputPost = new MagicObject(json_decode(file_get_contents("input.json")));
+//echo $inputPost;
+error_log(print_r($inputPost, true));
+
+if($inputPost->issetFields())
 {
     $insertFields = array();
     $editFields = array();
     foreach($inputPost->getFields() as $index=>$value)
     {
         $field = new AppField($value);
-        if($value['includeInsert'])
+        if($value->getIncludeInsert())
         {
             $insertFields[$field->getFieldName()] = $field;
         }
-        if($value['includeEdit'])
+        if($value->getIncludeEdit())
         {
             $editFields[$field->getFieldName()] = $field;
         }
@@ -92,7 +94,7 @@ if($inputPost->issetFields() && $inputPost->countableFields())
     // prepare CRUD section begin
     if($requireApproval == 1)
     {
-        $appBuilderApv = new AppBuilderApproval($database, $appConfig, $entityInfo, $entityApvInfo);
+        $appBuilderApv = new AppBuilderApproval($appConfig, $entityInfo, $entityApvInfo);
 
         $createSection = $appBuilderApv->createInsertApprovalSection($entityName, $insertFields, $pkName, $entityApprovalName);
         $updateSection = $appBuilderApv->createUpdateApprovalSection($entityName, $editFields, $pkName, $entityApprovalName, $pkApprovalName);
@@ -102,13 +104,11 @@ if($inputPost->issetFields() && $inputPost->countableFields())
         $approvalSection = $appBuilderApv->createApprovalSection($entityName, $pkName, $editFields, $entityApprovalName, $entityTrashName);
         $rejectionSection = $appBuilderApv->createRejectionSection($entityName, $pkName, $entityApprovalName);  
         
-        $guiInsert = $appBuilderApv->createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName);
-        
-        
+        $guiInsert = $appBuilderApv->createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName); 
     }
     else
     {
-        $appBuilder = new AppBuilder($database, $appConfig, $entityInfo, $entityApvInfo);
+        $appBuilder = new AppBuilder($appConfig, $entityInfo, $entityApvInfo);
 
         $createSection = $appBuilder->createInsertSection($entityName, $insertFields);
         $updateSection = $appBuilder->createUpdateSection($entityName, $editFields);

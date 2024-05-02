@@ -45,7 +45,5 @@ if(file_exists($appListPath))
     }
 }
 
-require_once __DIR__ . "/database.php";
-
 $entityInfo = new EntityInfo($appConfig->getEntityInfo());
 $entityApvInfo = new EntityApvInfo($appConfig->getEntityApvInfo());

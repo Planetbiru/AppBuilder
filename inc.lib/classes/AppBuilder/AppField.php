@@ -100,19 +100,19 @@ class AppField
 
     public function __construct($value)
     {
-        $this->fieldName = $value['fieldName'];
-        $this->fieldLabel = $value['fieldLabel'];
-        $this->includeInsert = $this->isTrue($value['includeInsert']);
-        $this->includeEdit = $this->isTrue($value['includeEdit']);
-        $this->includeDetail = $this->isTrue($value['includeDetail']);
-        $this->includeList = $this->isTrue($value['includeList']);
-        $this->key = $this->isTrue($value['isKey']);
-        $this->required = $this->isTrue($value['isInputRequired']);
-        $this->elementType = $value['elementType'];
-        $this->dataType = $value['dataType'];
-        $this->filterElementType = $value['filterElementType'];
-        $this->inputFilter = $value['inputFilter'];
-        $this->reference = $value['reference'];
+        $this->fieldName = $value->getFieldName();
+        $this->fieldLabel = $value->getFieldLabel();
+        $this->includeInsert = $this->isTrue($value->getIncludeInsert());
+        $this->includeEdit = $this->isTrue($value->getIncludeEdit());
+        $this->includeDetail = $this->isTrue($value->getIncludeDetail());
+        $this->includeList = $this->isTrue($value->getIncludeList());
+        $this->key = $this->isTrue($value->getIsKey());
+        $this->required = $this->isTrue($value->getIsInputRequired());
+        $this->elementType = $value->getelementType();
+        $this->dataType = $value->getdataType();
+        $this->filterElementType = $value->getFilterElementType();
+        $this->inputFilter = $value->getInputFilter();
+        $this->reference = $value->getreference();
 
         /*
         Array

@@ -67,13 +67,6 @@ class AppBuilderBase
     protected $entityApvInfo;
 
     /**
-     * Database
-     *
-     * @var PicoDatabase
-     */
-    protected $database;
-
-    /**
      * AppBuilder config
      *
      * @var SecretObject
@@ -90,15 +83,13 @@ class AppBuilderBase
     /**
      * Constructor
      *
-     * @param PicoDatabase $database
      * @param SecretObject $appBuilderConfig
      * @param EntityInfo $entityInfo
      * @param EntityApvInfo $entityApvInfo
      */
-    public function __construct($database, $appBuilderConfig, $entityInfo, $entityApvInfo)
+    public function __construct($appBuilderConfig, $entityInfo, $entityApvInfo)
     {
-        $this->database = $database;
-        $this->appBuilderConfig = $appBuilderConfig;
+         $this->appBuilderConfig = $appBuilderConfig;
         $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
         $this->entityInfo = $entityInfo;
@@ -589,20 +580,23 @@ class AppBuilderBase
     private function appendOption($dom, $input, $objectName, $insertField)
     {
         $reference = $insertField->getReference();
-        $upperPkName = PicoStringUtil::upperCamelize($insertField->getFieldName());
-        if($reference->getType() == 'map')
+        if($reference != null)
         {
-            $map = $reference->getMap();
-            $input = $this->appendOptionList($dom, $input, $objectName, $map, self::VAR.$objectName.'->get'.$upperPkName.'()');
-        }
-        else if($reference->getType() == 'entity')
-        {
-            $map = $reference->getMap();
-            $specification = $reference->getSpecfication();
-            $sortable = $reference->getSortable();
-            if(isset($entity) && $entity->getName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
+            $upperPkName = PicoStringUtil::upperCamelize($insertField->getFieldName());
+            if($reference->getType() == 'map')
             {
-                $input = $this->appendOptionEntity($dom, $input, $map, $specification, $sortable, self::VAR.$objectName.'->get'.$upperPkName.'()');
+                $map = $reference->getMap();
+                $input = $this->appendOptionList($dom, $input, $objectName, $map, self::VAR.$objectName.'->get'.$upperPkName.'()');
+            }
+            else if($reference->getType() == 'entity')
+            {
+                $map = $reference->getMap();
+                $specification = $reference->getSpecfication();
+                $sortable = $reference->getSortable();
+                if(isset($entity) && $entity->getName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
+                {
+                    $input = $this->appendOptionEntity($dom, $input, $map, $specification, $sortable, self::VAR.$objectName.'->get'.$upperPkName.'()');
+                }
             }
         }
         return $input;
