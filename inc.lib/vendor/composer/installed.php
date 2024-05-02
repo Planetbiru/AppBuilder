@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f071526d066ee6a6e4434cb9171289d3ad12b378',
+        'reference' => 'ba9266e5b3d7bafc908d90f123ca023c042ad401',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f071526d066ee6a6e4434cb9171289d3ad12b378',
+            'reference' => 'ba9266e5b3d7bafc908d90f123ca023c042ad401',
             'dev_requirement' => false,
         ),
         'planetbiru/magic-object' => array(
