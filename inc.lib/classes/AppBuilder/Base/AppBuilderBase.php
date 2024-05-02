@@ -2,6 +2,7 @@
 
 namespace AppBuilder\Base;
 
+use AppBuilder\AppEntityGenerator;
 use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
 use AppBuilder\ElementType;
@@ -12,6 +13,7 @@ use DOMElement;
 use MagicObject\Database\PicoDatabase;
 use MagicObject\Database\PicoSortable;
 use MagicObject\Database\PicoSpecification;
+use MagicObject\Generator\PicoEntityGenerator;
 use MagicObject\MagicObject;
 use MagicObject\SecretObject;
 use MagicObject\Util\PicoStringUtil;
@@ -1110,6 +1112,63 @@ class AppBuilderBase
         }
         $node->setAttribute('class', implode(' ', $classesCopy));
         return $node;
+    }
+    
+    /**
+     * Create main entity function
+     *
+     * @param PicoDatabase $database
+     * @param MagicObject $builderConfig
+     * @param MagicObject $appConf
+     * @param MagicObject $entityMain
+     * @param MagicObject $entityApproval
+     * @param EntityInfo $entityInfo
+     * @return boolean
+     */
+    public static function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    {
+        $entityName = $entity->getentityName();
+        $tableName = $entity->getTableName();
+        $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
+        $generator->generateMainEntity();
+    }
+    
+    /**
+     * Create approval entity function
+     *
+     * @param PicoDatabase $database
+     * @param MagicObject $builderConfig
+     * @param MagicObject $appConf
+     * @param MagicObject $entityMain
+     * @param MagicObject $entityApproval
+     * @param EntityInfo $entityInfo
+     * @return boolean
+     */
+    public static function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    {
+        $entityName = $entityMain->getentityName();
+        $tableName = $entityMain->getTableName();
+        $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
+        $generator->generateApprovalEntity();
+    }
+    
+    /**
+     * Create trash entity function
+     *
+     * @param PicoDatabase $database
+     * @param MagicObject $builderConfig
+     * @param MagicObject $appConf
+     * @param MagicObject $entityMain
+     * @param MagicObject $entityApproval
+     * @param EntityInfo $entityInfo
+     * @return boolean
+     */
+    public static function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    {
+        $entityName = $entityMain->getentityName();
+        $tableName = $entityMain->getTableName();
+        $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
+        $generator->generateTrashEntity();
     }
     
 }
