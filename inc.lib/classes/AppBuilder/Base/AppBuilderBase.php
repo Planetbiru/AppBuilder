@@ -386,13 +386,15 @@ class AppBuilderBase
      * Create GUI INSERT section without approval
      *
      * @param AppField[] $appFields
-     * @param string $entityName
-     * @param string $pkeyName
+     * @param MagicObject $mainEntity
      * @param string $entityApprovalName
      * @return string
      */
-    public function createGuiInsert($entityName, $insertFields, $pkName, $entityApprovalName)
+    public function createGuiInsert($mainEntity, $insertFields, $entityApprovalName)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
+
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         

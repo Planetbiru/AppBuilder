@@ -4,6 +4,7 @@ namespace AppBuilder;
 
 use AppBuilder\Base\AppBuilderBase;
 use AppBuilder\Base\AppBuilderInterface;
+use MagicObject\MagicObject;
 use MagicObject\Util\PicoStringUtil;
 
 class AppBuilder extends AppBuilderBase
@@ -85,13 +86,15 @@ class AppBuilder extends AppBuilderBase
      * Create UPDATE section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
-     * @param string $pkName
+     * @param MagicObject $mainEntity
      * @param mixed $withTrash
      * @return string
      */
-    public function createDeleteSection($entityName, $pkName, $withTrash = false, $entityTrashName = null)
+    public function createDeleteSection($mainEntity, $withTrash = false, $entityTrashName = null)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
+
         $objectName = lcfirst($entityName);
         $objectTrashName = lcfirst($entityTrashName);
         $objectNameBk = $objectName;
@@ -137,14 +140,16 @@ class AppBuilder extends AppBuilderBase
      * Create ACTIVATION section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
-     * @param string $pkName
+     * @param MagicObject $mainEntity
      * @param string $activationKey
      * @param boolean $activationValue
      * @return string
      */
-    public function createActivationSectionBase($entityName, $pkName, $activationKey, $userAction, $activationValue)
+    public function createActivationSectionBase($mainEntity, $activationKey, $userAction, $activationValue)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
+
         $objectName = lcfirst($entityName);
         $lines = array();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
@@ -169,29 +174,27 @@ class AppBuilder extends AppBuilderBase
      * Create ACTIVATION section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
-     * @param string $pkName
+     * @param MagicObject $mainEntity
      * @param string $activationKey
      * @param boolean $activationValue
      * @return string
      */
-    public function createActivationSection($entityName, $pkName, $activationKey)
+    public function createActivationSection($mainEntity, $activationKey)
     {
-        return $this->createActivationSectionBase($entityName, $pkName, $activationKey, 'UserAction::ACTIVATION', true);
+        return $this->createActivationSectionBase($mainEntity, $activationKey, 'UserAction::ACTIVATION', true);
     }
     
     /**
      * Create DEACTIVATION section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
-     * @param string $pkName
+     * @param MagicObject $mainEntity
      * @param string $activationKey
      * @param boolean $activationValue
      * @return string
      */
-    public function createDeactivationSection($entityName, $pkName, $activationKey)
+    public function createDeactivationSection($mainEntity, $activationKey)
     {
-        return $this->createActivationSectionBase($entityName, $pkName, $activationKey, 'UserAction::DEACTIVATION', false);
+        return $this->createActivationSectionBase($mainEntity, $activationKey, 'UserAction::DEACTIVATION', false);
     }
 }

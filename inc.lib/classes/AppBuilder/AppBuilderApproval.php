@@ -3,6 +3,7 @@
 namespace AppBuilder;
 
 use AppBuilder\Base\AppBuilderBase;
+use MagicObject\MagicObject;
 use MagicObject\Util\PicoStringUtil;
 
 class AppBuilderApproval extends AppBuilderBase
@@ -11,13 +12,14 @@ class AppBuilderApproval extends AppBuilderBase
      * Create INSERT section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @param string $pkeyName
      * @param string $entityApprovalName
      * @return string
      */
-    public function createInsertApprovalSection($entityName, $appFields, $pkeyName, $entityApprovalName)
+    public function createInsertApprovalSection($mainEntity, $appFields, $entityApprovalName)
     {
+        $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
         $objectApprovalName = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
@@ -74,11 +76,12 @@ class AppBuilderApproval extends AppBuilderBase
      * Create UPDATE section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @return string
      */
-    public function createUpdateApprovalSection($entityName, $appFields, $pkeyName, $entityApprovalName, $pkeyApprovalName)
+    public function createUpdateApprovalSection($mainEntity, $appFields, $entityApprovalName, $pkeyApprovalName)
     {
+        $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
         $objectApprovalName = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
@@ -161,8 +164,16 @@ class AppBuilderApproval extends AppBuilderBase
         return implode(parent::NEW_LINE, $lines);
     }
     
-    public function createDeleteApprovalSection($entityName, $pkName)
+    /**
+     * Create delete approval section
+     *
+     * @param MagicObject $entityName
+     * @return string
+     */
+    public function createDeleteApprovalSection($mainEntity)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
         $userAction = 'UserAction::DELETE';
         $waitingForFalue = WaitingFor::DELETE;
         return $this->createWaitingForSectionBase($entityName, $pkName, $userAction, $waitingForFalue);
@@ -214,14 +225,16 @@ class AppBuilderApproval extends AppBuilderBase
      * Create ACTIVATION section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @param string $pkName
      * @param string $activationKey
      * @param boolean $activationValue
      * @return string
      */
-    public function createActivationApprovalSection($entityName, $pkName)
+    public function createActivationApprovalSection($mainEntity)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
         $waitingForFalue = WaitingFor::ACTIVATE;
         $userAction = 'UserAction::ACTIVATE';
         return $this->createWaitingForSectionBase($entityName, $pkName, $userAction, $waitingForFalue);
@@ -231,14 +244,15 @@ class AppBuilderApproval extends AppBuilderBase
      * Create DEACTIVATION section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
-     * @param string $pkName
+     * @param MagicObject $mainEntity
      * @param string $activationKey
      * @param boolean $activationValue
      * @return string
      */
-    public function createDeactivationApprovalSection($entityName, $pkName)
+    public function createDeactivationApprovalSection($mainEntity)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
         $waitingForFalue = WaitingFor::DEACTIVATE;
         $userAction = 'UserAction::DEACTIVATE';
         return $this->createWaitingForSectionBase($entityName, $pkName, $userAction, $waitingForFalue);
@@ -247,13 +261,14 @@ class AppBuilderApproval extends AppBuilderBase
     /**
      * Undocumented function
      *
-     * @param string $entityName
-     * @param string $pkName
+     * @param MagicObject $mainEntity
      * @param array $editFields
      * @return string
      */
-    public function createApprovalSection($entityName, $pkName, $editFields, $entityApprovalName, $entityTrashName)
+    public function createApprovalSection($mainEntity, $editFields, $entityApprovalName, $entityTrashName)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
         $camelPkName = PicoStringUtil::camelize($pkName);
         $toBeCopied = array();
         foreach(array_keys($editFields) as $val)
@@ -368,8 +383,18 @@ class AppBuilderApproval extends AppBuilderBase
         
     }
 
-    public function createRejectionSection($entityName, $pkName, $entityApprovalName)
+    
+    /**
+     * Undocumented function
+     *
+     * @param MagicObject $mainEntity
+     * @param string $entityApprovalName
+     * @return string
+     */
+    public function createRejectionSection($mainEntity, $entityApprovalName)
     {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
         $entityInfoName = "entityInfo";
         $entityApvInfoName = "entityApvInfo";
         $userAction = 'UserAction::REJECT';

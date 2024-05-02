@@ -273,7 +273,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Description</td>
         <td>
-          <input class="form-control" type="text" name="description" id="description"/>
+          <textarea class="form-control" name="description" id="description"></textarea>
         </td>
       </tr>
       <tr>
@@ -317,19 +317,19 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Locked</td>
         <td>
-          <input class="form-control" type="number" name="locked" id="locked"/>
+          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> Locked</label>
         </td>
       </tr>
       <tr>
         <td>As Draft</td>
         <td>
-          <input class="form-control" type="number" name="as_draft" id="as_draft"/>
+          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> As Draft</label>
         </td>
       </tr>
       <tr>
         <td>Active</td>
         <td>
-          <input class="form-control" type="number" name="active" id="active"/>
+          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> Active</label>
         </td>
       </tr>
     </tbody>

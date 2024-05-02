@@ -1,6 +1,5 @@
 {
     "table": "album",
-    "entity": "Album",
     "tableApproval": "album_apv",
     "entityApproval": "AlbumApv",
     "entityTrash": "AlbumTrash",
@@ -10,6 +9,26 @@
     "withTrash": "1",
     "tableTrash": "album_trash",
     "primaryKeyTrashName": "album_trash_id",
+
+    "entity": {
+        "main": {
+            "entityName": "Album",
+            "tableName": "album",
+            "primaryKey": "album_id"
+        },
+        "approval": {
+            "entityName": "AlbumApv",
+            "tableName": "album_apv",
+            "primaryKey": "album_apv_id"
+        },
+        "trash": {
+            "entityName": "AlbumTrash",
+            "tableName": "album_trash",
+            "primaryKey": "album_trash_id"
+        }
+    },
+
+
     "fields": [
         {
             "fieldName": "album_id",
