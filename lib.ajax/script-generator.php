@@ -88,9 +88,6 @@ if($request->issetFields())
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
     }
     
-    
-    
-    
     if($trashRequired)
     {
         $entityTrash = $entity->getTrashEntity();

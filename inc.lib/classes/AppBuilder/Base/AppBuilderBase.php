@@ -1153,6 +1153,7 @@ class AppBuilderBase
         $baseDir = $appConf->getEntityBaseDirectory();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
+
         $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName());
     }
     
@@ -1175,6 +1176,31 @@ class AppBuilderBase
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
         $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName());
+    }
+
+    public function getAdditionalMainColumns()
+    {
+
+    }
+
+    public function getColumnInfo()
+    {
+        return array(
+        "active"=> array('Type'=>'tinyint(1)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'1', 'Extra'=>''), //active",
+        "draft"=> array('Type'=>'tinyint(1)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'0', 'Extra'=>''), //draft",
+        "adminCreate"=> array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //admin_create",
+        "adminEdit"=> array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //admin_edit",
+        "adminAskEdit"=> array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //admin_ask_edit",
+        "ipCreate"=> array('Type'=>'varchar(50)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //ip_create",
+        "ipEdit"=> array('Type'=>'varchar(50)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //ip_edit",
+        "ipAskEdit"=> array('Type'=>'varchar(50)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //ip_ask_edit",
+        "timeCreate"=> array('Type'=>'timestamp', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //time_create",
+        "timeEdit"=> array('Type'=>'timestamp', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //time_edit",
+        "timeAskEdit"=> array('Type'=>'timestamp', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''), //time_ask_edit",
+        "waitingFor"=> array('Type'=>'int(4)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'0', 'Extra'=>''), //waiting_for",
+        "approvalId"=> array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''),
+        "sortOrder"=> array('Type'=>'int(11)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'1', 'Extra'=>''), //sort_order"
+        );
     }
     
 }
