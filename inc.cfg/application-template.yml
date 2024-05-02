@@ -50,3 +50,4 @@ current_action:
     user_function: currentAction->getUserId()
     time_function: currentAction->getTime()
     ip_function: currentAction->getIp()
+global_variable_database: database

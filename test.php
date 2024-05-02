@@ -154,22 +154,6 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 			} 
 			);
 
-			// List of properties to be copied from AlbumApv to Album. You can add or remove it
-			$columToBeCopied = array(
-				"name", 
-				"title", 
-				"description", 
-				"producerId", 
-				"releaseDate", 
-				"numberOfSong", 
-				"duration", 
-				"imagePath", 
-				"sortOrder", 
-				"locked", 
-				"asDraft", 
-				"active"
-			);
-
 			$approvalCallback = new SetterGetter();
 			$approvalCallback->setAfterInsert(function($param1, $param2, $param3){
 				// callback on new data
@@ -213,6 +197,22 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 				// you code here
 				
 			}); 
+
+			// List of properties to be copied from AlbumApv to Album when user approve data modification. You can add or remove it
+			$columToBeCopied = array(
+				"name", 
+				"title", 
+				"description", 
+				"producerId", 
+				"releaseDate", 
+				"numberOfSong", 
+				"duration", 
+				"imagePath", 
+				"sortOrder", 
+				"locked", 
+				"asDraft", 
+				"active"
+			);
 
 			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), $approvalCallback);
 		}

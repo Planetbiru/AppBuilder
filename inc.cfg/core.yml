@@ -55,3 +55,4 @@ sessions:
     lifetime: lifetime
     save_handler: save_handler
     save_path: save_path
+global_variable_database: database

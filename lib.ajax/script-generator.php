@@ -116,7 +116,7 @@ if($request->issetFields())
     // prepare CRUD section begin
     if($approvalRequired == 1)
     {
-        $appBuilderApv = new AppBuilderApproval($appConfig, $entityInfo, $entityApvInfo);
+        $appBuilderApv = new AppBuilderApproval($builderConfig, $appConfig, $entityInfo, $entityApvInfo);
 
         // CRUD
         $createSection = $appBuilderApv->createInsertApprovalSection($entityMain, $insertFields, $approvalRequired, $entityApproval);
@@ -132,7 +132,7 @@ if($request->issetFields())
     }
     else
     {
-        $appBuilder = new AppBuilder($appConfig, $entityInfo, $entityApvInfo);
+        $appBuilder = new AppBuilder($builderConfig, $appConfig, $entityInfo, $entityApvInfo);
 
         // CRUD
         $createSection = $appBuilder->createInsertSection($entityMain, $insertFields);

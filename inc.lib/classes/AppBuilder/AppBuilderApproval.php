@@ -86,7 +86,6 @@ class AppBuilderApproval extends AppBuilderBase
      */
     public function createUpdateApprovalSection($mainEntity, $appFields, $approvalRequired, $approvalEntity)    
     {
-        //print_r($approvalEntity);
         $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
         $entityApprovalName = $approvalEntity->getEntityName();
@@ -317,11 +316,6 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
         $lines[] = "";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName. You can add or remove it".parent::NEW_LINE
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"'.implode('", '.parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"', $toBeCopied).'"'.parent::NEW_LINE
-        .parent::TAB1.parent::TAB1.parent::TAB1.");";
-        $lines[] = "";
         
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback = new SetterGetter();";
         
@@ -387,6 +381,11 @@ class AppBuilderApproval extends AppBuilderBase
         
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName when user approve data modification. You can add or remove it".parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"'.implode('", '.parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"', $toBeCopied).'"'.parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.");";
+        $lines[] = "";
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
         .parent::VAR."columToBeCopied, new $entityApprovalName(), new $entityTrashName(), ".parent::VAR."approvalCallback);";                                               

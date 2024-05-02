@@ -72,6 +72,12 @@ class AppBuilderBase
      * @var SecretObject
      */
     protected $appBuilderConfig;
+    /**
+     * Application config
+     *
+     * @var SecretObject
+     */
+    protected $appConfig;
 
     /**
      * Current action
@@ -84,12 +90,14 @@ class AppBuilderBase
      * Constructor
      *
      * @param SecretObject $appBuilderConfig
+     * @param SecretObject $appConfig
      * @param EntityInfo $entityInfo
      * @param EntityApvInfo $entityApvInfo
      */
-    public function __construct($appBuilderConfig, $entityInfo, $entityApvInfo)
+    public function __construct($appBuilderConfig, $appConfig, $entityInfo, $entityApvInfo)
     {
-         $this->appBuilderConfig = $appBuilderConfig;
+        $this->appBuilderConfig = $appBuilderConfig;
+        $this->appConfig = $appConfig;
         $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
         $this->entityInfo = $entityInfo;
@@ -657,7 +665,7 @@ class AppBuilderBase
             
             $option = $dom->createTextNode(self::NEW_LINE_R.self::TAB3
             .'<'.'?'.'php echo '.self::VAR.'selecOptionReference'
-            .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.'database), '.self::NEW_LINE_R.self::TAB3
+            .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.$this->appConfig->getGlobalVariableDatabase().'), '.self::NEW_LINE_R.self::TAB3
             .$specStr.', '.self::NEW_LINE_R.self::TAB3
             .$sortStr.', '.self::NEW_LINE_R.self::TAB3
             .'"'.$entity->getPrimaryKey().'", "'.$entity->getValue().'"'.$paramSelected.'); '.'?'.'>');
