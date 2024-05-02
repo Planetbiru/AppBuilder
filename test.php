@@ -15,7 +15,6 @@ use AppBuilder\UserAction;
 use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
-use YourApplication\Data\Entity\Producer;
 
 require_once __DIR__ . "auth.php";
 
@@ -81,7 +80,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
 
-	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(3)->update();
+	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -273,17 +272,13 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Description</td>
         <td>
-          <textarea class="form-control" name="description" id="description" spellcheck="false"></textarea>
+          <input autocomplete="off" class="form-control" type="text" name="description" id="description"/>
         </td>
       </tr>
       <tr>
         <td>Producer</td>
         <td>
-          <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option>
-			<?php echo $selecOptionReference->showList(new Producer(null, $database), 
-			(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3)), 
-			(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
-			"producer_id", "name"); ?></select>
+          <input autocomplete="off" class="form-control" type="text" name="producer_id" id="producer_id"/>
         </td>
       </tr>
       <tr>
@@ -319,19 +314,19 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Locked</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> Locked</label>
+          <input autocomplete="off" class="form-control" type="number" name="locked" id="locked"/>
         </td>
       </tr>
       <tr>
         <td>As Draft</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> As Draft</label>
+          <input autocomplete="off" class="form-control" type="number" name="as_draft" id="as_draft"/>
         </td>
       </tr>
       <tr>
         <td>Active</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> Active</label>
+          <input autocomplete="off" class="form-control" type="number" name="active" id="active"/>
         </td>
       </tr>
     </tbody>
@@ -374,17 +369,13 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
       <tr>
         <td>Description</td>
         <td>
-          <textarea class="form-control" name="description" id="description" spellcheck="false"><?php echo $album->getDescription();?></textarea>
+          <input class="form-control" type="text" name="description" id="description" value="<?php echo $album->getDescription();?>" autocomplete="off"/>
         </td>
       </tr>
       <tr>
         <td>Producer</td>
         <td>
-          <select class="form-control" name="producer_id" id="producer_id"><option value="">- Select One -</option>
-			<?php echo $selecOptionReference->showList(new Producer(null, $database), 
-			(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3)), 
-			(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
-			"producer_id", "name", $album->getProducerId()); ?></select>
+          <input class="form-control" type="text" name="producer_id" id="producer_id" value="<?php echo $album->getProducerId();?>" autocomplete="off"/>
         </td>
       </tr>
       <tr>
@@ -420,19 +411,19 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
       <tr>
         <td>Locked</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> Locked</label>
+          <input class="form-control" type="number" name="locked" id="locked" value="<?php echo $album->getLocked();?>" autocomplete="off"/>
         </td>
       </tr>
       <tr>
         <td>As Draft</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> As Draft</label>
+          <input class="form-control" type="number" name="as_draft" id="as_draft" value="<?php echo $album->getAsDraft();?>" autocomplete="off"/>
         </td>
       </tr>
       <tr>
         <td>Active</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> Active</label>
+          <input class="form-control" type="number" name="active" id="active" value="<?php echo $album->getActive();?>" autocomplete="off"/>
         </td>
       </tr>
     </tbody>

@@ -208,7 +208,6 @@ class AppBuilderApproval extends AppBuilderBase
         $upperTimeAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeAskEdit());
         $upperIpAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpAskEdit());
 
-
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
         $lines[] = "{";
         $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableAtivationRowIds())";
@@ -389,7 +388,7 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
         .parent::VAR."columToBeCopied, new $entityApprovalName(), new $entityTrashName(), ".parent::VAR."approvalCallback);";                                               
- 
+
 
         $lines[] = parent::TAB1.parent::TAB1."}";
 
@@ -435,13 +434,11 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityApprovalName());";
 
-
         $lines[] = parent::TAB1.parent::TAB1."}";
 
         $lines[] = parent::TAB1."}";
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
-
     }
 
     protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName)

@@ -143,8 +143,8 @@ $(document).ready(function(){
 		$(this).attr('data-value', masterTableName);
 
 		let masterPrimaryKeyName = $(this).find('option:selected').attr('data-primary-key') || '';
+		
 		$('[name="primary_key_master"]').val(masterPrimaryKeyName);
-
 		$('[name="entity_master_name"]').val(masterEntityName);
 		$('[name="entity_approval_name"]').val(approvalEntityName);
 		$('[name="entity_trash_name"]').val(trashEntityName);
@@ -184,7 +184,6 @@ $(document).ready(function(){
 				dataToPost.entity_info[name.substring(12)] = inputs[i].value;;
 			}
 		}
-
 		
 		updateCurrentApplivation(dataToPost);
 		
@@ -287,22 +286,36 @@ function generateScript(selector)
 
 	let requireApproval = $('#with_approval')[0].checked;
 	let withTrash = $('#with_trash')[0].checked;
-	let masterPrimaryKeyName = $('[name="primary_key_master"]').val();
+	let entity = {
+		mainEntity:{
+			entityName: $('[name="entity_master_name"]').val(),
+			tableName: $('[name="source_table"]').val(),
+			primaryKey: $('[name="primary_key_master"]').val()
+		},
+		approvalRequired: requireApproval,
+		trashRequired: withTrash
+	}
 
+	if(requireApproval)
+	{
+		entity.approvalEntity = {
+			entityName: $('[name="entity_approval_name"]').val(),
+            tableName: $('[name="table_approval_name"]').val(),
+            primaryKey: $('[name="primary_key_approval"]').val()
+		}
+	}
+
+	if(withTrash)
+	{
+		entity.trashEntity = {
+			entityName: $('[name="entity_trash_name"]').val(),
+            tableName: $('[name="table_trash_name"]').val(),
+            primaryKey: $('[name="primary_key_trash"]').val()
+		}
+	}
 
 	let dataToPost = {
-		table: $('[name="source_table"]').val(),
-		entity: $('[name="entity_master_name"]').val(),
-		tableApproval: $('[name="table_approval_name"]').val(),
-		entityApproval: $('[name="entity_approval_name"]').val(),
-		entityTrash: $('[name="entity_trash_name"]').val(),
-
-		primaryKeyName: masterPrimaryKeyName,
-		requireApproval: requireApproval ? 1 : 0,
-		primaryKeyApprovalName: $('[name="primary_key_approval"]').val(),
-		withTrash: withTrash ? 1 : 0,
-		tableTrash: $('[name="table_trash_name"]').val(),
-		primaryKeyTrashName: $('[name="primary_key_trash"]').val(),
+		entity: entity,
 		fields: fields
 	};
 	generateAllCode(dataToPost);

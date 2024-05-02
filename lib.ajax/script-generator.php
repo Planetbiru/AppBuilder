@@ -15,11 +15,7 @@ use MagicObject\Util\PicoGenericObject;
 require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
-//$request = new InputPost(true);
-
-$request = PicoObjectParser::parseJsonRecursive(json_decode(file_get_contents("input2.json")));
-//echo $request;
-//error_log(print_r($request, true));
+$request = new InputPost(true);
 
 if($request->issetFields())
 {
@@ -55,8 +51,8 @@ if($request->issetFields())
 
     $entityMainName = $entityMain->getEntityName();
     
-    $approvalRequired = $entity->getApprovalRequired();
-    $trashRequired = $entity->getTrashRequired();
+    $approvalRequired = AppBuilderBase::isTrue($entity->getApprovalRequired());
+    $trashRequired = AppBuilderBase::isTrue($entity->getTrashRequired());
     
     $activationKey = $entityInfo->getActive();
     $pkName = $request->getPrimaryKeyName();
@@ -126,7 +122,7 @@ if($request->issetFields())
     ));
 
     // prepare CRUD section begin
-    if($approvalRequired == 1)
+    if($approvalRequired)
     {
         $appBuilderApv = new AppBuilderApproval($builderConfig, $appConfig, $entityInfo, $entityApvInfo);
 

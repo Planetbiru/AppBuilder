@@ -1,15 +1,4 @@
 {
-    "table": "album",
-    "tableApproval": "album_apv",
-    "entityApproval": "AlbumApv",
-    "entityTrash": "AlbumTrash",
-    "primaryKeyName": "album_id",
-    "requireApproval": "1",
-    "primaryKeyApprovalName": "album_id",
-    "withTrash": "1",
-    "tableTrash": "album_trash",
-    "primaryKeyTrashName": "album_trash_id",
-
     "entity": {
         "mainEntity": {
             "entityName": "Album",
