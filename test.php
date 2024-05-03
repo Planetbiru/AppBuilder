@@ -250,6 +250,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 }
 if($inputGet->getUserAction() == UserAction::INSERT)
 {
+require_once __DIR__ . "/inc.app/header.php";
 ?>
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -346,6 +347,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
   </table>
 </form>
 <?php 
+require_once __DIR__ . "/inc.app/footer.php";
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
@@ -354,6 +356,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 		$album->findOneByAlbumId($inputGet->getAlbumId());
 		if($album->hasValueAlbumId())
 		{
+require_once __DIR__ . "/inc.app/header.php";
 ?>
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -450,6 +453,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
   </table>
 </form>
 <?php 
+require_once __DIR__ . "/inc.app/footer.php";
 		}
 		else
 		{
@@ -468,6 +472,7 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
 		$album->findOneByAlbumId($inputGet->getAlbumId());
 		if($album->hasValueAlbumId())
 		{
+require_once __DIR__ . "/inc.app/header.php";
 ?>
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -536,6 +541,7 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
   </table>
 </form>
 <?php 
+require_once __DIR__ . "/inc.app/footer.php";
 		}
 		else
 		{
