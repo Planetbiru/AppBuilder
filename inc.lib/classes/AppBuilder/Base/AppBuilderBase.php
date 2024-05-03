@@ -1068,7 +1068,7 @@ class AppBuilderBase
                 $output = array();
                 foreach($additionalOutput as $add)
                 {
-                    $output[] = $add->getColumn();
+                    $output[] = PicoStringUtil::camelize($add->getColumn());
                 }
                 $paramAdditionalOutput = ', array("'.implode('", "', $output).'")';
             }
@@ -1086,7 +1086,7 @@ class AppBuilderBase
             .self::NEW_LINE_N.self::TAB3.self::TAB3
             .$specStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
             .$sortStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
-            .'"'.$entity->getPrimaryKey().'", "'.$entity->getValue().'"'.$paramSelected.$paramAdditionalOutput.'); '.self::PHP_CLOSE_TAG.self::NEW_LINE_N.self::TAB3.self::TAB2);
+            .'"'.PicoStringUtil::camelize($entity->getPrimaryKey()).'", "'.PicoStringUtil::camelize($entity->getValue()).'"'.$paramSelected.$paramAdditionalOutput.'); '.self::PHP_CLOSE_TAG.self::NEW_LINE_N.self::TAB3.self::TAB2);
 
             $input->appendChild($option);
         }
