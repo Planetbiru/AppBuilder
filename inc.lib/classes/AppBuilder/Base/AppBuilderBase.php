@@ -439,10 +439,12 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
-
+        
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
         ."{\r\n"
+        .$this->getIncludeHeader().self::NEW_LINE
         .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
+        .$this->getIncludeFooter().self::NEW_LINE
         ."}";
     }
     
@@ -494,7 +496,9 @@ class AppBuilderBase
         $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = $this->getIncludeHeader();
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::TAB1."}";
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1."{";
@@ -550,14 +554,16 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
-        
+                
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
         $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = $this->getIncludeHeader();
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::TAB1."}";
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1."{";
@@ -1513,5 +1519,13 @@ class AppBuilderBase
         return $value == '1' || strtolower($value) == 'true' || $value === 1 || $value === true;
     }
 
+    public function getIncludeHeader()
+    {
+        return "require_once __DIR__ . \"/inc.app/header.php\";";
+    }
+    public function getIncludeFooter()
+    {
+        return "require_once __DIR__ . \"/inc.app/footer.php\";";
+    }
     
 }
