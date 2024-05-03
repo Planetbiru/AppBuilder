@@ -65,6 +65,9 @@ if($request->issetFields())
     $appConf = new AppSecretObject($appConfig->getApplication());
     
     $uses = array();
+    $uses[] = "// This script is generated automaticaly by AppBuilder";
+    $uses[] = "// Visit https://github.com/Planetbiru/AppBuilder";
+    $uses[] = "";
     $uses[] = "use MagicObject\\MagicObject;";
     $uses[] = "use MagicObject\\SetterGetter;";
     $uses[] = "use MagicObject\\Database\\PicoPredicate;";
