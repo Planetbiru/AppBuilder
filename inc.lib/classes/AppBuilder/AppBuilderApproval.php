@@ -102,7 +102,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
         foreach($appFields as $field)
         {
-            $line = $this->createSetter($objectName, $field->getFieldName(), $field->getInputFilter());
+            $line = $this->createSetter($objectApprovalName, $field->getFieldName(), $field->getInputFilter());
             if($line != null)
             {
                 $lines[] = $line;
