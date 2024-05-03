@@ -9,6 +9,7 @@ class UserAction
     const DELETE = "delete";
     const ACTIVATE = "activate";
     const DEACTIVATE = "deactivate";
+    const DETAIL = "detail";
     const APPROVE = "approve";
     const REJECT = "reject";
     const SPECIAL_ACTION = "special_action";

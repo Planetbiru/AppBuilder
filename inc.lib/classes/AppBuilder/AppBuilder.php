@@ -183,7 +183,7 @@ class AppBuilder extends AppBuilderBase
      */
     public function createActivationSection($mainEntity, $activationKey)
     {
-        return $this->createActivationSectionBase($mainEntity, $activationKey, 'UserAction::ACTIVATION', true);
+        return $this->createActivationSectionBase($mainEntity, $activationKey, 'UserAction::ACTIVATE', true);
     }
     
     /**
@@ -197,6 +197,6 @@ class AppBuilder extends AppBuilderBase
      */
     public function createDeactivationSection($mainEntity, $activationKey)
     {
-        return $this->createActivationSectionBase($mainEntity, $activationKey, 'UserAction::DEACTIVATION', false);
+        return $this->createActivationSectionBase($mainEntity, $activationKey, 'UserAction::DEACTIVATE', false);
     }
 }

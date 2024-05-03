@@ -61,7 +61,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setActive($inputPost->getActive(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->update();
 }
-else if($inputGet->getUserAction() == UserAction::ACTIVATION)
+else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
 	if($inputPost->countableAtivationRowIds())
 	{
@@ -72,7 +72,7 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATION)
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::DEACTIVATION)
+else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 {
 	if($inputPost->countableAtivationRowIds())
 	{
@@ -197,11 +197,9 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
 	$album = new Album(null, $database);
 	try{
-		$album->find($inputGet->getAlbumId());
-	} catch(Exception $e){
-		$album = new Album(null, $database);
-		// Do somtething here
-	}
+		$album->findOneByAlbumId($inputGet->getAlbumId());
+		if($album->hasValueAlbumId())
+		{
 ?>
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -298,16 +296,24 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
   </table>
 </form>
 <?php 
+		}
+		else
+		{
+			// Do somtething here when data is not found
+		}
+	}
+	catch(Exception $e)
+	{
+		// Do somtething here when exception
+	}
 }
 else if($inputGet->getUserAction() == UserAction::DETAIL)
 {
 	$album = new Album(null, $database);
 	try{
-		$album->find($inputGet->get());
-	} catch(Exception $e){
-		$album = new Album(null, $database);
-		// Do somtething here
-	}
+		$album->findOneByAlbumId($inputGet->getAlbumId());
+		if($album->hasValueAlbumId())
+		{
 ?>
 <form name="insertform" id="insertform" action="" method="post">
   <table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -376,5 +382,15 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
   </table>
 </form>
 <?php 
+		}
+		else
+		{
+			// Do somtething here when data is not found
+		}
+	}
+	catch(Exception $e)
+	{
+		// Do somtething here when exception
+	}
 }
 

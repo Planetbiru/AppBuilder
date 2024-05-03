@@ -459,14 +459,7 @@ class AppBuilderBase
         
         $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
-        $getData = array();
-        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
-        $getData[] = self::TAB1."try{";
-        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->find(".self::VAR."inputGet->get".$upperPkName."());";
-        $getData[] = self::TAB1."} catch(Exception ".self::VAR."e){";
-        $getData[] = self::TAB1.self::TAB1.$this->createConstructor($objectName, $entityName);
-        $getData[] = self::TAB1.self::TAB1."// Do somtething here";
-        $getData[] = self::TAB1."}".self::NEW_LINE;
+        
 
         $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
@@ -483,11 +476,29 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
+        
+        
+        $getData = array();
+        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1."try{";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
+        $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
+        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1."else";
+        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
+        $getData[] = self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1."}";
+        $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
+        $getData[] = self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
+        $getData[] = self::TAB1."}".self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::UPDATE)\r\n"
         ."{\r\n"
         .implode(self::NEW_LINE, $getData)
-        .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
         ."}";
     }
     
@@ -504,6 +515,7 @@ class AppBuilderBase
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
+        $upperPkName = PicoStringUtil::upperCamelize($pkName);
 
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
@@ -512,14 +524,6 @@ class AppBuilderBase
         
         $table1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
-        $getData = array();
-        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
-        $getData[] = self::TAB1."try{";
-        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->find(".self::VAR."inputGet->get".$upperPkName."());";
-        $getData[] = self::TAB1."} catch(Exception ".self::VAR."e){";
-        $getData[] = self::TAB1.self::TAB1.$this->createConstructor($objectName, $entityName);
-        $getData[] = self::TAB1.self::TAB1."// Do somtething here";
-        $getData[] = self::TAB1."}".self::NEW_LINE;
         
         $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
@@ -536,11 +540,28 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
+        
+        $getData = array();
+        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1."try{";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
+        $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
+        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1."else";
+        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
+        $getData[] = self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1."}";
+        $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
+        $getData[] = self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
+        $getData[] = self::TAB1."}".self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::DETAIL)\r\n"
         ."{\r\n"
         .implode(self::NEW_LINE, $getData)
-        .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
         ."}";
     }
 
