@@ -17,7 +17,6 @@ require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
 $request = new InputPost(true);
-error_log($request);
 if($request->issetFields())
 {
     $insertFields = array();
@@ -80,6 +79,10 @@ if($request->issetFields())
     $uses[] = "use MagicObject\\Util\\AttrUtil;";
     $uses[] = "use AppBuilder\\PicoApproval;";
     $uses[] = "use AppBuilder\\UserAction;";
+    $uses[] = "use AppBuilder\\AppInclude;";
+    $uses[] = "use AppBuilder\\EntityLabel;";
+    
+    
     $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
     
     if($approvalRequired)
@@ -149,7 +152,7 @@ if($request->issetFields())
     }
     else
     {
-        $appBuilder = new AppBuilder($builderConfig, $appConfig, $entityInfo, $appFeatures, $entityApvInfo);
+        $appBuilder = new AppBuilder($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo);
 
         // CRUD
         $createSection = $appBuilder->createInsertSection($entityMain, $insertFields);

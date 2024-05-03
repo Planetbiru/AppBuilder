@@ -81,7 +81,6 @@ class EntityInfo extends SecretObject
      * @var string
      */
     protected $timeAskEdit;
-
     
     /**
      * Waiting for key
@@ -96,11 +95,4 @@ class EntityInfo extends SecretObject
      * @var string
      */
     protected $approvalId;
-    
-    /**
-     * Variable name of database
-     *
-     * @var string
-     */
-    protected $database = "database";
 }

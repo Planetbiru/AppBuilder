@@ -125,7 +125,8 @@ class AppBuilderBase
             $entityInfo->getTimeCreate(),
             $entityInfo->getTimeEdit(),
             $entityInfo->getTimeAskEdit(),
-            $entityInfo->getWaitingFor()
+            $entityInfo->getWaitingFor(),
+            $entityInfo->getApprovalId()
         );
     }
     /**
@@ -443,6 +444,7 @@ class AppBuilderBase
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
         ."{\r\n"
         .$this->getIncludeHeader().self::NEW_LINE
+        .$this->constructEntityLabel($entityName).self::NEW_LINE
         .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
         .$this->getIncludeFooter().self::NEW_LINE
         ."}";
@@ -497,6 +499,7 @@ class AppBuilderBase
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
         $getData[] = $this->getIncludeHeader();
+        $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::TAB1."}";
@@ -562,6 +565,7 @@ class AppBuilderBase
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
         $getData[] = $this->getIncludeHeader();
+        $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::TAB1."}";
@@ -687,7 +691,9 @@ class AppBuilderBase
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
 
-        $label = $dom->createTextNode($field->getFieldLabel());
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        $caption = self::PHP_OPEN_TAG."echo ".self::VAR."entityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $label = $dom->createTextNode($caption);
 
         $td1->appendChild($label);
 
@@ -719,7 +725,9 @@ class AppBuilderBase
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
 
-        $label = $dom->createTextNode($field->getFieldLabel());
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        $caption = self::PHP_OPEN_TAG."echo ".self::VAR."entityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $label = $dom->createTextNode($caption);
 
         $td1->appendChild($label);
 
@@ -755,7 +763,9 @@ class AppBuilderBase
         
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
 
-        $label = $dom->createTextNode($field->getFieldLabel());
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        $caption = self::PHP_OPEN_TAG."echo ".self::VAR."entityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $label = $dom->createTextNode($caption);
         
         if($field->getElementType() == 'checkbox')
         {
@@ -1519,13 +1529,27 @@ class AppBuilderBase
         return $value == '1' || strtolower($value) == 'true' || $value === 1 || $value === true;
     }
 
+    /**
+     * Include app header
+     *
+     * @return string
+     */
     public function getIncludeHeader()
     {
-        return "require_once __DIR__ . \"/inc.app/header.php\";";
-    }
-    public function getIncludeFooter()
-    {
-        return "require_once __DIR__ . \"/inc.app/footer.php\";";
+        return "require_once AppInclude::mainAppHeader(__DIR__, ".self::VAR."appConfig);";
     }
     
+    /**
+     * Include app footer
+     *
+     * @return string
+     */
+    public function getIncludeFooter()
+    {
+        return "require_once AppInclude::mainAppFooter(__DIR__, ".self::VAR."appConfig);";
+    }
+    public function constructEntityLabel($entityName)
+    {
+        return self::VAR."entityLabel = new EntityLabel(new $entityName(), ".self::VAR."appConfig);";
+    }
 }
