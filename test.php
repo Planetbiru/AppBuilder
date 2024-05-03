@@ -148,7 +148,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<?php echo $selecOptionReference->showList(new Producer(null, $database), 
 						(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3))->addAnd(new PicoPredicate("releaseDate", '2024-01-03'))->addAnd(new PicoPredicate("active", true)), 
 						(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
-						"producer_id", "name", null, array("number_of_song", "release_date")); ?>
+						"producerId", "name", null, array("numberOfSong", "releaseDate")); ?>
 					</select>
         </td>
       </tr>
@@ -258,7 +258,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<?php echo $selecOptionReference->showList(new Producer(null, $database), 
 						(new PicoSpecification())->addAnd(new PicoPredicate("numberOfSong", 3))->addAnd(new PicoPredicate("releaseDate", '2024-01-03'))->addAnd(new PicoPredicate("active", true)), 
 						(new PicoSortable())->add(new PicoSort("timeCreate", "ASC")), 
-						"producer_id", "name", $album->getProducerId(), array("number_of_song", "release_date")); ?>
+						"producerId", "name", $album->getProducerId(), array("numberOfSong", "releaseDate")); ?>
 					</select>
         </td>
       </tr>
