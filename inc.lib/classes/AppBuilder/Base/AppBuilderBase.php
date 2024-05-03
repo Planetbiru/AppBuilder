@@ -396,11 +396,11 @@ class AppBuilderBase
         if($this->style == self::STYLE_SETTER_GETTER)
         {
             $param = PicoStringUtil::upperCamelize($id);
-            return self::PHP_OPEN_TAG.' echo '.self::VAR."currentLanguage->get$param"."(); ".self::PHP_CLOSE_TAG;
+            return self::PHP_OPEN_TAG.' echo '.self::VAR."appLanguage->get$param"."(); ".self::PHP_CLOSE_TAG;
         }
         else
         {
-            return self::PHP_OPEN_TAG.' echo '.self::VAR."currentLanguage->get('".$id."'); ".self::PHP_CLOSE_TAG;
+            return self::PHP_OPEN_TAG.' echo '.self::VAR."appLanguage->get('".$id."'); ".self::PHP_CLOSE_TAG;
         }
     }
     
@@ -756,8 +756,8 @@ class AppBuilderBase
      */
     private function createDetailRow($dom, $mainEntity, $objectName, $field, $pkName)
     {
-        $yes = self::VAR."currentLanguage->getYes()";
-        $no = self::VAR."currentLanguage->getNo()";
+        $yes = self::VAR."appLanguage->getYes()";
+        $no = self::VAR."appLanguage->getNo()";
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
@@ -846,7 +846,8 @@ class AppBuilderBase
                 $input->setAttribute('id', $id);
             }   
             $value = $dom->createElement('option');
-            $textLabel = $dom->createTextNode('- Select One -');
+            $caption = self::PHP_OPEN_TAG."echo ".self::VAR."appLangauge->getSelectOne();".self::PHP_CLOSE_TAG;
+            $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
@@ -871,7 +872,8 @@ class AppBuilderBase
             }   
             $inputStrl->setAttribute('value', '1');
             $input->appendChild($inputStrl);
-            $textLabel = $dom->createTextNode(' '.$insertField->getFieldLabel());
+            $caption = self::PHP_OPEN_TAG."echo ".self::VAR."entityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+            $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
 
         }
@@ -943,7 +945,8 @@ class AppBuilderBase
                 $input->setAttribute('id', $id);
             }   
             $value = $dom->createElement('option');
-            $textLabel = $dom->createTextNode('- Select One -');
+            $caption = self::PHP_OPEN_TAG."echo ".self::VAR."appLangauge->getSelectOne();".self::PHP_CLOSE_TAG;
+            $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
@@ -968,7 +971,8 @@ class AppBuilderBase
             $inputStrl->setAttribute('value', '1');
             $inputStrl->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo '.self::VAR.$objectName.'->createChecked'.$upperFieldName.'();'.self::PHP_CLOSE_TAG));
             $input->appendChild($inputStrl);
-            $textLabel = $dom->createTextNode(' '.$insertField->getFieldLabel());
+            $caption = self::PHP_OPEN_TAG."echo ".self::VAR."entityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+            $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
 
         }
