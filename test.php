@@ -17,6 +17,7 @@ use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
 use AppBuilder\EntityLabel;
+use AppBuilder\WaitingFor;
 use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
@@ -43,7 +44,7 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->setAsDraft($inputPost->getAsDraft(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setActive($inputPost->getActive(PicoFilterConstant::FILTER_SANITIZE_NUMBER_INT));
 	$album->setDraft(true);
-	$album->setWaitingFor(1);
+	$album->setWaitingFor(WaitingFor::CREATE);
 	$album->setAdminCreate($currentAction->getUserId());
 	$album->setTimeCreate($currentAction->getTime());
 	$album->setIpCreate($currentAction->getIp());
@@ -85,7 +86,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
 
-	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(3)->update();
+	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(WaitingFor::UPDATE)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -99,7 +100,7 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 			$album->setTimeAskEdit($currentAction->getTime());
 			$album->setIpAskEdit($currentAction->getIp());
 
-			$album->setAlbumId($rowId)->setWaitingFor(3)->update();
+			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::ACTIVATE)->update();
 		}
 	}
 }
@@ -115,7 +116,7 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 			$album->setTimeAskEdit($currentAction->getTime());
 			$album->setIpAskEdit($currentAction->getIp());
 
-			$album->setAlbumId($rowId)->setWaitingFor(4)->update();
+			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::DEACTIVATE)->update();
 		}
 	}
 }
@@ -131,7 +132,7 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 			$album->setTimeAskEdit($currentAction->getTime());
 			$album->setIpAskEdit($currentAction->getIp());
 
-			$album->setAlbumId($rowId)->setWaitingFor(5)->update();
+			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::DELETE)->update();
 		}
 	}
 }
@@ -162,44 +163,44 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 			$approvalCallback = new SetterGetter();
 			$approvalCallback->setAfterInsert(function($param1, $param2, $param3){
 				// callback on new data
-				// add your code here
+				// you code here
 				
 				return true;
 			}); 
 
 			$approvalCallback->setBeforeUpdate(function($param1, $param2, $param3){
 				// callback before update data
-				// add your code here
+				// you code here
 				
 			}); 
 
 			$approvalCallback->setAfterUpdate(function($param1, $param2, $param3){
 				// callback after update data
-				// add your code here
+				// you code here
 				
 			}); 
 
 			$approvalCallback->setAfterActivate(function($param1, $param2, $param3){
 				// callback after activate data
-				// add your code here
+				// you code here
 				
 			}); 
 
 			$approvalCallback->setAfterDeactivate(function($param1, $param2, $param3){
 				// callback after deactivate data
-				// add your code here
+				// you code here
 				
 			}); 
 
 			$approvalCallback->setBeforeDelete(function($param1, $param2, $param3){
 				// callback before delete data
-				// add your code here
+				// you code here
 				
 			}); 
 
 			$approvalCallback->setAfterDelete(function($param1, $param2, $param3){
 				// callback after delete data
-				// add your code here
+				// you code here
 				
 			}); 
 

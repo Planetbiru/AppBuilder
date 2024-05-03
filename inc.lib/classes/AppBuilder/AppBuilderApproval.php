@@ -44,7 +44,7 @@ class AppBuilderApproval extends AppBuilderBase
         
         // set draft
         $lines[] = parent::TAB1.parent::VAR.$objectName."->set".$upperDraft."(true);";
-        $lines[] = parent::TAB1.parent::VAR.$objectName."->set".$upperWaitingFor."(".WaitingFor::CREATE.");";
+        $lines[] = parent::TAB1.parent::VAR.$objectName."->set".$upperWaitingFor."(WaitingFor::CREATE);";
 
         $upperAdminCreate = PicoStringUtil::upperCamelize($this->entityInfo->getAdminCreate());
         $upperTimeCreate = PicoStringUtil::upperCamelize($this->entityInfo->getTimeCreate());
@@ -134,7 +134,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
 
         $lines[] = "";
-        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyApprovalName."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())->set".$upperWaitingFor."(".WaitingFor::ACTIVATE.")->update();";
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyApprovalName."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())->set".$upperWaitingFor."(WaitingFor::UPDATE)->update();";
 
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
@@ -203,6 +203,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines = array();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->getentityInfo()->getWaitingFor());
+        $waitingFor = str_replace('UserAction', 'WaitingFor', $userAction);
 
         $upperAdminAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit());
         $upperTimeAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeAskEdit());
@@ -220,7 +221,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
         $lines[] = "";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".$waitingForValue.")".parent::CALL_UPDATE_END;
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".$waitingFor.")".parent::CALL_UPDATE_END;
         $lines[] = parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1."}";
         $lines[] = "}";
