@@ -162,44 +162,44 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 			$approvalCallback = new SetterGetter();
 			$approvalCallback->setAfterInsert(function($param1, $param2, $param3){
 				// callback on new data
-				// you code here
+				// add your code here
 				
 				return true;
 			}); 
 
 			$approvalCallback->setBeforeUpdate(function($param1, $param2, $param3){
 				// callback before update data
-				// you code here
+				// add your code here
 				
 			}); 
 
 			$approvalCallback->setAfterUpdate(function($param1, $param2, $param3){
 				// callback after update data
-				// you code here
+				// add your code here
 				
 			}); 
 
 			$approvalCallback->setAfterActivate(function($param1, $param2, $param3){
 				// callback after activate data
-				// you code here
+				// add your code here
 				
 			}); 
 
 			$approvalCallback->setAfterDeactivate(function($param1, $param2, $param3){
 				// callback after deactivate data
-				// you code here
+				// add your code here
 				
 			}); 
 
 			$approvalCallback->setBeforeDelete(function($param1, $param2, $param3){
 				// callback before delete data
-				// you code here
+				// add your code here
 				
 			}); 
 
 			$approvalCallback->setAfterDelete(function($param1, $param2, $param3){
 				// callback after delete data
-				// you code here
+				// add your code here
 				
 			}); 
 
