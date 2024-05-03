@@ -612,8 +612,6 @@ require_once __DIR__ . "/inc.app/navs.php";
       </div>
     </div>
   </div>
-
-
 </body>
 
 </html>
