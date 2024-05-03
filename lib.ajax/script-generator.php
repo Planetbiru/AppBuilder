@@ -21,6 +21,7 @@ if($request->issetFields())
 {
     $insertFields = array();
     $editFields = array();
+    $detailFields = array();
     $referenceEntity = array();
     foreach($request->getFields() as $index=>$value)
     {
@@ -32,6 +33,10 @@ if($request->issetFields())
         if($value->getIncludeEdit())
         {
             $editFields[$field->getFieldName()] = $field;
+        }
+        if($value->getIncludeDetail())
+        {
+            $detailFields[$field->getFieldName()] = $field;
         }
         if($value->getReference() != null 
         && $value->getReference()->getType() == 'entity' 
@@ -54,10 +59,7 @@ if($request->issetFields())
     $trashRequired = AppBuilderBase::isTrue($entity->getTrashRequired());
     
     $activationKey = $entityInfo->getActive();
-    $pkName = $request->getPrimaryKeyName();
-    $withStrash = $request->getWithTrash();
-    $entityTrashName = $request->getEntityTrash();
-    $pkApprovalName = $request->getPrimaryKeyApprovalName();
+
     
     $appConf = new AppSecretObject($appConfig->getApplication());
     
@@ -136,7 +138,8 @@ if($request->issetFields())
         
         // GUI
         $guiInsert = $appBuilderApv->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
-        $guiUpdate = $appBuilderApv->createGuiUpdate($entityMain, $insertFields, $approvalRequired, $entityApproval); 
+        $guiUpdate = $appBuilderApv->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
+        $guiDetail = $appBuilderApv->createGuiDetail($entityMain, $detailFields, $approvalRequired, $entityApproval); 
     }
     else
     {
@@ -148,7 +151,7 @@ if($request->issetFields())
         $activationSection = $appBuilder->createActivationSection($entityMain, $activationKey);
         $deactivationSection = $appBuilder->createDeactivationSection($entityMain, $activationKey);
         
-        if($withStrash == 1)
+        if($trashRequired)
         {
             $deleteSection = $appBuilder->createDeleteSection($entityMain, true, $entityTrash);
         }
@@ -158,6 +161,9 @@ if($request->issetFields())
         }
         $approvalSection = "";
         $rejectionSection = "";
+        $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
+        $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields); 
+        $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields); 
     }
     
    
@@ -177,6 +183,7 @@ if($request->issetFields())
     $guiSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
     ->add($guiInsert)
     ->add($guiUpdate)
+    ->add($guiDetail)
     ;
 
     $merged = (new AppSection(AppSection::SEPARATOR_NEW_LINE))

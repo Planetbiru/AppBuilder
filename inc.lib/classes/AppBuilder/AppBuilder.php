@@ -13,11 +13,12 @@ class AppBuilder extends AppBuilderBase
      * Create INSERT section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @return string
      */
-    public function createInsertSection($entityName, $appFields)
+    public function createInsertSection($mainEntity, $appFields)
     {
+        $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
         $lines = array();
         
@@ -58,11 +59,12 @@ class AppBuilder extends AppBuilderBase
      * Create UPDATE section without approval and trash
      *
      * @param AppField[] $appFields
-     * @param string $entityName
+     * @param MagicObject $mainEntity
      * @return string
      */
-    public function createUpdateSection($entityName, $appFields)
+    public function createUpdateSection($mainEntity, $appFields)
     {
+        $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
         $lines = array();
         

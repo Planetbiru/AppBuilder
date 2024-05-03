@@ -170,7 +170,7 @@ class AppBuilderBase
         } else {
             $dataToLoad = self::VAR . $dataToLoad;
         }
-        return self::VAR . $objectName . " = new $entityName($dataToLoad, " . self::VAR . $this->entityInfo->getDatabase() . ");";
+        return self::VAR . $objectName . " = new $entityName($dataToLoad, " . self::VAR . $this->appBuilderConfig->getGlobalVariableDatabase() . ");";
     }
 
     /**
@@ -401,7 +401,7 @@ class AppBuilderBase
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiInsert($mainEntity, $insertFields, $approvalRequired, $approvalEntity)
+    public function createGuiInsert($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
@@ -445,10 +445,12 @@ class AppBuilderBase
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiUpdate($mainEntity, $insertFields, $approvalRequired, $approvalEntity)
+    public function createGuiUpdate($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
     {
+        
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
+        $upperPkName = PicoStringUtil::upperCamelize($pkName);
 
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
@@ -457,6 +459,14 @@ class AppBuilderBase
         
         $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
+        $getData = array();
+        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1."try{";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->find(".self::VAR."inputGet->get".$upperPkName."());";
+        $getData[] = self::TAB1."} catch(Exception ".self::VAR."e){";
+        $getData[] = self::TAB1.self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1.self::TAB1."// Do somtething here";
+        $getData[] = self::TAB1."}".self::NEW_LINE;
 
         $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
@@ -476,6 +486,60 @@ class AppBuilderBase
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::UPDATE)\r\n"
         ."{\r\n"
+        .implode(self::NEW_LINE, $getData)
+        .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
+        ."}";
+    }
+    
+    /**
+     * Create GUI DETAIL section without approval
+     *
+     * @param AppField[] $appFields
+     * @param MagicObject $mainEntity
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
+     * @return string
+     */
+    public function createGuiDetail($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
+    {
+        $entityName = $mainEntity->getEntityName();
+        $pkName =  $mainEntity->getPrimaryKey();
+
+        $objectName = lcfirst($entityName);
+        $dom = new DOMDocument();
+        
+        $form = $this->createElementForm($dom);
+        
+        $table1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+
+        $getData = array();
+        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1."try{";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->find(".self::VAR."inputGet->get".$upperPkName."());";
+        $getData[] = self::TAB1."} catch(Exception ".self::VAR."e){";
+        $getData[] = self::TAB1.self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1.self::TAB1."// Do somtething here";
+        $getData[] = self::TAB1."}".self::NEW_LINE;
+        
+        $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+
+        $form->appendChild($table1);
+        $form->appendChild($table2);
+        
+        $dom->appendChild($form);
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        $xml = $dom->saveXML();
+
+        $html = $this->xmlToHtml($xml);
+        $html = str_replace('<td/>', '<td></td>', $html);
+        $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
+        $html = trim($html, "\r\n");
+
+        return "if(".self::VAR."inputGet->getUserAction() == UserAction::DETAIL)\r\n"
+        ."{\r\n"
+        .implode(self::NEW_LINE, $getData)
         .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
         ."}";
     }
@@ -531,6 +595,36 @@ class AppBuilderBase
             if($field->getIncludeInsert())
             {
                 $tr = $this->createUpdateRow($dom, $mainEntity, $objectName, $field, $pkName);
+                $tbody->appendChild($tr);
+            }
+        }
+
+
+        $table->appendChild($tbody);
+        return $table;
+    }
+    
+    /**
+     * Create detail table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField[] $insertFields
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
+    {
+        $table = $this->createElementTableResponsive($dom);
+
+        $tbody = $dom->createElement('tbody');
+
+        foreach($insertFields as $field)
+        {
+            if($field->getIncludeInsert())
+            {
+                $tr = $this->createDetailRow($dom, $mainEntity, $objectName, $field, $pkName);
                 $tbody->appendChild($tr);
             }
         }
@@ -597,6 +691,50 @@ class AppBuilderBase
         {
             $td2->appendChild($input);
         }
+
+        $tr->appendChild($td1);
+        $tr->appendChild($td2);
+
+        return $tr;
+    }
+    
+    /**
+     * Create detail form table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createDetailRow($dom, $mainEntity, $objectName, $field, $pkName)
+    {
+        $yes = self::VAR."currentLanguage->getYes()";
+        $no = self::VAR."currentLanguage->getNo()";
+        $tr = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+
+        $label = $dom->createTextNode($field->getFieldLabel());
+        
+        if($field->getElementType() == 'checkbox')
+        {
+            $val = "->option".$upperFieldName."(".$yes.", ".$no.");";
+        }
+        else
+        {
+            $val = "->get".$upperFieldName."();";
+        }
+        
+        $value = $dom->createTextNode(self::PHP_OPEN_TAG."echo ".self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
+
+        $td1->appendChild($label);
+
+        $td2->appendChild($value);
+        
 
         $tr->appendChild($td1);
         $tr->appendChild($td2);
