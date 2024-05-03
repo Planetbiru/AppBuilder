@@ -286,7 +286,7 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
         <td><?php echo $entityLabel->getProducerId();?></td>
         <td>
           <select class="form-control" name="producer_id" id="producer_id">
-            <option value="">- Select One -</option>
+            <option value=""><?php echo $appLangauge->getSelectOne();?></option>
           </select>
         </td>
       </tr>
@@ -323,19 +323,19 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
       <tr>
         <td><?php echo $entityLabel->getLocked();?></td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> Locked</label>
+          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> <?php echo $entityLabel->getLocked();?></label>
         </td>
       </tr>
       <tr>
         <td><?php echo $entityLabel->getAsDraft();?></td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> As Draft</label>
+          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> <?php echo $entityLabel->getAsDraft();?></label>
         </td>
       </tr>
       <tr>
         <td><?php echo $entityLabel->getActive();?></td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> Active</label>
+          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> <?php echo $entityLabel->getActive();?></label>
         </td>
       </tr>
     </tbody>
@@ -344,7 +344,7 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
     <tbody>
       <tr>
         <td></td>
-        <td><input type="submit" class="btn btn-success" name="save-insert" id="save-insert" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+        <td><input type="submit" class="btn btn-success" name="save-insert" id="save-insert" value="<?php  echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
       </tr>
     </tbody>
   </table>
@@ -393,7 +393,7 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
         <td><?php echo $entityLabel->getProducerId();?></td>
         <td>
           <select class="form-control" name="producer_id" id="producer_id">
-            <option value="">- Select One -</option>
+            <option value=""><?php echo $appLangauge->getSelectOne();?></option>
           </select>
         </td>
       </tr>
@@ -430,19 +430,19 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
       <tr>
         <td><?php echo $entityLabel->getLocked();?></td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> Locked</label>
+          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> <?php echo $entityLabel->getLocked();?></label>
         </td>
       </tr>
       <tr>
         <td><?php echo $entityLabel->getAsDraft();?></td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> As Draft</label>
+          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> <?php echo $entityLabel->getAsDraft();?></label>
         </td>
       </tr>
       <tr>
         <td><?php echo $entityLabel->getActive();?></td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> Active</label>
+          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> <?php echo $entityLabel->getActive();?></label>
         </td>
       </tr>
     </tbody>
@@ -451,7 +451,7 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
     <tbody>
       <tr>
         <td></td>
-        <td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+        <td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php  echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
       </tr>
     </tbody>
   </table>
@@ -524,15 +524,15 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
       </tr>
       <tr>
         <td><?php echo $entityLabel->getLocked();?></td>
-        <td><?php echo $album->optionLocked($currentLanguage->getYes(), $currentLanguage->getNo());?></td>
+        <td><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
       </tr>
       <tr>
         <td><?php echo $entityLabel->getAsDraft();?></td>
-        <td><?php echo $album->optionAsDraft($currentLanguage->getYes(), $currentLanguage->getNo());?></td>
+        <td><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></td>
       </tr>
       <tr>
         <td><?php echo $entityLabel->getActive();?></td>
-        <td><?php echo $album->optionActive($currentLanguage->getYes(), $currentLanguage->getNo());?></td>
+        <td><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></td>
       </tr>
     </tbody>
   </table>
@@ -540,7 +540,7 @@ $entityLabel = new EntityLabel(new Album(), $appConfig);
     <tbody>
       <tr>
         <td></td>
-        <td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php  echo $currentLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $currentLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+        <td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php  echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php  echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
       </tr>
     </tbody>
   </table>
