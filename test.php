@@ -1,5 +1,8 @@
 <?php
 
+// This script is generated automaticaly by AppBuilder
+// Visit https://github.com/Planetbiru/AppBuilder
+
 use MagicObject\MagicObject;
 use MagicObject\SetterGetter;
 use MagicObject\Database\PicoPredicate;
