@@ -45,7 +45,7 @@ entity_info:
   sort_order: sort_order
   approval_id: approval_id
   approval_note: approval_note
-  sort_order: sort_order
+  approval_status: approval_status
 entity_apv_info:
   approval_status: approval_status
 current_action:

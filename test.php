@@ -80,7 +80,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
 
-	$album->setAlbumId($album->getAlbumId())->setWaitingFor(3)->update();
+	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(3)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -316,19 +316,19 @@ if($inputGet->getUserAction() == UserAction::INSERT)
       <tr>
         <td>Locked</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> Locked</label>
+          <input autocomplete="off" class="form-control" type="number" name="locked" id="locked"/>
         </td>
       </tr>
       <tr>
         <td>As Draft</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> As Draft</label>
+          <input autocomplete="off" class="form-control" type="number" name="as_draft" id="as_draft"/>
         </td>
       </tr>
       <tr>
         <td>Active</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> Active</label>
+          <input autocomplete="off" class="form-control" type="number" name="active" id="active"/>
         </td>
       </tr>
     </tbody>
@@ -420,19 +420,19 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
       <tr>
         <td>Locked</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> Locked</label>
+          <input class="form-control" type="number" name="locked" id="locked" value="<?php echo $album->getLocked();?>" autocomplete="off"/>
         </td>
       </tr>
       <tr>
         <td>As Draft</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> As Draft</label>
+          <input class="form-control" type="number" name="as_draft" id="as_draft" value="<?php echo $album->getAsDraft();?>" autocomplete="off"/>
         </td>
       </tr>
       <tr>
         <td>Active</td>
         <td>
-          <label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> Active</label>
+          <input class="form-control" type="number" name="active" id="active" value="<?php echo $album->getActive();?>" autocomplete="off"/>
         </td>
       </tr>
     </tbody>
@@ -511,15 +511,15 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
       </tr>
       <tr>
         <td>Locked</td>
-        <td><?php echo $album->optionLocked($currentLanguage->getYes(), $currentLanguage->getNo());?></td>
+        <td><?php echo $album->getLocked();?></td>
       </tr>
       <tr>
         <td>As Draft</td>
-        <td><?php echo $album->optionAsDraft($currentLanguage->getYes(), $currentLanguage->getNo());?></td>
+        <td><?php echo $album->getAsDraft();?></td>
       </tr>
       <tr>
         <td>Active</td>
-        <td><?php echo $album->optionActive($currentLanguage->getYes(), $currentLanguage->getNo());?></td>
+        <td><?php echo $album->getActive();?></td>
       </tr>
     </tbody>
   </table>

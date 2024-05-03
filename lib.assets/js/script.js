@@ -137,7 +137,7 @@ $(document).ready(function(){
 		let trashEntityName = masterEntityName+'Trash';
 		
 		let approvalTableName = masterTableName + '_apv';
-		let approvalPrimaryKeyName = masterTableName + '_id';
+		let approvalPrimaryKeyName = approvalTableName + '_id';
 		let trashTableName = masterTableName + '_trash';
 		let trashPrimaryKeyName = trashTableName + '_id';
 		$(this).attr('data-value', masterTableName);
@@ -270,8 +270,6 @@ function generateScript(selector)
 		let dataType = $(this).find('select.input-field-data-type').val();
 		let inputFilter = $(this).find('select.input-data-filter').val();
 
-
-
 		let field = {
 			fieldName:fieldName,
 			fieldLabel:fieldLabel,
@@ -291,6 +289,9 @@ function generateScript(selector)
 
 	let requireApproval = $('#with_approval')[0].checked && true;
 	let withTrash = $('#with_trash')[0].checked && true;
+	let manualSortOrder = $('#manualsortorder')[0].checked && true;
+	let actiavteDeactivate = $('#actiavte_deactivate')[0].checked && true;
+	let withApprovalNote = $('#with_approval_note')[0].checked && true;
 	let entity = {
 		mainEntity:{
 			entityName: $('[name="entity_master_name"]').val(),
@@ -318,10 +319,20 @@ function generateScript(selector)
             primaryKey: $('[name="primary_key_trash"]').val()
 		}
 	}
+	
+	let features = {
+		actiavteDeactivate: actiavteDeactivate,
+		sortOrder: manualSortOrder,
+		approvalRequired: requireApproval,
+		approvalNote: withApprovalNote,
+		trashRequired: withTrash
+		
+	};
 
 	let dataToPost = {
 		entity: entity,
-		fields: fields
+		fields: fields,
+		features: features
 	};
 	generateAllCode(dataToPost);
 }

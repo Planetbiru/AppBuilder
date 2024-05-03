@@ -2,6 +2,7 @@
 
 use AppBuilder\AppBuilder;
 use AppBuilder\AppBuilderApproval;
+use AppBuilder\AppFeatures;
 use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
 use AppBuilder\AppSection;
@@ -16,7 +17,7 @@ require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
 $request = new InputPost(true);
-
+error_log($request);
 if($request->issetFields())
 {
     $insertFields = array();
@@ -121,29 +122,31 @@ if($request->issetFields())
         AppBuilderBase::VAR."inputPost = new InputPost();",
         ""
     ));
+    
+    $appFeatures = new AppFeatures($request->getFeatures());
 
     // prepare CRUD section begin
-    if($approvalRequired)
+    if($appFeatures->isApprovalRequired())
     {
-        $appBuilderApv = new AppBuilderApproval($builderConfig, $appConfig, $entityInfo, $entityApvInfo);
+        $appBuilder = new AppBuilderApproval($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo);
 
         // CRUD
-        $createSection = $appBuilderApv->createInsertApprovalSection($entityMain, $insertFields, $approvalRequired, $entityApproval);
-        $updateSection = $appBuilderApv->createUpdateApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval);
-        $activationSection = $appBuilderApv->createActivationApprovalSection($entityMain);
-        $deactivationSection = $appBuilderApv->createDeactivationApprovalSection($entityMain);     
-        $deleteSection = $appBuilderApv->createDeleteApprovalSection($entityMain);
-        $approvalSection = $appBuilderApv->createApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval, $trashRequired, $entityTrash);
-        $rejectionSection = $appBuilderApv->createRejectionSection($entityMain, $approvalRequired, $entityApproval);  
+        $createSection = $appBuilder->createInsertApprovalSection($entityMain, $insertFields, $approvalRequired, $entityApproval);
+        $updateSection = $appBuilder->createUpdateApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval);
+        $activationSection = $appBuilder->createActivationApprovalSection($entityMain);
+        $deactivationSection = $appBuilder->createDeactivationApprovalSection($entityMain);     
+        $deleteSection = $appBuilder->createDeleteApprovalSection($entityMain);
+        $approvalSection = $appBuilder->createApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval, $trashRequired, $entityTrash);
+        $rejectionSection = $appBuilder->createRejectionSection($entityMain, $approvalRequired, $entityApproval);  
         
         // GUI
-        $guiInsert = $appBuilderApv->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
-        $guiUpdate = $appBuilderApv->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
-        $guiDetail = $appBuilderApv->createGuiDetail($entityMain, $detailFields, $approvalRequired, $entityApproval); 
+        $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
+        $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
+        $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $approvalRequired, $entityApproval); 
     }
     else
     {
-        $appBuilder = new AppBuilder($builderConfig, $appConfig, $entityInfo, $entityApvInfo);
+        $appBuilder = new AppBuilder($builderConfig, $appConfig, $entityInfo, $appFeatures, $entityApvInfo);
 
         // CRUD
         $createSection = $appBuilder->createInsertSection($entityMain, $insertFields);
@@ -202,9 +205,9 @@ if($request->issetFields())
     
     require_once dirname(__DIR__) . "/inc.app/database.php";
         
-    AppBuilderBase::generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
-    AppBuilderBase::generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
-    AppBuilderBase::generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
+    $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
+    $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
+    $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
     
 }
 

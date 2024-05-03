@@ -428,14 +428,53 @@ require_once __DIR__ . "/inc.app/navs.php";
                 </tbody>
               </table>
               <div class="button-area">
-                <input type="hidden" name="table" value="">
-                <input class="btn btn-success" type="button" name="generate-script" id="generate-script" value="Generate Script"> &nbsp;
-                <label><input type="checkbox" name="with_approval" id="with_approval" value="1"> Approval</label> &nbsp;
-                <label><input type="checkbox" name="with_approval_note" id="with_approval_note" value="1"> Approval Note</label> &nbsp;
-                <label><input type="checkbox" name="with_trash" id="with_trash" value="1"> Trash</label> &nbsp;
-                <label><input type="checkbox" name="quote" id="quote" value="1"> Quote table and column</label> &nbsp;
-                <label><input type="checkbox" name="pkeydesc" id="pkeydesc" value="1"> ORDER BY PRIMARY_KEY DESC</label> &nbsp;
-                <label><input type="checkbox" name="manualsortorder" id="manualsortorder" value="1"> Manual Sort Order</label> &nbsp;
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-module-features">
+                  Module Features
+                </button>
+                <input class="btn btn-success" type="button" name="generate-script" id="generate-script" value="Generate Script"> &nbsp;            
+                
+                <div class="modal fade" id="modal-module-features" tabindex="-1" aria-labelledby="modal_features_label" aria-hidden="true">
+                  <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Module Feature</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tbody>
+                            <tr>
+                              <td>Activate/Decativate</td>
+                              <td><label><input type="checkbox" name="actiavte_deactivate" id="actiavte_deactivate" value="1"> Activate/Decativate</label> &nbsp;</td>
+                            </tr>
+                            <tr>
+                              <td>Sort Order</td>
+                              <td><label><input type="checkbox" name="manualsortorder" id="manualsortorder" value="1"> Sort Order</label> &nbsp;</td>
+                            </tr>
+                            <tr>
+                              <td>Approval</td>
+                              <td><label><input type="checkbox" name="with_approval" id="with_approval" value="1"> Approval</label> &nbsp;</td>
+                            </tr>
+                            <tr>
+                              <td>Approval Note</td>
+                              <td><label><input type="checkbox" name="with_approval_note" id="with_approval_note" value="1"> Approval Note</label> &nbsp;</td>
+                            </tr>
+                            <tr>
+                              <td>Trash</td>
+                              <td><label><input type="checkbox" name="with_trash" id="with_trash" value="1"> Trash</label> &nbsp;</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
               </div>
             </form>
           </div>

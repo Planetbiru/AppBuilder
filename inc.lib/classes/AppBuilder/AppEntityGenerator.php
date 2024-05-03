@@ -114,6 +114,7 @@ class '.$className.' extends MagicObject
         $tmp = array();
         if($predecessor && is_array($predecessor))
         {
+            $predecessor = $this->removeDuplicated($predecessor, $rows);
             foreach($predecessor as $row)
             {
                 $tmp[] = $row;
@@ -130,11 +131,37 @@ class '.$className.' extends MagicObject
         }
         if($successor && is_array($successor))
         {
+            $successor = $this->removeDuplicated($successor, $rows);
             foreach($successor as $row)
             {
                 $tmp[] = $row;
             }
         }
         return $tmp;
+    }
+    
+    /**
+     * Remove duplication
+     *
+     * @param array $additional
+     * @param array $rows
+     * @return array
+     */
+    public function removeDuplicated($additional, $rows)
+    {
+        $existing = array();
+        foreach($rows as $row)
+        {
+            $existing[] = $row['Field'];
+        }
+        $result = array();
+        foreach($additional as $row)
+        {
+            if(!in_array($row['Field'], $existing))
+            {
+                $result[] = $row;
+            }
+        }
+        return $result;
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBuilder\Base;
 
 use AppBuilder\AppEntityGenerator;
+use AppBuilder\AppFeatures;
 use AppBuilder\AppField;
 use AppBuilder\AppSecretObject;
 use AppBuilder\ElementType;
@@ -87,19 +88,28 @@ class AppBuilderBase
      * @var SecretObject
      */
     protected $currentAction;
+    
+    /**
+     * App feature
+     *
+     * @var AppFeatures
+     */
+    protected $appFeatures;
 
     /**
      * Constructor
      *
      * @param SecretObject $appBuilderConfig
      * @param SecretObject $appConfig
+     * @param AppFeatures $appFeatures
      * @param EntityInfo $entityInfo
      * @param EntityApvInfo $entityApvInfo
      */
-    public function __construct($appBuilderConfig, $appConfig, $entityInfo, $entityApvInfo)
+    public function __construct($appBuilderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo)
     {
         $this->appBuilderConfig = $appBuilderConfig;
         $this->appConfig = $appConfig;
+        $this->appFeatures = $appFeatures;
         $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
         $this->entityInfo = $entityInfo;
@@ -1283,7 +1293,7 @@ class AppBuilderBase
      * @param EntityInfo $entityInfo
      * @return void
      */
-    public static function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
@@ -1291,7 +1301,7 @@ class AppBuilderBase
         echo "$baseDir\r\n";
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity();
+        $generator->generateCustomEntity($entityMain->getEntityName(), $entityMain->getTableName(), null, $this->getSucessorMainColumns());
     }
     
     /**
@@ -1305,7 +1315,7 @@ class AppBuilderBase
      * @param MagicObject $entityApproval
      * @return void
      */
-    public static function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval)
+    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
@@ -1313,7 +1323,8 @@ class AppBuilderBase
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
 
-        $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName());
+        $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName(), 
+        $this->getPredecessorApprovalColumns($entityApproval), $this->getSucessorApprovalColumns(), true);
     }
     
     /**
@@ -1327,19 +1338,143 @@ class AppBuilderBase
      * @param MagicObject $entityTrash
      * @return void
      */
-    public static function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash)
+    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName());
+        $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName(),
+        $this->getPredecessorTrashColumns($entityTrash), $this->getSucessorTrashColumns(), true);
     }
 
-    public function getAdditionalMainColumns()
+    /**
+     * Get successor main columns
+     *
+     * @return array
+     */
+    public function getSucessorMainColumns()
     {
+        $cols = array();
+        
+        if($this->appFeatures->isSortOrder())
+        {
+            $cols["sortOrder"]       = array('Type'=>'int(11)',     'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //sort_order",
+        }
+        if($this->appFeatures->isActiavteDeactivate())
+        {
+            $cols["active"]          = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //active",
+        }
+        if($this->appFeatures->isApprovalRequired())
+        {
+            $cols["draft"]           = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //draft",
+            $cols["waitingFor"]      = array('Type'=>'int(4)',      'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //waiting_for",
+            $cols["approvalId"]      = array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>'');  //approval_id",
+            $cols["adminAskEdit"]    = array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //admin_ask_edit",
+            $cols["ipAskEdit"]       = array('Type'=>'varchar(50)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //ip_ask_edit",
+            $cols["timeAskEdit"]     = array('Type'=>'timestamp',   'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //time_ask_edit",
+        }
+        $result = array();
+        foreach($cols as $key=>$value)
+        {
+            $value['Field'] = $this->entityInfo->get($key);
+            $result[] = $value;
+        }
+        return $result;
+    }
+    
+    /**
+     * Get predecessor approval columns
+     *
+     * @param MagicObject $entityApproval
+     * @return array
+     */
+    public function getPredecessorApprovalColumns($entityApproval)
+    {
+        return array(
 
+            array('Field'=>$entityApproval->getPrimaryKey(), 'Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'PRI', 'Default'=>'NULL', 'Extra'=>'')
+        );
+    }
+    
+    /**
+     * Get successor approval columns
+     *
+     * @return array
+     */
+    public function getSucessorApprovalColumns()
+    {
+        $cols = array();
+        
+        if($this->appFeatures->isSortOrder())
+        {
+            $cols["sortOrder"]       = array('Type'=>'int(11)',     'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //sort_order",
+        }
+        if($this->appFeatures->isActiavteDeactivate())
+        {
+            $cols["active"]          = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //active",
+        }
+        if($this->appFeatures->isApprovalRequired())
+        {
+            $cols["adminAskEdit"]    = array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //admin_ask_edit",
+            $cols["ipAskEdit"]       = array('Type'=>'varchar(50)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //ip_ask_edit",
+            $cols["timeAskEdit"]     = array('Type'=>'timestamp',   'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //time_ask_edit",
+            $cols["approvalStatus"]  = array('Type'=>'int(4)',      'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //waiting_for",
+        }
+        $result = array();
+        foreach($cols as $key=>$value)
+        {
+            $value['Field'] = $this->entityInfo->get($key);
+            $result[] = $value;
+        }
+        return $result;
+    }
+    
+    /**
+     * Get predecessor trash columns
+     *
+     * @param MagicObject $entityTrash
+     * @return array
+     */
+    public function getPredecessorTrashColumns($entityTrash)
+    {
+        return array(
+
+            array('Field'=>$entityTrash->getPrimaryKey(), 'Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'PRI', 'Default'=>'NULL', 'Extra'=>'')
+        );
+    }
+    
+    /**
+     * Get successor approval columns
+     *
+     * @return array
+     */
+    public function getSucessorTrashColumns()
+    {
+        $cols = array();
+        
+        if($this->appFeatures->isSortOrder())
+        {
+            $cols["sortOrder"]       = array('Type'=>'int(11)',     'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //sort_order",
+        }
+        if($this->appFeatures->isActiavteDeactivate())
+        {
+            $cols["active"]          = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //active",
+        }
+        if($this->appFeatures->isApprovalRequired())
+        {
+            $cols["adminAskEdit"]    = array('Type'=>'varchar(40)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //admin_ask_edit",
+            $cols["ipAskEdit"]       = array('Type'=>'varchar(50)', 'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //ip_ask_edit",
+            $cols["timeAskEdit"]     = array('Type'=>'timestamp',   'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //time_ask_edit",
+        }
+        $result = array();
+        foreach($cols as $key=>$value)
+        {
+            $value['Field'] = $this->entityInfo->get($key);
+            $result[] = $value;
+        }
+        return $result;
     }
 
     /**
