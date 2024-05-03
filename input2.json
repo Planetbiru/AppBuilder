@@ -102,12 +102,28 @@
                     {
                         "column": "number_of_song",
                         "value": 3
+                    },
+                    {
+                        "column": "release_date",
+                        "value": "2024-01-03"
+                    },
+                    {
+                        "column": "active",
+                        "value": true
                     }
                 ],
                 "sortable": [
                     {
                         "sortBy": "time_create",
                         "sortType": "ASC"
+                    }
+                ],
+                "additionalOutput": [
+                    {
+                        "column": "number_of_song"
+                    },
+                    {
+                        "column": "release_date"
                     }
                 ]
             }

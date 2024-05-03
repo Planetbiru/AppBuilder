@@ -87,18 +87,19 @@ class AppBuilder extends AppBuilderBase
     /**
      * Create UPDATE section without approval and trash
      *
-     * @param AppField[] $appFields
      * @param MagicObject $mainEntity
      * @param mixed $withTrash
+     * @param MagicObject $trashEntity
      * @return string
      */
-    public function createDeleteSection($mainEntity, $withTrash = false, $entityTrashName = null)
+    public function createDeleteSection($mainEntity, $withTrash = false, $trashEntity = null)
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
+        
 
         $objectName = lcfirst($entityName);
-        $objectTrashName = lcfirst($entityTrashName);
+        
         $objectNameBk = $objectName;
         $lines = array();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
@@ -112,15 +113,16 @@ class AppBuilder extends AppBuilderBase
             
         if($withTrash)
         {
-
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectNameBk, $entityName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->findOneBy".$upperPkName."(".parent::VAR."rowId);";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."if(".$objectNameBk."->hasValue".$upperPkName."())";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."{";       
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectTrashName, $entityTrashName, $objectNameBk);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectTrashName.parent::CALL_INSERT_END;
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->delete();";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."}";
+            $entityTrashName = $trashEntity->getEntityName();
+            $objectTrashName = lcfirst($entityTrashName);
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectNameBk, $entityName);
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->findOneBy".$upperPkName."(".parent::VAR."rowId);";
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."if(".parent::VAR.$objectNameBk."->hasValue".$upperPkName."())";
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."{";       
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectTrashName, $entityTrashName, $objectNameBk);
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectTrashName.parent::CALL_INSERT_END;
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->delete();";
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."}";
 
         }
         else

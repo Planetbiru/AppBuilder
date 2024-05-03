@@ -20,11 +20,14 @@ class AppFeatures
      */
     public function __construct($features)
     {
-        $this->actiavteDeactivate = $this->isTrue($features->get('actiavteDeactivate'));
-        $this->sortOrder = $this->isTrue($features->get('sortOrder'));
-        $this->approvalRequired = $this->isTrue($features->get('approvalRequired'));
-        $this->approvalNote = $this->isTrue($features->get('approvalNote'));
-        $this->trashRequired = $this->isTrue($features->get('trashRequired'));
+        if($features != null)
+        {
+            $this->actiavteDeactivate = $this->isTrue($features->get('actiavteDeactivate'));
+            $this->sortOrder = $this->isTrue($features->get('sortOrder'));
+            $this->approvalRequired = $this->isTrue($features->get('approvalRequired'));
+            $this->approvalNote = $this->isTrue($features->get('approvalNote'));
+            $this->trashRequired = $this->isTrue($features->get('trashRequired'));
+        }
     }
     
     /**

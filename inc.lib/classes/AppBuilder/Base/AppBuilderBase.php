@@ -26,7 +26,8 @@ class AppBuilderBase
     const TAB3 = "\t\t\t";
     const TAB4 = "\t\t\t\t";
     const NEW_LINE = "\r\n";
-    const NEW_LINE_R = "\n";
+    const NEW_LINE_R = "\r";
+    const NEW_LINE_N = "\n";
     const VAR = "$";
     const CALL_INSERT_END = "->insert();";
     const CALL_UPDATE_END = "->update();";
@@ -397,11 +398,11 @@ class AppBuilderBase
         if($this->style == self::STYLE_SETTER_GETTER)
         {
             $param = PicoStringUtil::upperCamelize($id);
-            return self::PHP_OPEN_TAG.' echo '.self::VAR."appLanguage->get$param"."(); ".self::PHP_CLOSE_TAG;
+            return self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->get$param"."(); ".self::PHP_CLOSE_TAG;
         }
         else
         {
-            return self::PHP_OPEN_TAG.' echo '.self::VAR."appLanguage->get('".$id."'); ".self::PHP_CLOSE_TAG;
+            return self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->get('".$id."'); ".self::PHP_CLOSE_TAG;
         }
     }
     
@@ -970,7 +971,7 @@ class AppBuilderBase
                 $inputStrl->setAttribute('id', $id);
             }   
             $inputStrl->setAttribute('value', '1');
-            $inputStrl->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo '.self::VAR.$objectName.'->createChecked'.$upperFieldName.'();'.self::PHP_CLOSE_TAG));
+            $inputStrl->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.'->createChecked'.$upperFieldName.'();'.self::PHP_CLOSE_TAG));
             $input->appendChild($inputStrl);
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode(' '.$caption);
@@ -1001,9 +1002,11 @@ class AppBuilderBase
                 $entity = $reference->getEntity();
                 $specification = $reference->getSpecification();
                 $sortable = $reference->getSortable();
+                $additionalOutput = $reference->getAdditionalOutput();
+                
                 if(isset($entity) && $entity->getEntityName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
                 {
-                    $input = $this->appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected);
+                    $input = $this->appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected, $additionalOutput);
                 }
             }
         }
@@ -1030,8 +1033,8 @@ class AppBuilderBase
             $option->appendChild($textLabel);
             if($selected != null)
             {
-                $input->setAttribute('data-app-builder-encoded-script', base64_encode('data-value="'.self::PHP_OPEN_TAG.'echo '.$selected.';'.self::PHP_CLOSE_TAG.'"'));
-                $option->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.'echo AttrUtil::selected('.$selected.', '."'".$value."'".');'.self::PHP_CLOSE_TAG));
+                $input->setAttribute('data-app-builder-encoded-script', base64_encode('data-value="'.self::PHP_OPEN_TAG.self::ECHO.$selected.';'.self::PHP_CLOSE_TAG.'"'));
+                $option->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.self::ECHO.'AttrUtil::selected('.$selected.', '."'".$value."'".');'.self::PHP_CLOSE_TAG));
             }
             else if($opt->isSelected())
             {
@@ -1051,23 +1054,40 @@ class AppBuilderBase
      * @param array $specification
      * @param array $sortable
      * @param string $selected
+     * @param MagicObject $additionalOutput
      * @return DOMElement
      */
-    private function appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected = null)
+    private function appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected = null, $additionalOutput = null)
     {
         if($entity != null)
         {
-            $paramSelected = ($selected != null) ? ", $selected": "";
+            $paramAdditionalOutput = "";
+            if($additionalOutput != null && !empty($additionalOutput))
+            {
+                $paramSelected = ($selected != null) ? ", $selected": ", null";
+                $output = array();
+                foreach($additionalOutput as $add)
+                {
+                    $output[] = $add->getColumn();
+                }
+                $paramAdditionalOutput = ', array("'.implode('", "', $output).'")';
+            }
+            else
+            {
+                $paramSelected = ($selected != null) ? ", $selected": "";
+            }
             
             $specStr = $this->buildSpecification($specification);
             $sortStr = $this->buildSortable($sortable);
             
-            $option = $dom->createTextNode(self::NEW_LINE_R.self::TAB3
-            .'<'.'?'.'php echo '.self::VAR.'selecOptionReference'
-            .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.$this->appConfig->getGlobalVariableDatabase().'), '.self::NEW_LINE_R.self::TAB3
-            .$specStr.', '.self::NEW_LINE_R.self::TAB3
-            .$sortStr.', '.self::NEW_LINE_R.self::TAB3
-            .'"'.$entity->getPrimaryKey().'", "'.$entity->getValue().'"'.$paramSelected.'); '.'?'.'>');
+            $option = $dom->createTextNode(self::NEW_LINE_N.self::TAB3.self::TAB3
+            .self::PHP_OPEN_TAG.self::ECHO.self::VAR.'selecOptionReference'
+            .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.$this->appConfig->getGlobalVariableDatabase().'), '
+            .self::NEW_LINE_N.self::TAB3.self::TAB3
+            .$specStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
+            .$sortStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
+            .'"'.$entity->getPrimaryKey().'", "'.$entity->getValue().'"'.$paramSelected.$paramAdditionalOutput.'); '.self::PHP_CLOSE_TAG.self::NEW_LINE_N.self::TAB3.self::TAB2);
+
             $input->appendChild($option);
         }
         return $input;
@@ -1077,7 +1097,7 @@ class AppBuilderBase
     {
         $specs = array();
         $specs[] = '(new PicoSpecification())';
-        if($specification != null && is_array($specification))
+        if($specification != null)
         {
             foreach($specification as $spc)
             {
@@ -1085,6 +1105,7 @@ class AppBuilderBase
                 {
                     $field = PicoStringUtil::camelize($spc->getColumn());
                     $value = $spc->getValue();
+                    $value = $this->fixValue($value);
                     $specs[]  = '->addAnd(new PicoPredicate("'.$field.'"'.", $value))";
                 }
             }
@@ -1096,7 +1117,7 @@ class AppBuilderBase
     {
         $specs = array();
         $specs[] = '(new PicoSortable())';
-        if($sortable != null && is_array($sortable))
+        if($sortable != null)
         {
             foreach($sortable as $srt)
             {
@@ -1121,6 +1142,25 @@ class AppBuilderBase
         {
             return '"'.$sortType.'"';
         }
+    }
+
+    /**
+     * Fix value
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    private function fixValue($value)
+    {
+        if(is_bool($value))
+        {
+            $value = ($value === true) ? 'true' : 'false';
+        }
+        else if(is_string($value))
+        {
+            $value = "'".$value."'";
+        }
+        return $value;
     }
 
     /**
@@ -1249,7 +1289,7 @@ class AppBuilderBase
      */
     public function createPhpOutputValue($value)
     {
-        return self::PHP_OPEN_TAG.'echo '.$value.';'.self::PHP_CLOSE_TAG;
+        return self::PHP_OPEN_TAG.self::ECHO.$value.';'.self::PHP_CLOSE_TAG;
     }
     
     /**
@@ -1320,7 +1360,6 @@ class AppBuilderBase
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
-        echo "$baseDir\r\n";
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
         $generator->generateCustomEntity($entityMain->getEntityName(), $entityMain->getTableName(), null, $this->getSucessorMainColumns());
@@ -1405,7 +1444,6 @@ class AppBuilderBase
             $result[] = $value;
             
         }
-        error_log(json_encode($result));
 
         return $result;
     }

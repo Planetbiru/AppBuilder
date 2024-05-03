@@ -3,6 +3,7 @@
 namespace AppBuilder;
 
 use MagicObject\MagicObject;
+use MagicObject\Util\ClassUtil\PicoObjectParser;
 use MagicObject\Util\PicoGenericObject;
 
 class AppField
@@ -99,6 +100,13 @@ class AppField
      */
     private $reference = array();
 
+    /**
+     * Additional output
+     *
+     * @var array
+     */
+    private $additionalOutput = array();
+
     public function __construct($value)
     {
         $this->fieldName = $value->getFieldName();
@@ -113,7 +121,8 @@ class AppField
         $this->dataType = $value->getdataType();
         $this->filterElementType = $value->getFilterElementType();
         $this->inputFilter = $value->getInputFilter();
-        $this->reference = $value->getreference();
+        $this->reference = PicoObjectParser::parseJsonRecursive($value->getreference());
+        $this->additionalOutput = $value->getAdditionalOutput();
 
         /*
         Array
@@ -276,5 +285,15 @@ class AppField
     public function getReference()
     {
         return $this->reference;
+    }
+
+    /**
+     * Get additional output
+     *
+     * @return  array
+     */ 
+    public function getAdditionalOutput()
+    {
+        return $this->additionalOutput;
     }
 }

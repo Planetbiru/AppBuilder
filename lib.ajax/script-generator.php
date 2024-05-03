@@ -16,7 +16,12 @@ use MagicObject\Util\PicoGenericObject;
 require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
-$request = new InputPost(true);
+//$request = new InputPost(true);
+
+$request = new MagicObject();
+$request->loadJsonFile(dirname(__DIR__)."/input2.json", false, true, true);
+//print_r($request);
+
 if($request->issetFields())
 {
     $insertFields = array();
@@ -211,7 +216,7 @@ if($request->issetFields())
     
     
     require_once dirname(__DIR__) . "/inc.app/database.php";
-        
+    
     $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
     $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
     $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
