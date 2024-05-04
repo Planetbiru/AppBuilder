@@ -18,8 +18,13 @@
             "primaryKey": "album_trash_id"
         }
     },
-
-
+    "features": {
+        "actiavteDeactivate": true,
+        "sortOrder": true,
+        "approvalRequired": true,
+        "approvalNote": true,
+        "trashRequired": true
+    },
     "fields": [
         {
             "fieldName": "album_id",
@@ -115,7 +120,7 @@
                 "sortable": [
                     {
                         "sortBy": "time_create",
-                        "sortType": "ASC"
+                        "sortType": "PicoSort::ORDER_TYPE_ASC"
                     }
                 ],
                 "additionalOutput": [

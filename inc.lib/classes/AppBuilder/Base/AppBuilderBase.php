@@ -40,7 +40,12 @@ class AppBuilderBase
     const STYLE_NATIVE = 'native';
     const STYLE_SETTER_GETTER = 'setter-getter';
     const ECHO = 'echo ';
-    
+
+    const WRAPPER_INSERT = "insert";
+    const WRAPPER_UPDATE = "update";
+    const WRAPPER_DETAIL = "detail";
+    const WRAPPER_LIST = "list";
+
     /**
      * Set and get value style
      *
@@ -443,9 +448,12 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
+
+        $html = $this->addIndent($html, 2);
+        $html = $this->addWrapper($html, self::WRAPPER_INSERT);
         
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
-        ."{\r\n"
+        ."{".self::NEW_LINE
         .$this->getIncludeHeader().self::NEW_LINE
         .$this->constructEntityLabel($entityName).self::NEW_LINE
         .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
@@ -494,6 +502,8 @@ class AppBuilderBase
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
         
+        $html = $this->addIndent($html, 2);
+        $html = $this->addWrapper($html, self::WRAPPER_UPDATE);
         
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
@@ -561,6 +571,9 @@ class AppBuilderBase
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
                 
+        $html = $this->addIndent($html, 2);
+        $html = $this->addWrapper($html, self::WRAPPER_DETAIL);
+
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
@@ -1106,7 +1119,7 @@ class AppBuilderBase
                     $field = PicoStringUtil::camelize($spc->getColumn());
                     $value = $spc->getValue();
                     $value = $this->fixValue($value);
-                    $specs[]  = '->addAnd(new PicoPredicate("'.$field.'"'.", $value))";
+                    $specs[]  = self::NEW_LINE_N.self::TAB4.self::TAB3."->and(new PicoPredicate(\"$field\", $value))";
                 }
             }
         }
@@ -1125,7 +1138,7 @@ class AppBuilderBase
                 {
                     $field = PicoStringUtil::camelize($srt->getSortBy());
                     $type = $this->getSortType($srt->getSortType());
-                    $specs[]  = "->add(new PicoSort(\"$field\", $type))";
+                    $specs[]  = self::NEW_LINE_N.self::TAB4.self::TAB3."->add(new PicoSort(\"$field\", $type))";
                 }
             }
         }
@@ -1606,5 +1619,76 @@ class AppBuilderBase
     public function constructEntityLabel($entityName)
     {
         return self::VAR."appEntityLabel = new EntityLabel(new $entityName(), ".self::VAR."appConfig);";
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $html
+     * @param integer $tab
+     * @return string
+     */
+    public function addIndent($html, $indent = 1)
+    {
+        $tab = "";
+        for($i = 0; $i<$indent; $i++)
+        {
+            $tab .= self::TAB1;
+        }
+        $html = PicoStringUtil::windowsCariageReturn($html);
+        $lines = explode(self::NEW_LINE, $html);
+        foreach($lines as $index=>$line)
+        {
+            $lines[$index] = $tab.$line;
+        }
+        return implode(self::NEW_LINE, $lines);
+    }
+
+    /**
+     * Add wrapper
+     *
+     * @param string $html
+     * @param string $wrapper
+     * @return string
+     */
+    public function addWrapper($html, $wrapper)
+    {
+        if($wrapper == self::WRAPPER_INSERT)
+        {
+            $html = 
+            '<div class="page page-insert">'.self::NEW_LINE
+            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            .$html
+            .self::TAB1.'</div>'.self::NEW_LINE
+            .'</div>'.self::NEW_LINE;
+        }
+        else if($wrapper == self::WRAPPER_UPDATE)
+        {
+            $html = 
+            '<div class="page page-update">'.self::NEW_LINE
+            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            .$html
+            .self::TAB1.'</div>'.self::NEW_LINE
+            .'</div>'.self::NEW_LINE;
+        }
+        else if($wrapper == self::WRAPPER_DETAIL)
+        {
+            $html = 
+            '<div class="page page-detail">'.self::NEW_LINE
+            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            .$html
+            .self::TAB1.'</div>'.self::NEW_LINE
+            .'</div>'.self::NEW_LINE;
+        }
+        else if($wrapper == self::WRAPPER_LIST)
+        {
+            $html = 
+            '<div class="page page-list">'.self::NEW_LINE
+            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            .$html
+            .self::TAB1.'</div>'.self::NEW_LINE
+            .'</div>'.self::NEW_LINE;
+        }
+        return $html;
     }
 }

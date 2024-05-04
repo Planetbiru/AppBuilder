@@ -10,17 +10,19 @@ use AppBuilder\Base\AppBuilderBase;
 use MagicObject\MagicObject;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
-use MagicObject\Util\ClassUtil\PicoObjectParser;
-use MagicObject\Util\PicoGenericObject;
 
 require_once dirname(__DIR__) . "/inc.app/app.php";
 
 $inputGet = new InputGet();
-//$request = new InputPost(true);
-
-$request = new MagicObject();
-$request->loadJsonFile(dirname(__DIR__)."/input2.json", false, true, true);
-//print_r($request);
+if(isset($_POST) && !empty($_POST))
+{
+    $request = new InputPost(true);
+}
+else
+{
+    $request = new MagicObject();
+    $request->loadJsonFile(dirname(__DIR__)."/input2.json", false, true, true);
+}
 
 if($request->issetFields())
 {
@@ -87,8 +89,6 @@ if($request->issetFields())
     $uses[] = "use AppBuilder\\AppInclude;";
     $uses[] = "use AppBuilder\\EntityLabel;";
     $uses[] = "use AppBuilder\\WaitingFor;";
-    
-    
     $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
     
     if($approvalRequired)
