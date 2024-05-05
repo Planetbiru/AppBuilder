@@ -214,13 +214,28 @@ $(document).ready(function(){
 	});
 
 	$(document).on('click', '.reference-button-data', function(e2){
-		let parentObj = $(this).closest('td'); 
+		let parentTd = $(this).closest('td'); 
+		let parentTr = $(this).closest('tr'); 
+		let fieldName = parentTr.attr('data-field-name');
+		loadReference(fieldName);
 		$('#modal-create-reference-data').modal('show');
 	})
 
 	loadTable();
 });
 
+function loadReference(fieldName)
+{
+	$.ajax({
+		type:'GET',
+		url:'lib.ajax/reference.php',
+		data:{fieldName:fieldName},
+		dataType:'json',
+		success: function(data){
+			console.log(data)
+		}
+	})
+}
 function prepareReferenceData(checkedValue, ctrl)
 {
 	let tr = ctrl.closest('tr');
