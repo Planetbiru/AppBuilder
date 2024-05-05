@@ -71,15 +71,10 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = "";
         $lines[] = parent::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName, $objectName);
-        $lines[] = "";
-
         $lines[] = parent::TAB1.parent::VAR.$objectApprovalName.parent::CALL_INSERT_END;
-
-
         $lines[] = parent::TAB1.$this->createConstructor($objectName."Update", $entityName);
         $lines[] = parent::TAB1.parent::VAR.$objectName."Update->set".$upperPkeyName."(".parent::VAR
         .$objectName."->get".$upperPkeyName."())->set".$approvalId."(".parent::VAR.$objectApprovalName."->get".$upperApprovalPkName."())".parent::CALL_UPDATE_END;
-
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
@@ -109,8 +104,6 @@ class AppBuilderApproval extends AppBuilderBase
         
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::UPDATE)";
         $lines[] = "{";
-        $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
-        $lines[] = "";
         $lines[] = parent::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
         foreach($appFields as $field)
         {
@@ -141,17 +134,11 @@ class AppBuilderApproval extends AppBuilderBase
         $upperIpAskEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpAskEdit());
         $upperPkeyApprovalName = PicoStringUtil::upperCamelize($pkeyApprovalName);
 
+        $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
-
-        $lines[] = "";
-        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyApprovalName."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())->set".$upperWaitingFor."(WaitingFor::UPDATE)->update();";
-
-        $lines[] = parent::TAB1.$this->createConstructor($objectName."Update", $entityName);
-        $lines[] = parent::TAB1.parent::VAR.$objectName."Update->set".$upperPkeyName."(".parent::VAR
-        .$objectName."->get".$upperPkeyName."())->set".$approvalId."(".parent::VAR.$objectApprovalName."->get".$upperApprovalPkName."())".parent::CALL_UPDATE_END;
-
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$approvalId."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())->set".$upperWaitingFor."(WaitingFor::UPDATE)->update();";
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
@@ -232,11 +219,9 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getAtivationRowIds() as ".parent::VAR."rowId)";    
         $lines[] = parent::TAB1.parent::TAB1."{";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
-        $lines[] = "";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
-        $lines[] = "";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".$waitingFor.")".parent::CALL_UPDATE_END;
         $lines[] = parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1."}";
