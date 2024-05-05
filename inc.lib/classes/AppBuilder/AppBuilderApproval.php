@@ -23,10 +23,13 @@ class AppBuilderApproval extends AppBuilderBase
         $objectName = lcfirst($entityName);
         
         $entityApprovalName = $approvalEntity->getEntityName();
-        
+        $upperPkeyName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
+        $upperApprovalPkName = PicoStringUtil::upperCamelize($approvalEntity->getPrimaryKey());
         $objectApprovalName = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         $upperDraft = PicoStringUtil::upperCamelize($this->entityInfo->getDraft());
+
+        $approvalId = PicoStringUtil::upperCamelize($this->entityInfo->getApprovalId());
 
         $lines = array();
         
@@ -71,6 +74,12 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = "";
 
         $lines[] = parent::TAB1.parent::VAR.$objectApprovalName.parent::CALL_INSERT_END;
+
+
+        $lines[] = parent::TAB1.$this->createConstructor($objectName."Update", $entityName);
+        $lines[] = parent::TAB1.parent::VAR.$objectName."Update->set".$upperPkeyName."(".parent::VAR
+        .$objectName."->get".$upperPkeyName."())->set".$approvalId."(".parent::VAR.$objectApprovalName."->get".$upperApprovalPkName."())".parent::CALL_UPDATE_END;
+
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
@@ -90,6 +99,9 @@ class AppBuilderApproval extends AppBuilderBase
         $objectName = lcfirst($entityName);
         $entityApprovalName = $approvalEntity->getEntityName();
         $pkeyApprovalName = $approvalEntity->getPrimaryKey();
+        $upperPkeyName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
+        $upperApprovalPkName = PicoStringUtil::upperCamelize($approvalEntity->getPrimaryKey());
+        $approvalId = PicoStringUtil::upperCamelize($this->entityInfo->getApprovalId());
 
         $objectApprovalName = lcfirst($entityApprovalName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
@@ -136,6 +148,10 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = "";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyApprovalName."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())->set".$upperWaitingFor."(WaitingFor::UPDATE)->update();";
 
+        $lines[] = parent::TAB1.$this->createConstructor($objectName."Update", $entityName);
+        $lines[] = parent::TAB1.parent::VAR.$objectName."Update->set".$upperPkeyName."(".parent::VAR
+        .$objectName."->get".$upperPkeyName."())->set".$approvalId."(".parent::VAR.$objectApprovalName."->get".$upperApprovalPkName."())".parent::CALL_UPDATE_END;
+
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
@@ -153,7 +169,7 @@ class AppBuilderApproval extends AppBuilderBase
     {
         $objectName = lcfirst($entityName);
         $lines = array();
-        $upperPkName = PicoStringUtil::upperCamelize($pkName);
+        $upperPkeyName = PicoStringUtil::upperCamelize($pkName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($waitingForKey);
          
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
@@ -163,7 +179,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getDeletionRowIds() as ".parent::VAR."rowId)";    
         $lines[] = parent::TAB1.parent::TAB1."{";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".parent::VAR.$waitingForFalue.");";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".parent::VAR.$waitingForFalue.");";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_UPDATE_END;
         $lines[] = parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1."}";
@@ -201,7 +217,7 @@ class AppBuilderApproval extends AppBuilderBase
     {
         $objectName = lcfirst($entityName);
         $lines = array();
-        $upperPkName = PicoStringUtil::upperCamelize($pkName);
+        $upperPkeyName = PicoStringUtil::upperCamelize($pkName);
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->getentityInfo()->getWaitingFor());
         $waitingFor = str_replace('UserAction', 'WaitingFor', $userAction);
 
@@ -221,7 +237,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
         $lines[] = "";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".$waitingFor.")".parent::CALL_UPDATE_END;
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".$waitingFor.")".parent::CALL_UPDATE_END;
         $lines[] = parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1."}";
         $lines[] = "}";
@@ -300,18 +316,18 @@ class AppBuilderApproval extends AppBuilderBase
         $userAction = 'UserAction::APPROVE';
         $objectName = lcfirst($entityName);
         $lines = array();
-        $upperPkName = PicoStringUtil::upperCamelize($pkName);
+        $upperPkeyName = PicoStringUtil::upperCamelize($pkName);
         $variableName = PicoStringUtil::camelize($pkName);
 
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
         $lines[] = "{";
-        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->isset".$upperPkName."())";
+        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->isset".$upperPkeyName."())";
         $lines[] = parent::TAB1."{";
-        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$variableName." = ".parent::VAR."inputPost->get".$upperPkName."();";
+        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$variableName." = ".parent::VAR."inputPost->get".$upperPkeyName."();";
     
         $lines[] = parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$objectName."->findOneBy".$upperPkName."(".parent::VAR.$variableName.");";
-        $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkName."())";
+        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$objectName."->findOneBy".$upperPkeyName."(".parent::VAR.$variableName.");";
+        $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkeyName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
         $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
@@ -418,18 +434,18 @@ class AppBuilderApproval extends AppBuilderBase
         $userAction = 'UserAction::REJECT';
         $objectName = lcfirst($entityName);
         $lines = array();
-        $upperPkName = PicoStringUtil::upperCamelize($pkName);
+        $upperPkeyName = PicoStringUtil::upperCamelize($pkName);
         $variableName = PicoStringUtil::camelize($pkName);
 
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
         $lines[] = "{";
-        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->isset".$upperPkName."())";
+        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->isset".$upperPkeyName."())";
         $lines[] = parent::TAB1."{";
-        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$variableName." = ".parent::VAR."inputPost->get".$upperPkName."();";
+        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$variableName." = ".parent::VAR."inputPost->get".$upperPkeyName."();";
     
         $lines[] = parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$objectName."->findOneBy".$upperPkName."(".parent::VAR.$variableName.");";
-        $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkName."())";
+        $lines[] = parent::TAB1.parent::TAB1.parent::VAR.$objectName."->findOneBy".$upperPkeyName."(".parent::VAR.$variableName.");";
+        $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPkeyName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
         $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);

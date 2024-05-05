@@ -1653,6 +1653,7 @@ class AppBuilderBase
      */
     public function addWrapper($html, $wrapper)
     {
+        $html = rtrim($html, self::NEW_LINE).self::NEW_LINE;
         if($wrapper == self::WRAPPER_INSERT)
         {
             $html = 
@@ -1689,6 +1690,6 @@ class AppBuilderBase
             .self::TAB1.'</div>'.self::NEW_LINE
             .'</div>'.self::NEW_LINE;
         }
-        return $html;
+        return rtrim($html, self::NEW_LINE);
     }
 }

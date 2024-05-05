@@ -58,6 +58,8 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$albumApv = new AlbumApv($album, $database);
 
 	$albumApv->insert();
+	$albumUpdate = new Album(null, $database);
+	$albumUpdate->setAlbumId($album->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->update();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
@@ -88,6 +90,8 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setIpAskEdit($currentAction->getIp());
 
 	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(WaitingFor::UPDATE)->update();
+	$albumUpdate = new Album(null, $database);
+	$albumUpdate->setAlbumId($album->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -359,9 +363,9 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 		      </tr>
 		    </tbody>
 		  </table>
-		</form>	</div>
+		</form>
+	</div>
 </div>
-
 <?php 
 require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 }
@@ -477,9 +481,9 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 		      </tr>
 		    </tbody>
 		  </table>
-		</form>	</div>
+		</form>
+	</div>
 </div>
-
 <?php 
 require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
@@ -570,9 +574,9 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 		      </tr>
 		    </tbody>
 		  </table>
-		</form>	</div>
+		</form>
+	</div>
 </div>
-
 <?php 
 require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
