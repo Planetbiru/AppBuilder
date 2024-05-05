@@ -56,15 +56,12 @@ if($inputGet->getUserAction() == UserAction::INSERT)
 	$album->insert();
 
 	$albumApv = new AlbumApv($album, $database);
-
 	$albumApv->insert();
 	$albumUpdate = new Album(null, $database);
 	$albumUpdate->setAlbumId($album->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->update();
 }
 else if($inputGet->getUserAction() == UserAction::UPDATE)
 {
-	$album = new Album(null, $database);
-
 	$albumApv = new AlbumApv(null, $database);
 	$albumApv->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
 	$albumApv->setName($inputPost->getName(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
@@ -85,13 +82,11 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 
 	$albumApv->insert();
 
+	$album = new Album(null, $database);
 	$album->setAdminAskEdit($currentAction->getUserId());
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
-
-	$album->setAlbumApvId($album->getAlbumApvId())->setWaitingFor(WaitingFor::UPDATE)->update();
-	$albumUpdate = new Album(null, $database);
-	$albumUpdate->setAlbumId($album->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->update();
+	$album->setApprovalId($album->getAlbumApvId())->setWaitingFor(WaitingFor::UPDATE)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -100,11 +95,9 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-
 			$album->setAdminAskEdit($currentAction->getUserId());
 			$album->setTimeAskEdit($currentAction->getTime());
 			$album->setIpAskEdit($currentAction->getIp());
-
 			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::ACTIVATE)->update();
 		}
 	}
@@ -116,11 +109,9 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-
 			$album->setAdminAskEdit($currentAction->getUserId());
 			$album->setTimeAskEdit($currentAction->getTime());
 			$album->setIpAskEdit($currentAction->getIp());
-
 			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::DEACTIVATE)->update();
 		}
 	}
@@ -132,11 +123,9 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-
 			$album->setAdminAskEdit($currentAction->getUserId());
 			$album->setTimeAskEdit($currentAction->getTime());
 			$album->setIpAskEdit($currentAction->getIp());
-
 			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::DELETE)->update();
 		}
 	}
