@@ -536,42 +536,21 @@ class AppBuilderBase
     /**
      * Create GUI DETAIL section without approval
      *
-     * @param AppField[] $appFields
      * @param MagicObject $mainEntity
+     * @param AppField[] $appFields
      * @param boolean $approvalRequired
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiDetail($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
+    public function createGuiDetail($mainEntity, $appFields, $approvalRequired = false, $approvalEntity = null)
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
 
         $objectName = lcfirst($entityName);
-        $dom = new DOMDocument();
         
-        $formDetail = $this->createElementForm($dom);
-        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
-        $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
-
-        $formDetail->appendChild($tableDetail1);
-        $formDetail->appendChild($tableDetail2);
-        
-        $dom->appendChild($formDetail);
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-
-        $xml = $dom->saveXML();
-
-        $htmlDetail = $this->xmlToHtml($xml);
-        $htmlDetail = str_replace('<td/>', '<td></td>', $htmlDetail);
-        $htmlDetail = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $htmlDetail);
-        $htmlDetail = trim($htmlDetail, "\r\n");
-        
-        $htmlDetail = $this->addTab($htmlDetail, 2);
-        $htmlDetail = $this->addIndent($htmlDetail, 2);
-        $htmlDetail = $this->addWrapper($htmlDetail, self::WRAPPER_DETAIL);
+        $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $pkName);
 
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
@@ -605,6 +584,42 @@ class AppBuilderBase
         ."{\r\n"
         .implode(self::NEW_LINE, $getData)
         ."}";
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $mainEntity
+     * @param [type] $objectName
+     * @param [type] $insertFields
+     * @param [type] $pkName
+     * @return void
+     */
+    public function createTableDetail($mainEntity, $objectName, $insertFields, $pkName)
+    {
+        $dom = new DOMDocument();
+        
+        $formDetail = $this->createElementForm($dom);
+        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+        $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+
+        $formDetail->appendChild($tableDetail1);
+        $formDetail->appendChild($tableDetail2);
+        
+        $dom->appendChild($formDetail);
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        $xml = $dom->saveXML();
+
+        $htmlDetail = $this->xmlToHtml($xml);
+        $htmlDetail = str_replace('<td/>', '<td></td>', $htmlDetail);
+        $htmlDetail = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $htmlDetail);
+        $htmlDetail = trim($htmlDetail, "\r\n");
+        
+        $htmlDetail = $this->addTab($htmlDetail, 2);
+        $htmlDetail = $this->addIndent($htmlDetail, 2);
+        $htmlDetail = $this->addWrapper($htmlDetail, self::WRAPPER_DETAIL);
     }
 
     /**
