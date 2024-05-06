@@ -123,7 +123,6 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectApprovalName.parent::CALL_SET.$upperTimeEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectApprovalName.parent::CALL_SET.$upperIpEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
 
-
         $lines[] = "";
         $lines[] = parent::TAB1.parent::VAR.$objectApprovalName.parent::CALL_INSERT_END;
 
@@ -138,7 +137,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
-        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR.$objectName."->get".$upperPkeyName."())".parent::CALL_SET.$approvalId."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())".parent::CALL_SET.$approvalId.$upperWaitingFor."(WaitingFor::UPDATE)->update();";
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR.$objectApprovalName."->get".$upperPkeyName."())".parent::CALL_SET.$approvalId."(".parent::VAR.$objectApprovalName."->get".$upperPkeyApprovalName."())".parent::CALL_SET.$approvalId.$upperWaitingFor."(WaitingFor::UPDATE)->update();";
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
@@ -219,10 +218,18 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getAtivationRowIds() as ".parent::VAR."rowId)";    
         $lines[] = parent::TAB1.parent::TAB1."{";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR."rowId)->set".$upperWaitingFor."(".$waitingFor.")".parent::CALL_UPDATE_END;
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."try";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."{";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName."->findOneBy".$upperPkeyName."And".$upperWaitingFor."(".parent::VAR."rowId, WaitingFor::NOTHING);";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperWaitingFor."(".$waitingFor.")".parent::CALL_UPDATE_END;
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."}";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."catch(Exception ".parent::VAR."e)";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."{";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// Do something here when record is not found";
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1."}";
         $lines[] = "}";

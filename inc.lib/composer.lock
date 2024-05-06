@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Planetbiru/MagicObject.git",
-                "reference": "bef091bdf97474b6a59b80641c4e573e1d3163fa"
+                "reference": "7efa9d3a392d9a03cb9f142780c5f6f2e6cd050b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Planetbiru/MagicObject/zipball/bef091bdf97474b6a59b80641c4e573e1d3163fa",
-                "reference": "bef091bdf97474b6a59b80641c4e573e1d3163fa",
+                "url": "https://api.github.com/repos/Planetbiru/MagicObject/zipball/7efa9d3a392d9a03cb9f142780c5f6f2e6cd050b",
+                "reference": "7efa9d3a392d9a03cb9f142780c5f6f2e6cd050b",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 "issues": "https://github.com/Planetbiru/MagicObject/issues",
                 "source": "https://github.com/Planetbiru/MagicObject/tree/main"
             },
-            "time": "2024-05-06T01:05:08+00:00"
+            "time": "2024-05-06T02:34:50+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

@@ -23,7 +23,7 @@ use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
 use YourApplication\Data\Entity\Producer;
 
-require_once __DIR__ . "auth.php";
+require_once __DIR__ . "/inc.app/auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
@@ -86,7 +86,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setAdminAskEdit($currentAction->getUserId());
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
-	$album->setAlbumId($album->getAlbumId())->setApprovalId($album->getAlbumApvId())->setApprovalIdWaitingFor(WaitingFor::UPDATE)->update();
+	$album->setAlbumId($albumApv->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->setApprovalIdWaitingFor(WaitingFor::UPDATE)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
@@ -95,10 +95,18 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAdminAskEdit($currentAction->getUserId());
-			$album->setTimeAskEdit($currentAction->getTime());
-			$album->setIpAskEdit($currentAction->getIp());
-			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::ACTIVATE)->update();
+			try
+			{
+				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
+				$album->setAdminAskEdit($currentAction->getUserId());
+				$album->setTimeAskEdit($currentAction->getTime());
+				$album->setIpAskEdit($currentAction->getIp());
+				$album->setWaitingFor(WaitingFor::ACTIVATE)->update();
+			}
+			catch(Exception $e)
+			{
+				// Do something here when record is not found
+			}
 		}
 	}
 }
@@ -109,10 +117,18 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAdminAskEdit($currentAction->getUserId());
-			$album->setTimeAskEdit($currentAction->getTime());
-			$album->setIpAskEdit($currentAction->getIp());
-			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::DEACTIVATE)->update();
+			try
+			{
+				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
+				$album->setAdminAskEdit($currentAction->getUserId());
+				$album->setTimeAskEdit($currentAction->getTime());
+				$album->setIpAskEdit($currentAction->getIp());
+				$album->setWaitingFor(WaitingFor::DEACTIVATE)->update();
+			}
+			catch(Exception $e)
+			{
+				// Do something here when record is not found
+			}
 		}
 	}
 }
@@ -123,10 +139,18 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 		foreach($inputPost->getAtivationRowIds() as $rowId)
 		{
 			$album = new Album(null, $database);
-			$album->setAdminAskEdit($currentAction->getUserId());
-			$album->setTimeAskEdit($currentAction->getTime());
-			$album->setIpAskEdit($currentAction->getIp());
-			$album->setAlbumId($rowId)->setWaitingFor(WaitingFor::DELETE)->update();
+			try
+			{
+				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
+				$album->setAdminAskEdit($currentAction->getUserId());
+				$album->setTimeAskEdit($currentAction->getTime());
+				$album->setIpAskEdit($currentAction->getIp());
+				$album->setWaitingFor(WaitingFor::DELETE)->update();
+			}
+			catch(Exception $e)
+			{
+				// Do something here when record is not found
+			}
 		}
 	}
 }

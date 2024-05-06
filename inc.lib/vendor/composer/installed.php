@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'a2e089ebc58dd2eb0b5dafe4554e024fa85b0cc3',
+        'reference' => '6c02aac9852138767d7b2a79222b45b685e63992',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'a2e089ebc58dd2eb0b5dafe4554e024fa85b0cc3',
+            'reference' => '6c02aac9852138767d7b2a79222b45b685e63992',
             'dev_requirement' => false,
         ),
         'planetbiru/magic-object' => array(
@@ -27,7 +27,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => 'bef091bdf97474b6a59b80641c4e573e1d3163fa',
+            'reference' => '7efa9d3a392d9a03cb9f142780c5f6f2e6cd050b',
             'dev_requirement' => false,
         ),
         'symfony/polyfill-ctype' => array(

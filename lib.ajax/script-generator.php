@@ -16,7 +16,7 @@ require_once dirname(__DIR__) . "/inc.app/app.php";
 $inputGet = new InputGet();
 if(isset($_POST) && !empty($_POST))
 {
-    $request = new InputPost(true, true);
+    $request = new InputPost(true);
 }
 else
 {

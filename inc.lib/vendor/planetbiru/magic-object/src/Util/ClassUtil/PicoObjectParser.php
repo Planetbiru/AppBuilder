@@ -181,6 +181,7 @@ class PicoObjectParser
     
     /**
      * Parse from Yaml recursively
+     * @param string $yamlString
      */
     public static function parseYamlRecursive($yamlString)
     {
@@ -196,28 +197,25 @@ class PicoObjectParser
     
     /**
      * Parse from JSON recursively
+     * @param mixed $data
      */
-    public static function parseJsonRecursive($data, $parseNullAndBool = false)
+    public static function parseJsonRecursive($data) //NOSONAR
     {
-        if($data != null)
+        if($data == null)
         {
-            if(is_scalar($data) && is_string($data))
-            {
-                return self::parseObject(json_decode($data));
-            }
-            else if (is_array($data) || is_object($data)) {
-                return self::parseObject($data);
-            }
-            else if(is_string($data))
-            {
-                return self::parseString($data);
-            }
-            else
-            {
-                return $data;
-            }
+            return null;
         }
-        return null;
+        if(is_scalar($data) && is_string($data))
+        {
+            return self::parseObject(json_decode($data));
+        }
+        else if (is_array($data) || is_object($data)) {
+            return self::parseObject($data);
+        }
+        else
+        {
+            return $data;
+        }
     }
 
     /**
@@ -226,7 +224,7 @@ class PicoObjectParser
      * @param string $data
      * @return mixed
      */
-    public static function parseString($data)
+    public static function parseString($data) //NOSONAR
     {
         if($data == 'null')
         {
