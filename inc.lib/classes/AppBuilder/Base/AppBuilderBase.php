@@ -551,30 +551,27 @@ class AppBuilderBase
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
-        $form = $this->createElementForm($dom);
-        
-        $table1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+        $formDetail = $this->createElementForm($dom);
+        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+        $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
+        $formDetail->appendChild($tableDetail1);
+        $formDetail->appendChild($tableDetail2);
         
-        $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
-
-        $form->appendChild($table1);
-        $form->appendChild($table2);
-        
-        $dom->appendChild($form);
+        $dom->appendChild($formDetail);
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
 
         $xml = $dom->saveXML();
 
-        $html = $this->xmlToHtml($xml);
-        $html = str_replace('<td/>', '<td></td>', $html);
-        $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
-        $html = trim($html, "\r\n");
+        $htmlDetail = $this->xmlToHtml($xml);
+        $htmlDetail = str_replace('<td/>', '<td></td>', $htmlDetail);
+        $htmlDetail = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $htmlDetail);
+        $htmlDetail = trim($htmlDetail, "\r\n");
         
-        $html = $this->addTab($html, 2);
-        $html = $this->addIndent($html, 2);
-        $html = $this->addWrapper($html, self::WRAPPER_DETAIL);
+        $htmlDetail = $this->addTab($htmlDetail, 2);
+        $htmlDetail = $this->addIndent($htmlDetail, 2);
+        $htmlDetail = $this->addWrapper($htmlDetail, self::WRAPPER_DETAIL);
 
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
@@ -582,10 +579,17 @@ class AppBuilderBase
         $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
+
+
+
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
-        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
+
+
+
+
         $getData[] = self::TAB1.self::TAB1."}";
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1."{";
@@ -1187,20 +1191,6 @@ class AppBuilderBase
      */
     private function setInputTypeAttribute($input, $dataType)
     {
-        /*
-        <select class="form-control input-field-data-type" name="data_type_title" id="data_type_title">
-        <option value="text" title="<input type=&quot;text&quot;>" selected="selected">text</option>
-        <option value="email" title="<input type=&quot;email&quot;>">email</option>
-        <option value="tel" title="<input type=&quot;tel&quot;>">tel</option>
-        <option value="password" title="<input type=&quot;password&quot;>">password</option>
-        <option value="int" title="<input type=&quot;number&quot;>">int</option>
-        <option value="float" title="<input type=&quot;number&quot; step=&quot;any&quot;>">float</option>
-        <option value="date" title="<input type=&quot;text&quot;>">date</option>
-        <option value="time" title="<input type=&quot;text&quot;>">time</option>
-        <option value="datetime" title="<input type=&quot;text&quot;>">datetime</option>
-        <option value="color" title="<input type=&quot;text&quot;>">color</option>
-        </select>
-        */
         $classes = array();
         $classes[] = 'form-control';
         $input->setAttribute('class', implode(' ', $classes));
