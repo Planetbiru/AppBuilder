@@ -120,7 +120,7 @@ if($request->issetFields())
     }
     else 
     {
-        $includeDir = '"auth.php"';
+        $includeDir = '"/auth.php"';
     }
     
     $includes[] = "require_once __DIR__ . $includeDir;";

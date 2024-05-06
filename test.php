@@ -171,10 +171,10 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 				return true;
 			}, 
 			function($param1, $param2, $param3){
-				// callback when success
+				// callback when approved
 			}, 
 			function($param1, $param2, $param3){
-				// callback when failed
+				// callback when rejected
 			} 
 			);
 
@@ -259,10 +259,10 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 				return true;
 			}, 
 			function($param1, $param2, $param3){
-				// callback when success
+				// callback when approved
 			}, 
 			function($param1, $param2, $param3){
-				// callback when failed
+				// callback when rejected
 			} 
 			);
 			$approval->reject(new AlbumApv());

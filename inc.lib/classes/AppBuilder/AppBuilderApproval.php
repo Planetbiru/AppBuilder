@@ -462,10 +462,10 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when success".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when approved".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when failed".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when rejected".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.");"; //NOSONAR
     }
