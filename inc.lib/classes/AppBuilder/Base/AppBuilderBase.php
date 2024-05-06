@@ -448,7 +448,7 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
-
+        $html = $this->addTab($html, 2);
         $html = $this->addIndent($html, 2);
         $html = $this->addWrapper($html, self::WRAPPER_INSERT);
         
@@ -502,6 +502,7 @@ class AppBuilderBase
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
         
+        $html = $this->addTab($html, 2);
         $html = $this->addIndent($html, 2);
         $html = $this->addWrapper($html, self::WRAPPER_UPDATE);
         
@@ -570,7 +571,8 @@ class AppBuilderBase
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
         $html = trim($html, "\r\n");
-                
+        
+        $html = $this->addTab($html, 2);
         $html = $this->addIndent($html, 2);
         $html = $this->addWrapper($html, self::WRAPPER_DETAIL);
 
@@ -1619,6 +1621,46 @@ class AppBuilderBase
     public function constructEntityLabel($entityName)
     {
         return self::VAR."appEntityLabel = new EntityLabel(new $entityName(), ".self::VAR."appConfig);";
+    }
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $html
+     * @param integer $tab
+     * @return string
+     */
+    public function addTab($html, $indent = 2)
+    {
+        $html = PicoStringUtil::windowsCariageReturn($html);
+        $lines = explode(self::NEW_LINE, $html);
+        foreach($lines as $index=>$line)
+        {
+            $line2 = ltrim($line, " ");
+            $nspace = strlen($line) - strlen($line2);
+            if($nspace % $indent == 0)
+            {
+                $ntab = (int) $nspace / $indent;
+                $lines[$index] = $this->createTab($ntab).$line2;
+            } 
+        }
+        return implode(self::NEW_LINE, $lines);
+    }
+    
+    /**
+     * Create tab
+     *
+     * @param integer $n
+     * @return string
+     */
+    private function createTab($n)
+    {
+        $search = "";
+        for($i = 0; $i<$n; $i++)
+        {
+            $search .= self::TAB1;
+        }
+        return $search;
     }
 
     /**
