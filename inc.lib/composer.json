@@ -5,6 +5,6 @@
         }
     },
     "require": {
-        "planetbiru/magic-object": "dev-main"
+        "planetbiru/magic-object": "^1.4"
     }
 }
