@@ -86,7 +86,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setAdminAskEdit($currentAction->getUserId());
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
-	$album->setApprovalId($album->getAlbumApvId())->setWaitingFor(WaitingFor::UPDATE)->update();
+	$album->setAlbumId($album->getAlbumId())->setApprovalId($album->getAlbumApvId())->setApprovalIdWaitingFor(WaitingFor::UPDATE)->update();
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {

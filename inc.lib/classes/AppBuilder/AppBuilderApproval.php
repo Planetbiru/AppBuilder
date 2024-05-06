@@ -138,7 +138,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminAskEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
-        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$approvalId."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())->set".$upperWaitingFor."(WaitingFor::UPDATE)->update();";
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkeyName."(".parent::VAR.$objectName."->get".$upperPkeyName."())".parent::CALL_SET.$approvalId."(".parent::VAR.$objectName."->get".$upperPkeyApprovalName."())".parent::CALL_SET.$approvalId.$upperWaitingFor."(WaitingFor::UPDATE)->update();";
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
