@@ -422,6 +422,7 @@ class AppBuilderBase //NOSONAR
      */
     private function fixTable($html)
     {
+        $html = str_replace('<div/>', '<div></div>', $html);
         $html = str_replace('<td/>', '<td></td>', $html);
         $html = str_replace('<th/>', '<th></th>', $html);
         $html = str_replace('<tr/>', '<tr></tr>', $html);
@@ -692,6 +693,21 @@ class AppBuilderBase //NOSONAR
         $dom = new DOMDocument();
         
         $formDetail = $this->createElementForm($dom);
+        
+        $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
+        
+        $div = $dom->createElement('div');
+        $div->setAttribute('class', 'alert alert-warning');
+        
+        $messagePhp = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->message(".self::VAR.$objectName.self::CALL_GET.$upperWaitingFor."());".self::PHP_CLOSE_TAG;
+        
+        $message = $dom->createTextNode($messagePhp);
+
+        $div->appendChild($message);
+        
+        $formDetail->appendChild($div);
+        
+        
         $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
         $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
@@ -968,10 +984,18 @@ class AppBuilderBase //NOSONAR
         $value2 = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectApprovalName.$val.self::PHP_CLOSE_TAG);
 
         $td1->appendChild($label);
-
-        $td2->appendChild($value);
-        $td3->appendChild($value2);
         
+        $valueWrapper1 = $dom->createElement('span');
+        $valueWrapper2 = $dom->createElement('span');
+        
+        $valueWrapper1->setAttribute('class', 'compare-data'.self::PHP_OPEN_TAG.self::ECHO."PicoTestUtil::addClassDiffetent(".self::VAR.$objectName."->notEquals".$upperFieldName."(".self::VAR.$objectApprovalName.self::CALL_GET.$upperFieldName."()));".self::PHP_CLOSE_TAG);
+        $valueWrapper2->setAttribute('class', 'compare-data'.self::PHP_OPEN_TAG.self::ECHO."PicoTestUtil::addClassDiffetent(".self::VAR.$objectName."->notEquals".$upperFieldName."(".self::VAR.$objectApprovalName.self::CALL_GET.$upperFieldName."()));".self::PHP_CLOSE_TAG);
+
+        $valueWrapper1->appendChild($value);
+        $valueWrapper2->appendChild($value2);
+        
+        $td2->appendChild($valueWrapper1);
+        $td3->appendChild($valueWrapper2);
 
         $tr->appendChild($td1);
         $tr->appendChild($td2);

@@ -89,6 +89,7 @@ if($request->issetFields())
     $uses[] = "use AppBuilder\\AppInclude;";
     $uses[] = "use AppBuilder\\EntityLabel;";
     $uses[] = "use AppBuilder\\WaitingFor;";
+    $uses[] = "use AppBuilder\\PicoTestUtil;";
     $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
     
     if($approvalRequired)
