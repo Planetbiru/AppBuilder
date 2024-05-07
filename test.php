@@ -517,6 +517,138 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
 		$album->findOneByAlbumId($inputGet->getAlbumId());
 		if($album->hasValueAlbumId())
 		{
+			if($album->nonNullApprovalId())
+			{
+				$albumApv = new AlbumApv(null, $database);
+				try
+				{
+					$albumApv->find($album->getApprovalId());
+				}
+				catch(Exception $e)
+				{
+					// do something here
+				}
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
+$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+?>
+<div class="page page-detail">
+	<div class="row">
+		<form name="insertform" id="insertform" action="" method="post">
+			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody>
+					<tr>
+						<td><?php echo $appEntityLabel->getAlbumId();?></td>
+						<td><?php echo $album->getAlbumId();?></td>
+						<td><?php echo $albumApv->getAlbumId();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getName();?></td>
+						<td><?php echo $album->getName();?></td>
+						<td><?php echo $albumApv->getName();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTitle();?></td>
+						<td><?php echo $album->getTitle();?></td>
+						<td><?php echo $albumApv->getTitle();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getDescription();?></td>
+						<td><?php echo $album->getDescription();?></td>
+						<td><?php echo $albumApv->getDescription();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getProducerId();?></td>
+						<td><?php echo $album->getProducerId();?></td>
+						<td><?php echo $albumApv->getProducerId();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
+						<td><?php echo $album->getReleaseDate();?></td>
+						<td><?php echo $albumApv->getReleaseDate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
+						<td><?php echo $album->getNumberOfSong();?></td>
+						<td><?php echo $albumApv->getNumberOfSong();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getDuration();?></td>
+						<td><?php echo $album->getDuration();?></td>
+						<td><?php echo $albumApv->getDuration();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getImagePath();?></td>
+						<td><?php echo $album->getImagePath();?></td>
+						<td><?php echo $albumApv->getImagePath();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getSortOrder();?></td>
+						<td><?php echo $album->getSortOrder();?></td>
+						<td><?php echo $albumApv->getSortOrder();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
+						<td><?php echo $album->getTimeCreate();?></td>
+						<td><?php echo $albumApv->getTimeCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
+						<td><?php echo $album->getTimeEdit();?></td>
+						<td><?php echo $albumApv->getTimeEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
+						<td><?php echo $album->getAdminCreate();?></td>
+						<td><?php echo $albumApv->getAdminCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
+						<td><?php echo $album->getAdminEdit();?></td>
+						<td><?php echo $albumApv->getAdminEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpCreate();?></td>
+						<td><?php echo $album->getIpCreate();?></td>
+						<td><?php echo $albumApv->getIpCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpEdit();?></td>
+						<td><?php echo $album->getIpEdit();?></td>
+						<td><?php echo $albumApv->getIpEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getLocked();?></td>
+						<td><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
+						<td><?php echo $albumApv->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAsDraft();?></td>
+						<td><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></td>
+						<td><?php echo $albumApv->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getActive();?></td>
+						<td><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></td>
+						<td><?php echo $albumApv->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody>
+					<tr>
+						<td></td>
+						<td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+<?php 
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
+			}
+			else
+			{
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
@@ -566,6 +698,30 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<td><?php echo $album->getSortOrder();?></td>
 					</tr>
 					<tr>
+						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
+						<td><?php echo $album->getTimeCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
+						<td><?php echo $album->getTimeEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
+						<td><?php echo $album->getAdminCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
+						<td><?php echo $album->getAdminEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpCreate();?></td>
+						<td><?php echo $album->getIpCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpEdit();?></td>
+						<td><?php echo $album->getIpEdit();?></td>
+					</tr>
+					<tr>
 						<td><?php echo $appEntityLabel->getLocked();?></td>
 						<td><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
 					</tr>
@@ -592,6 +748,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 </div>
 <?php 
 require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
+			}
 		}
 		else
 		{
