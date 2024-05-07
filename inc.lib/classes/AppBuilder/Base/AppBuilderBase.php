@@ -472,12 +472,9 @@ class AppBuilderBase
         $dom->formatOutput = true;
 
         $xml = $dom->saveXML();
-
-        $html = $this->xmlToHtml($xml);
-        
+        $html = $this->xmlToHtml($xml);     
         $html = $this->fixTable($html);
         $html = $this->fixPhpCode($html);
-
         
         $html = trim($html, self::NEW_LINE);
         $html = $this->addTab($html, 2);
