@@ -47,6 +47,7 @@ use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
 use AppBuilder\EntityLabel;
 use AppBuilder\WaitingFor;
+use AppBuilder\PicoTestUtil;
 use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
@@ -200,10 +201,10 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 				return true;
 			}, 
 			function($param1, $param2, $param3){
-				// callback when success
+				// callback when approved
 			}, 
 			function($param1, $param2, $param3){
-				// callback when failed
+				// callback when rejected
 			} 
 			);
 
@@ -288,10 +289,10 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 				return true;
 			}, 
 			function($param1, $param2, $param3){
-				// callback when success
+				// callback when approved
 			}, 
 			function($param1, $param2, $param3){
-				// callback when failed
+				// callback when rejected
 			} 
 			);
 			$approval->reject(new AlbumApv());
@@ -546,6 +547,215 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
 		$album->findOneByAlbumId($inputGet->getAlbumId());
 		if($album->hasValueAlbumId())
 		{
+			if($album->nonNullApprovalId())
+			{
+				$albumApv = new AlbumApv(null, $database);
+				try
+				{
+					$albumApv->find($album->getApprovalId());
+				}
+				catch(Exception $e)
+				{
+					// do something here
+				}
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
+$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+?>
+<div class="page page-detail">
+	<div class="row">
+		<form name="insertform" id="insertform" action="" method="post">
+			<div class="alert alert-warning"><?php echo $appLanguage->message($album->getWaitingFor());?></div>
+			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody>
+					<tr>
+						<td><?php echo $appEntityLabel->getAlbumId();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $album->getAlbumId();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $albumApv->getAlbumId();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getName();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsName($albumApv->getName()));?>"><?php echo $album->getName();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsName($albumApv->getName()));?>"><?php echo $albumApv->getName();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTitle();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $album->getTitle();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $albumApv->getTitle();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getDescription();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $album->getDescription();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $albumApv->getDescription();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getProducerId();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $album->getProducerId();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $albumApv->getProducerId();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $album->getReleaseDate();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $albumApv->getReleaseDate();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $album->getNumberOfSong();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $albumApv->getNumberOfSong();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getDuration();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $album->getDuration();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $albumApv->getDuration();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getImagePath();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $album->getImagePath();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $albumApv->getImagePath();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getSortOrder();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $album->getSortOrder();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $albumApv->getSortOrder();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $album->getTimeCreate();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $albumApv->getTimeCreate();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $album->getTimeEdit();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $albumApv->getTimeEdit();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $album->getAdminCreate();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $albumApv->getAdminCreate();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $album->getAdminEdit();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $albumApv->getAdminEdit();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpCreate();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $album->getIpCreate();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $albumApv->getIpCreate();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpEdit();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $album->getIpEdit();?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $albumApv->getIpEdit();?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getLocked();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $albumApv->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAsDraft();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $albumApv->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getActive();?></td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
+						</td>
+						<td>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $albumApv->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody>
+					<tr>
+						<td></td>
+						<td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+<?php 
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
+			}
+			else
+			{
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
@@ -595,6 +805,30 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<td><?php echo $album->getSortOrder();?></td>
 					</tr>
 					<tr>
+						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
+						<td><?php echo $album->getTimeCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
+						<td><?php echo $album->getTimeEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
+						<td><?php echo $album->getAdminCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
+						<td><?php echo $album->getAdminEdit();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpCreate();?></td>
+						<td><?php echo $album->getIpCreate();?></td>
+					</tr>
+					<tr>
+						<td><?php echo $appEntityLabel->getIpEdit();?></td>
+						<td><?php echo $album->getIpEdit();?></td>
+					</tr>
+					<tr>
 						<td><?php echo $appEntityLabel->getLocked();?></td>
 						<td><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
 					</tr>
@@ -621,6 +855,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 </div>
 <?php 
 require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
+			}
 		}
 		else
 		{

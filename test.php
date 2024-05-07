@@ -541,172 +541,172 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLabel->getAlbumId();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $album->getAlbumId();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $album->getAlbumId();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $albumApv->getAlbumId();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $albumApv->getAlbumId();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getName();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsName($albumApv->getName()));?>"><?php echo $album->getName();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsName($albumApv->getName()));?>"><?php echo $album->getName();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsName($albumApv->getName()));?>"><?php echo $albumApv->getName();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsName($albumApv->getName()));?>"><?php echo $albumApv->getName();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getTitle();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $album->getTitle();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $album->getTitle();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $albumApv->getTitle();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $albumApv->getTitle();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getDescription();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $album->getDescription();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $album->getDescription();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $albumApv->getDescription();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $albumApv->getDescription();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getProducerId();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $album->getProducerId();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $album->getProducerId();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $albumApv->getProducerId();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $albumApv->getProducerId();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $album->getReleaseDate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $album->getReleaseDate();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $albumApv->getReleaseDate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $albumApv->getReleaseDate();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $album->getNumberOfSong();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $album->getNumberOfSong();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $albumApv->getNumberOfSong();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $albumApv->getNumberOfSong();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getDuration();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $album->getDuration();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $album->getDuration();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $albumApv->getDuration();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $albumApv->getDuration();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getImagePath();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $album->getImagePath();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $album->getImagePath();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $albumApv->getImagePath();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $albumApv->getImagePath();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getSortOrder();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $album->getSortOrder();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $album->getSortOrder();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $albumApv->getSortOrder();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $albumApv->getSortOrder();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $album->getTimeCreate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $album->getTimeCreate();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $albumApv->getTimeCreate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $albumApv->getTimeCreate();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $album->getTimeEdit();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $album->getTimeEdit();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $albumApv->getTimeEdit();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $albumApv->getTimeEdit();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $album->getAdminCreate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $album->getAdminCreate();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $albumApv->getAdminCreate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $albumApv->getAdminCreate();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $album->getAdminEdit();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $album->getAdminEdit();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $albumApv->getAdminEdit();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $albumApv->getAdminEdit();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getIpCreate();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $album->getIpCreate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $album->getIpCreate();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $albumApv->getIpCreate();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $albumApv->getIpCreate();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getIpEdit();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $album->getIpEdit();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $album->getIpEdit();?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $albumApv->getIpEdit();?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $albumApv->getIpEdit();?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getLocked();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $albumApv->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $albumApv->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getAsDraft();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $albumApv->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $albumApv->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
 					</tr>
 					<tr>
 						<td><?php echo $appEntityLabel->getActive();?></td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
 						<td>
-							<span class="compare-data<?php echo PicoTestUtil::addClassDiffetent($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $albumApv->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
+							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $albumApv->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
 					</tr>
 				</tbody>

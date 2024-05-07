@@ -988,8 +988,8 @@ class AppBuilderBase //NOSONAR
         $valueWrapper1 = $dom->createElement('span');
         $valueWrapper2 = $dom->createElement('span');
         
-        $valueWrapper1->setAttribute('class', 'compare-data'.self::PHP_OPEN_TAG.self::ECHO."PicoTestUtil::addClassDiffetent(".self::VAR.$objectName."->notEquals".$upperFieldName."(".self::VAR.$objectApprovalName.self::CALL_GET.$upperFieldName."()));".self::PHP_CLOSE_TAG);
-        $valueWrapper2->setAttribute('class', 'compare-data'.self::PHP_OPEN_TAG.self::ECHO."PicoTestUtil::addClassDiffetent(".self::VAR.$objectName."->notEquals".$upperFieldName."(".self::VAR.$objectApprovalName.self::CALL_GET.$upperFieldName."()));".self::PHP_CLOSE_TAG);
+        $valueWrapper1->setAttribute('class', self::PHP_OPEN_TAG.self::ECHO."PicoTestUtil::classCompareData(".self::VAR.$objectName."->notEquals".$upperFieldName."(".self::VAR.$objectApprovalName.self::CALL_GET.$upperFieldName."()));".self::PHP_CLOSE_TAG);
+        $valueWrapper2->setAttribute('class', self::PHP_OPEN_TAG.self::ECHO."PicoTestUtil::classCompareData(".self::VAR.$objectName."->notEquals".$upperFieldName."(".self::VAR.$objectApprovalName.self::CALL_GET.$upperFieldName."()));".self::PHP_CLOSE_TAG);
 
         $valueWrapper1->appendChild($value);
         $valueWrapper2->appendChild($value2);

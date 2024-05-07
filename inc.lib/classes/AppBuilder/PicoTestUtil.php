@@ -5,13 +5,13 @@ namespace AppBuilder;
 class PicoTestUtil
 {
     /**
-     * Add class different
+     * Add class compare data
      *
      * @param boolean $div
      * @return string
      */
-    public static function addClassDiffetent($div)
+    public static function classCompareData($div)
     {
-        return $div ? ' different':'';
+        return $div ? 'compare-data data-different':'compare-data';
     }
 }
