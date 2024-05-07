@@ -33,6 +33,7 @@ class AppBuilderBase
     const CALL_UPDATE_END = "->update();";
     const CALL_DELETE_END = "->delete();";
     const CALL_SET = "->set";
+    const CALL_GET = "->get";
     
     const PHP_OPEN_TAG = '<'.'?'.'php ';
     const PHP_CLOSE_TAG = '?'.'>';
@@ -207,7 +208,7 @@ class AppBuilderBase
         }
         if ($this->style = self::STYLE_SETTER_GETTER) {
             $method = PicoStringUtil::upperCamelize($fieldName);
-            return self::TAB1 . self::VAR . $objectName . "->set" . $method . "(" . self::VAR . "inputPost->get" . $method . "(PicoFilterConstant::" . $fieldFilter . "));";
+            return self::TAB1 . self::VAR . $objectName . "->set" . $method . "(" . self::VAR . "inputPost".self::CALL_GET.$method . "(PicoFilterConstant::" . $fieldFilter . "));";
         } else {
             return self::TAB1 . self::VAR . $objectName . "->set('" . $fieldName . "', " . self::VAR . "inputPost->get('" . $fieldName . "', PicoFilterConstant::" . $fieldFilter . "));";
         }
@@ -509,7 +510,7 @@ class AppBuilderBase
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
-        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
         $getData[] = $this->getIncludeHeader();
@@ -555,7 +556,7 @@ class AppBuilderBase
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
-        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet->get".$upperPkName."());";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
 
@@ -589,18 +590,18 @@ class AppBuilderBase
     /**
      * Undocumented function
      *
-     * @param [type] $mainEntity
-     * @param [type] $objectName
-     * @param [type] $insertFields
-     * @param [type] $pkName
-     * @return void
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField[] $appFields
+     * @param string $pkName
+     * @return string
      */
-    public function createTableDetail($mainEntity, $objectName, $insertFields, $pkName)
+    public function createTableDetail($mainEntity, $objectName, $appFields, $pkName)
     {
         $dom = new DOMDocument();
         
         $formDetail = $this->createElementForm($dom);
-        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $appFields, $pkName);
         $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
         $formDetail->appendChild($tableDetail1);
@@ -620,6 +621,8 @@ class AppBuilderBase
         $htmlDetail = $this->addTab($htmlDetail, 2);
         $htmlDetail = $this->addIndent($htmlDetail, 2);
         $htmlDetail = $this->addWrapper($htmlDetail, self::WRAPPER_DETAIL);
+
+        return $htmlDetail;
     }
 
     /**
@@ -635,9 +638,7 @@ class AppBuilderBase
     private function createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
     {
         $table = $this->createElementTableResponsive($dom);
-
         $tbody = $dom->createElement('tbody');
-
         foreach($insertFields as $field)
         {
             if($field->getIncludeInsert())
@@ -646,8 +647,6 @@ class AppBuilderBase
                 $tbody->appendChild($tr);
             }
         }
-
-
         $table->appendChild($tbody);
         return $table;
     }
@@ -665,9 +664,7 @@ class AppBuilderBase
     private function createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
     {
         $table = $this->createElementTableResponsive($dom);
-
         $tbody = $dom->createElement('tbody');
-
         foreach($insertFields as $field)
         {
             if($field->getIncludeInsert())
@@ -676,8 +673,6 @@ class AppBuilderBase
                 $tbody->appendChild($tr);
             }
         }
-
-
         $table->appendChild($tbody);
         return $table;
     }
@@ -695,9 +690,7 @@ class AppBuilderBase
     private function createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
     {
         $table = $this->createElementTableResponsive($dom);
-
         $tbody = $dom->createElement('tbody');
-
         foreach($insertFields as $field)
         {
             if($field->getIncludeInsert())
@@ -706,8 +699,6 @@ class AppBuilderBase
                 $tbody->appendChild($tr);
             }
         }
-
-
         $table->appendChild($tbody);
         return $table;
     }
@@ -729,7 +720,7 @@ class AppBuilderBase
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
         $td1->appendChild($label);
@@ -763,7 +754,7 @@ class AppBuilderBase
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
         $td1->appendChild($label);
@@ -797,11 +788,9 @@ class AppBuilderBase
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
-        
-        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
         
         if($field->getElementType() == 'checkbox')
@@ -810,7 +799,7 @@ class AppBuilderBase
         }
         else
         {
-            $val = "->get".$upperFieldName."();";
+            $val = "".self::CALL_GET.$upperFieldName."();";
         }
         
         $value = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
@@ -908,7 +897,7 @@ class AppBuilderBase
             }   
             $inputStrl->setAttribute('value', '1');
             $input->appendChild($inputStrl);
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
 
@@ -941,10 +930,7 @@ class AppBuilderBase
             $this->setInputTypeAttribute($input, $insertField->getDataType()); 
             $input->setAttribute('name', $insertField->getFieldName());
 
-            if($id != null)
-            {
-                $input->setAttribute('id', $id);
-            }   
+            $input = $this->addAttributeId($input, $id);  
             
             $input->setAttribute('value', $this->createPhpOutputValue(self::VAR.$objectName.'->get'.$upperFieldName.'()'));
             $input->setAttribute('autocomplete', 'off');
@@ -957,10 +943,7 @@ class AppBuilderBase
             $input->setAttribute('class', implode(' ', $classes));
             $input->setAttribute('name', $insertField->getFieldName());
 
-            if($id != null)
-            {
-                $input->setAttribute('id', $id);
-            }   
+            $input = $this->addAttributeId($input, $id); 
             
             $value = $dom->createTextNode('');
             $input->appendChild($value);
@@ -976,10 +959,8 @@ class AppBuilderBase
             $input->setAttribute('class', implode(' ', $classes));
             $input->setAttribute('name', $insertField->getFieldName());
 
-            if($id != null)
-            {
-                $input->setAttribute('id', $id);
-            }   
+            $input = $this->addAttributeId($input, $id);
+
             $value = $dom->createElement('option');
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLangauge->getSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
@@ -1000,14 +981,13 @@ class AppBuilderBase
             $inputStrl->setAttribute('type', 'checkbox');
             $inputStrl->setAttribute('name', $insertField->getFieldName());
 
-            if($id != null)
-            {
-                $inputStrl->setAttribute('id', $id);
-            }   
+            $inputStrl = $this->addAttributeId($inputStrl, $id);
+
+             
             $inputStrl->setAttribute('value', '1');
             $inputStrl->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.'->createChecked'.$upperFieldName.'();'.self::PHP_CLOSE_TAG));
             $input->appendChild($inputStrl);
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel->get".$upperFieldName."();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
 
@@ -1017,6 +997,22 @@ class AppBuilderBase
             $input->setAttribute('required', 'required');
         }
         return $input;
+    }
+
+    /**
+     * Add attribute id
+     *
+     * @param DOMElement $element
+     * @param string $id
+     * @return DOMElement
+     */
+    public function addAttributeId($element, $id)
+    {
+        if($id != null)
+        {
+            $element->setAttribute('id', $id);
+        }  
+        return $element;
     }
     
     private function appendOption($dom, $input, $objectName, $insertField, $selected = null)
