@@ -19,7 +19,7 @@ use MagicObject\MagicObject;
 use MagicObject\SecretObject;
 use MagicObject\Util\PicoStringUtil;
 
-class AppBuilderBase
+class AppBuilderBase //NOSONAR
 {
     const TAB1 = "\t";
     const TAB2 = "\t\t";
@@ -46,6 +46,8 @@ class AppBuilderBase
     const WRAPPER_UPDATE = "update";
     const WRAPPER_DETAIL = "detail";
     const WRAPPER_LIST = "list";
+
+    const APP_CONFIG = "appConfig";
 
     /**
      * Set and get value style
@@ -208,9 +210,9 @@ class AppBuilderBase
         }
         if ($this->style = self::STYLE_SETTER_GETTER) {
             $method = PicoStringUtil::upperCamelize($fieldName);
-            return self::TAB1 . self::VAR . $objectName . "->set" . $method . "(" . self::VAR . "inputPost".self::CALL_GET.$method . "(PicoFilterConstant::" . $fieldFilter . "));";
+            return self::TAB1 . self::VAR . $objectName . self::CALL_SET . $method . "(" . self::VAR . "inputPost".self::CALL_GET.$method . "(PicoFilterConstant::" . $fieldFilter . "));";
         } else {
-            return self::TAB1 . self::VAR . $objectName . "->set('" . $fieldName . "', " . self::VAR . "inputPost->get('" . $fieldName . "', PicoFilterConstant::" . $fieldFilter . "));";
+            return self::TAB1 . self::VAR . $objectName . self::CALL_SET."('" . $fieldName . "', " . self::VAR . "inputPost".self::CALL_GET."('" . $fieldName . "', PicoFilterConstant::" . $fieldFilter . "));";
         }
     }
 
@@ -855,7 +857,6 @@ class AppBuilderBase
      */
     private function createInsertControl($dom, $mainEntity, $objectName, $insertField, $pkName, $id = null)
     {
-        $upperPkName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
         $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
         $input = $dom->createElement('input');
         if($insertField->getElementType() == ElementType::TEXT)
@@ -865,10 +866,7 @@ class AppBuilderBase
             $this->setInputTypeAttribute($input, $insertField->getDataType()); 
             $input->setAttribute('name', $insertField->getFieldName());
 
-            if($id != null)
-            {
-                $input->setAttribute('id', $id);
-            }  
+            $input = $this->addAttributeId($input, $id); 
             $input->setAttribute('autocomplete', 'off'); 
         }
         else if($insertField->getElementType() == ElementType::TEXTAREA)
@@ -879,10 +877,7 @@ class AppBuilderBase
             $input->setAttribute('class', implode(' ', $classes));
             $input->setAttribute('name', $insertField->getFieldName());
 
-            if($id != null)
-            {
-                $input->setAttribute('id', $id);
-            }   
+            $input = $this->addAttributeId($input, $id);  
             $value = $dom->createTextNode('');
             $input->appendChild($value);
             $input->setAttribute('spellcheck', 'false');
@@ -894,11 +889,7 @@ class AppBuilderBase
             $classes[] = 'form-control';
             $input->setAttribute('class', implode(' ', $classes));
             $input->setAttribute('name', $insertField->getFieldName());
-
-            if($id != null)
-            {
-                $input->setAttribute('id', $id);
-            }   
+            $input = $this->addAttributeId($input, $id);  
             $value = $dom->createElement('option');
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLangauge->getSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
@@ -917,11 +908,7 @@ class AppBuilderBase
             $inputStrl->setAttribute('class', implode(' ', $classes));
             $inputStrl->setAttribute('type', 'checkbox');
             $inputStrl->setAttribute('name', $insertField->getFieldName());
-
-            if($id != null)
-            {
-                $inputStrl->setAttribute('id', $id);
-            }   
+            $inputStrl = $this->addAttributeId($inputStrl, $id);
             $inputStrl->setAttribute('value', '1');
             $input->appendChild($inputStrl);
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
@@ -948,7 +935,6 @@ class AppBuilderBase
      */
     private function createUpdateControl($dom, $mainEntity, $objectName, $insertField, $pkName, $id = null)
     {
-        $upperPkName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
         $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
         $input = $dom->createElement('input');
         if($insertField->getElementType() == ElementType::TEXT)
@@ -1046,16 +1032,14 @@ class AppBuilderBase
     {
         $reference = $insertField->getReference();
         if($reference != null)
-        {
-            $upperPkName = PicoStringUtil::upperCamelize($insertField->getFieldName());
+        {            
             if($reference->getType() == 'map')
             {
                 $map = $reference->getMap();
                 $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
             else if($reference->getType() == 'entity')
-            {
-                
+            {      
                 $entity = $reference->getEntity();
                 $specification = $reference->getSpecification();
                 $sortable = $reference->getSortable();
@@ -1150,6 +1134,12 @@ class AppBuilderBase
         return $input;
     }
     
+    /**
+     * Build specification
+     *
+     * @param array $specification
+     * @return string
+     */
     private function buildSpecification($specification)
     {
         $specs = array();
@@ -1170,6 +1160,12 @@ class AppBuilderBase
         return implode("", $specs);
     }
     
+    /**
+     * Build sortable
+     *
+     * @param array $sortable
+     * @return string
+     */
     private function buildSortable($sortable)
     {
         $specs = array();
@@ -1189,6 +1185,12 @@ class AppBuilderBase
         return implode("", $specs);
     }
     
+    /**
+     * Get sort type
+     *
+     * @paramstring $sortType
+     * @return string
+     */
     public function getSortType($sortType)
     {
         if(stripos($sortType, 'PicoSort::') !== false)
@@ -1283,6 +1285,12 @@ class AppBuilderBase
         return $table;
     }
 
+    /**
+     * Convert XML to HTML
+     *
+     * @param string $xml
+     * @return string
+     */
     public function xmlToHtml($xml)
     {
         $start = stripos($xml, '<?xml');
@@ -1310,6 +1318,12 @@ class AppBuilderBase
         return $xml;
     }
     
+    /**
+     * Decode string
+     *
+     * @param string $stringFound
+     * @return string
+     */
     public function decodeString($stringFound)
     {
         $search = 'data-app-builder-encoded-script="';
@@ -1627,7 +1641,7 @@ class AppBuilderBase
      */
     public function getIncludeHeader()
     {
-        return "require_once AppInclude::mainAppHeader(__DIR__, ".self::VAR."appConfig);";
+        return "require_once AppInclude::mainAppHeader(__DIR__, ".self::VAR.self::APP_CONFIG.");";
     }
     
     /**
@@ -1637,7 +1651,7 @@ class AppBuilderBase
      */
     public function getIncludeFooter()
     {
-        return "require_once AppInclude::mainAppFooter(__DIR__, ".self::VAR."appConfig);";
+        return "require_once AppInclude::mainAppFooter(__DIR__, ".self::VAR.self::APP_CONFIG.");";
     }
     
     /**
@@ -1648,7 +1662,7 @@ class AppBuilderBase
      */
     public function constructEntityLabel($entityName)
     {
-        return self::VAR."appEntityLabel = new EntityLabel(new $entityName(), ".self::VAR."appConfig);";
+        return self::VAR."appEntityLabel = new EntityLabel(new $entityName(), ".self::VAR.self::APP_CONFIG.");";
     }
     
     /**

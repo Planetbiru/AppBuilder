@@ -2,13 +2,27 @@
 
 namespace AppBuilder;
 
+use MagicObject\Database\PicoDatabase;
 use MagicObject\Generator\PicoColumnGenerator;
 use MagicObject\Generator\PicoEntityGenerator;
 use MagicObject\Util\PicoStringUtil;
 
 class AppEntityGenerator extends PicoEntityGenerator
 {
-    
+    /**
+     * Constructor
+     *
+     * @param PicoDatabase $database
+     * @param string $baseDir
+     * @param string $tableName
+     * @param string $baseNamespace
+     * @param string $entityName
+     * @param boolean $prettify
+     */
+    public function __construct($database, $baseDir, $tableName, $baseNamespace, $entityName)
+    {
+        parent::__construct($database, $baseDir, $tableName, $baseNamespace, $entityName);
+    }
     /**
      * Generate custom entity
      *
