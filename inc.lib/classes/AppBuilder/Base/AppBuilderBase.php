@@ -411,6 +411,34 @@ class AppBuilderBase
             return self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->get('".$id."'); ".self::PHP_CLOSE_TAG;
         }
     }
+
+    /**
+     * Fix table tags
+     *
+     * @param string $html
+     * @return string
+     */
+    private function fixTable($html)
+    {
+        $html = str_replace('<td/>', '<td></td>', $html);
+        $html = str_replace('<th/>', '<th></th>', $html);
+        $html = str_replace('<tr/>', '<tr></tr>', $html);
+        $html = str_replace('<thead/>', '<thead></thead>', $html);
+        $html = str_replace('<tbody/>', '<tbody></tbody>', $html);
+        $html = str_replace('<table/>', '<table></table>', $html);
+        return $html;
+    }
+
+    /**
+     * Fix PHP code
+     *
+     * @param string $html
+     * @return string
+     */
+    private function fixPhpCode($html)
+    {
+        return str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
+    }
     
     /**
      * Create GUI INSERT section without approval
@@ -446,9 +474,12 @@ class AppBuilderBase
         $xml = $dom->saveXML();
 
         $html = $this->xmlToHtml($xml);
-        $html = str_replace('<td/>', '<td></td>', $html);
-        $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
-        $html = trim($html, "\r\n");
+        
+        $html = $this->fixTable($html);
+        $html = $this->fixPhpCode($html);
+
+        
+        $html = trim($html, self::NEW_LINE);
         $html = $this->addTab($html, 2);
         $html = $this->addIndent($html, 2);
         $html = $this->addWrapper($html, self::WRAPPER_INSERT);
@@ -499,9 +530,10 @@ class AppBuilderBase
         $xml = $dom->saveXML();
 
         $html = $this->xmlToHtml($xml);
-        $html = str_replace('<td/>', '<td></td>', $html);
-        $html = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
-        $html = trim($html, "\r\n");
+        $html = $this->fixTable($html);
+        $html = $this->fixPhpCode($html);
+        
+        $html = trim($html, self::NEW_LINE);
         
         $html = $this->addTab($html, 2);
         $html = $this->addIndent($html, 2);
@@ -614,9 +646,9 @@ class AppBuilderBase
         $xml = $dom->saveXML();
 
         $htmlDetail = $this->xmlToHtml($xml);
-        $htmlDetail = str_replace('<td/>', '<td></td>', $htmlDetail);
-        $htmlDetail = str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $htmlDetail);
-        $htmlDetail = trim($htmlDetail, "\r\n");
+        $htmlDetail = $this->fixTable($htmlDetail);
+        $htmlDetail = $this->fixPhpCode($htmlDetail);
+        $htmlDetail = trim($htmlDetail, self::NEW_LINE);
         
         $htmlDetail = $this->addTab($htmlDetail, 2);
         $htmlDetail = $this->addIndent($htmlDetail, 2);
@@ -877,8 +909,6 @@ class AppBuilderBase
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-
-            //$input = $this->appendOption($dom, $input, $objectName, $insertField, self::VAR.$objectName.'->get'.$upperFieldName.'()');
             $input = $this->appendOption($dom, $input, $objectName, $insertField);
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
