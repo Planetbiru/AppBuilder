@@ -577,12 +577,15 @@ class AppBuilderBase //NOSONAR
     public function createGuiDetail($mainEntity, $appFields, $approvalRequired = false, $approvalEntity = null)
     {
         $entityName = $mainEntity->getEntityName();
+        $entityApprovalName = $approvalEntity->getEntityName();
+        $objectApprovalName = PicoStringUtil::camelize($entityApprovalName);
         $pkName =  $mainEntity->getPrimaryKey();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
 
         $objectName = lcfirst($entityName);
         
         $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $pkName);
+        $htmlDetailCompare = $this->createTableDetailCompare($mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
 
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
@@ -591,15 +594,34 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1."{";
 
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."if(".self::VAR.$objectName."->nonNullApprovalId())";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."try";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::VAR.$objectApprovalName."->find(".self::VAR.$objectName.self::CALL_GET."ApprovalId());";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."catch(Exception ".self::VAR."e)";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::TAB1."// do something here";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."}";
 
+        $getData[] = $this->getIncludeHeader();
+        $getData[] = $this->constructEntityLabel($entityName);
+        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetailCompare.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = $this->getIncludeFooter();
+
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."else";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."{";
 
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
 
-
-
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."}";
+            
 
         $getData[] = self::TAB1.self::TAB1."}";
         $getData[] = self::TAB1.self::TAB1."else";
@@ -633,6 +655,44 @@ class AppBuilderBase //NOSONAR
         
         $formDetail = $this->createElementForm($dom);
         $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $appFields, $pkName);
+        $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+
+        $formDetail->appendChild($tableDetail1);
+        $formDetail->appendChild($tableDetail2);
+        
+        $dom->appendChild($formDetail);
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        $xml = $dom->saveXML();
+
+        $htmlDetail = $this->xmlToHtml($xml);
+        $htmlDetail = $this->fixTable($htmlDetail);
+        $htmlDetail = $this->fixPhpCode($htmlDetail);
+        $htmlDetail = trim($htmlDetail, self::NEW_LINE);
+        
+        $htmlDetail = $this->addTab($htmlDetail, 2);
+        $htmlDetail = $this->addIndent($htmlDetail, 2);
+        $htmlDetail = $this->addWrapper($htmlDetail, self::WRAPPER_DETAIL);
+
+        return $htmlDetail;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField[] $appFields
+     * @param string $pkName
+     * @return string
+     */
+    public function createTableDetailCompare($mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName)
+    {
+        $dom = new DOMDocument();
+        
+        $formDetail = $this->createElementForm($dom);
+        $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
         $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
         $formDetail->appendChild($tableDetail1);
@@ -698,7 +758,7 @@ class AppBuilderBase //NOSONAR
         $tbody = $dom->createElement('tbody');
         foreach($insertFields as $field)
         {
-            if($field->getIncludeInsert())
+            if($field->getIncludeEdit())
             {
                 $tr = $this->createUpdateRow($dom, $mainEntity, $objectName, $field, $pkName);
                 $tbody->appendChild($tr);
@@ -724,9 +784,35 @@ class AppBuilderBase //NOSONAR
         $tbody = $dom->createElement('tbody');
         foreach($insertFields as $field)
         {
-            if($field->getIncludeInsert())
+            if($field->getIncludeDetail())
             {
                 $tr = $this->createDetailRow($dom, $mainEntity, $objectName, $field, $pkName);
+                $tbody->appendChild($tr);
+            }
+        }
+        $table->appendChild($tbody);
+        return $table;
+    }
+
+    /**
+     * Create detail compare table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField[] $insertFields
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createDetailTableCompare($dom, $mainEntity, $objectName, $insertFields, $pkName, $approvalEntity, $objectApprovalName)
+    {
+        $table = $this->createElementTableResponsive($dom);
+        $tbody = $dom->createElement('tbody');
+        foreach($insertFields as $field)
+        {
+            if($field->getIncludeDetail())
+            {
+                $tr = $this->createDetailCompareRow($dom, $mainEntity, $objectName, $field, $pkName, $approvalEntity, $objectApprovalName);
                 $tbody->appendChild($tr);
             }
         }
@@ -842,6 +928,54 @@ class AppBuilderBase //NOSONAR
 
         $tr->appendChild($td1);
         $tr->appendChild($td2);
+
+        return $tr;
+    }
+
+    /**
+     * Create detail form table
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param string $objectName
+     * @param AppField $insertField
+     * @param string $pkName
+     * @return DOMElement
+     */
+    private function createDetailCompareRow($dom, $mainEntity, $objectName, $field, $pkName, $approvalEntity, $objectApprovalName)
+    {
+        $yes = self::VAR."appLanguage->getYes()";
+        $no = self::VAR."appLanguage->getNo()";
+        $tr = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        $td3 = $dom->createElement('td');
+
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $label = $dom->createTextNode($caption);
+        
+        if($field->getElementType() == 'checkbox')
+        {
+            $val = "->option".$upperFieldName."(".$yes.", ".$no.");";
+        }
+        else
+        {
+            $val = "".self::CALL_GET.$upperFieldName."();";
+        }
+        
+        $value = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
+        $value2 = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectApprovalName.$val.self::PHP_CLOSE_TAG);
+
+        $td1->appendChild($label);
+
+        $td2->appendChild($value);
+        $td3->appendChild($value2);
+        
+
+        $tr->appendChild($td1);
+        $tr->appendChild($td2);
+        $tr->appendChild($td3);
 
         return $tr;
     }
