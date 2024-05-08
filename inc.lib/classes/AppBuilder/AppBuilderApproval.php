@@ -213,9 +213,9 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
         $lines[] = "{";
-        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableAtivationRowIds())";
+        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableCheckedRowId())";
         $lines[] = parent::TAB1."{";
-        $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getAtivationRowIds() as ".parent::VAR."rowId)";    
+        $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getCheckedRowId() as ".parent::VAR."rowId)";    
         $lines[] = parent::TAB1.parent::TAB1."{";
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."try";
