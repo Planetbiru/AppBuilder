@@ -24,7 +24,7 @@ use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
 use YourApplication\Data\Entity\Producer;
 
-require_once __DIR__ . "/inc.app/auth.php";
+require_once __DIR__ . "/auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
