@@ -347,7 +347,9 @@ function generateScript(selector)
 	let dataToPost = {
 		entity: entity,
 		fields: fields,
-		features: features
+		features: features,
+		module_name: $('[name="module_name"]').val(),
+		module_file: $('[name="module_file"]').val()
 	};
 	generateAllCode(dataToPost);
 }

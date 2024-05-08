@@ -1,4 +1,6 @@
 {
+    "module_name": "album",
+    "module_file": "album.php",
     "entity": {
         "mainEntity": {
             "entityName": "Album",

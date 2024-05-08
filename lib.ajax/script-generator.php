@@ -30,8 +30,7 @@ if($request->issetFields())
     require_once dirname(__DIR__) . "/inc.app/database.php";
 
     $scriptGenerator = new ScriptGenerator();
-    $moduleName = "test";
-    $scriptGenerator->generate($database, $moduleName, $request, $builderConfig, $appConfig, $entityInfo, $entityApvInfo);
+    $scriptGenerator->generate($database, $request, $builderConfig, $appConfig, $entityInfo, $entityApvInfo);
     
 }
 
