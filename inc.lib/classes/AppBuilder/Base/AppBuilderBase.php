@@ -317,13 +317,14 @@ class AppBuilderBase //NOSONAR
      * Create element form
      *
      * @param DOMDocument $dom
+     * @param string $name
      * @return DOMElement
      */
-    private function createElementForm($dom)
+    private function createElementForm($dom, $name)
     {
         $form = $dom->createElement('form');
-        $form->setAttribute('name', 'insertform');
-        $form->setAttribute('id', 'insertform');
+        $form->setAttribute('name', $name);
+        $form->setAttribute('id', $name);
         $form->setAttribute('action', '');
         $form->setAttribute('method', 'post');
         return $form; 
@@ -462,7 +463,7 @@ class AppBuilderBase //NOSONAR
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
-        $form = $this->createElementForm($dom);
+        $form = $this->createElementForm($dom, 'insertform');
         
         $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
@@ -514,7 +515,7 @@ class AppBuilderBase //NOSONAR
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
-        $form = $this->createElementForm($dom);
+        $form = $this->createElementForm($dom, 'updateform');
         
         $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
 
@@ -656,7 +657,7 @@ class AppBuilderBase //NOSONAR
     {
         $dom = new DOMDocument();
         
-        $formDetail = $this->createElementForm($dom);
+        $formDetail = $this->createElementForm($dom, 'detailform');
         $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $appFields, $pkName);
         $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
 
@@ -694,7 +695,7 @@ class AppBuilderBase //NOSONAR
     {
         $dom = new DOMDocument();
         
-        $formDetail = $this->createElementForm($dom);
+        $formDetail = $this->createElementForm($dom, 'detailform');
         
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         
