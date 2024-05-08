@@ -123,25 +123,6 @@ class AppField
         $this->inputFilter = $value->getInputFilter();
         $this->reference = PicoObjectParser::parseJsonRecursive($value->getreference());
         $this->additionalOutput = $value->getAdditionalOutput();
-
-        /*
-        Array
-        (
-            [fieldName] => album_id
-            [fieldLabel] => Album
-            [includeInsert] => true
-            [includeEdit] => true
-            [includeDetail] => true
-            [includeList] => true
-            [isKey] => false
-            [isInputRequired] => false
-            [elementType] => text
-            [filterElementType] => 
-            [dataType] => text
-            [inputFilter] => FILTER_SANITIZE_SPECIAL_CHARS
-        )
-        */
-
     }
 
     /**
@@ -280,7 +261,7 @@ class AppField
     /**
      * Get reference
      *
-     * @return  array
+     * @return MagicObject
      */ 
     public function getReference()
     {

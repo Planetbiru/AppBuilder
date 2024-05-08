@@ -13,7 +13,7 @@ class AppInclude
      *
      * @param string $dir
      * @param MagicObject|SecretObject $config
-     * @return void
+     * @return string
      */
     public static function mainAppHeader($dir, $config)
     {
@@ -32,7 +32,7 @@ class AppInclude
      *
      * @param string $dir
      * @param MagicObject|SecretObject $config
-     * @return void
+     * @return string
      */
     public static function mainAppFooter($dir, $config)
     {
@@ -42,7 +42,7 @@ class AppInclude
         }
         else
         {
-            return $dir."/Footer.php";
+            return $dir."/footer.php";
         }
     }
 }

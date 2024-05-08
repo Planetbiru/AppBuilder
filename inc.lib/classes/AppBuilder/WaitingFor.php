@@ -10,4 +10,5 @@ class WaitingFor
     const ACTIVATE = 3;
     const DEACTIVATE = 4;
     const DELETE = 5;
+    const SORT_ORDER = 6;
 }

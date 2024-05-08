@@ -48,6 +48,8 @@ class AppBuilderBase //NOSONAR
     const WRAPPER_LIST = "list";
 
     const APP_CONFIG = "appConfig";
+    const CURLY_BRACKET_OPEN = "{";
+    const CURLY_BRACKET_CLOSE = "}";
 
     /**
      * Set and get value style
@@ -485,12 +487,12 @@ class AppBuilderBase //NOSONAR
         $html = $this->addWrapper($html, self::WRAPPER_INSERT);
         
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
-        ."{".self::NEW_LINE
+        .self::CURLY_BRACKET_OPEN.self::NEW_LINE
         .$this->getIncludeHeader().self::NEW_LINE
         .$this->constructEntityLabel($entityName).self::NEW_LINE
         .self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG.self::NEW_LINE
         .$this->getIncludeFooter().self::NEW_LINE
-        ."}";
+        .self::CURLY_BRACKET_CLOSE;
     }
     
     /**
@@ -544,26 +546,26 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1."try{";
         $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
-        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
-        $getData[] = self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1."else";
-        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
-        $getData[] = self::TAB1.self::TAB1."}";
-        $getData[] = self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
-        $getData[] = self::TAB1."{";
+        $getData[] = self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
-        $getData[] = self::TAB1."}".self::NEW_LINE;
+        $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE.self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::UPDATE)\r\n"
         ."{\r\n"
         .implode(self::NEW_LINE, $getData)
-        ."}";
+        .self::CURLY_BRACKET_CLOSE;
     }
     
     /**
@@ -593,52 +595,52 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1."try{";
         $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
-        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
 
         $getData[] = self::TAB1.self::TAB1.self::TAB1."if(".self::VAR.$objectName."->nonNullApprovalId())";
-        $getData[] = self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."try";
-        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::VAR.$objectApprovalName."->find(".self::VAR.$objectName.self::CALL_GET."ApprovalId());";
-        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."catch(Exception ".self::VAR."e)";
-        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::TAB1."// do something here";
-        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
 
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetailCompare.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
 
-        $getData[] = self::TAB1.self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1.self::TAB1."else";
-        $getData[] = self::TAB1.self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
 
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
 
-        $getData[] = self::TAB1.self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
             
 
-        $getData[] = self::TAB1.self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1."else";
-        $getData[] = self::TAB1.self::TAB1."{";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
-        $getData[] = self::TAB1.self::TAB1."}";
-        $getData[] = self::TAB1."}";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
-        $getData[] = self::TAB1."{";
+        $getData[] = self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
-        $getData[] = self::TAB1."}".self::NEW_LINE;
+        $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE.self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::DETAIL)\r\n"
         ."{\r\n"
         .implode(self::NEW_LINE, $getData)
-        ."}";
+        .self::CURLY_BRACKET_CLOSE;
     }
 
     /**

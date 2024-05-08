@@ -23,7 +23,7 @@ class AppBuilder extends AppBuilderBase
         $lines = array();
         
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::INSERT)";
-        $lines[] = "{";
+        $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)
         {
@@ -51,7 +51,7 @@ class AppBuilder extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
 
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_INSERT_END;
-        $lines[] = "}";
+        $lines[] = parent::CURLY_BRACKET_CLOSE;
         return implode(parent::NEW_LINE, $lines);
     }
     
@@ -69,7 +69,7 @@ class AppBuilder extends AppBuilderBase
         $lines = array();
         
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::UPDATE)";
-        $lines[] = "{";
+        $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)
         {
@@ -80,7 +80,7 @@ class AppBuilder extends AppBuilderBase
             }
         }
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_UPDATE_END;
-        $lines[] = "}";
+        $lines[] = parent::CURLY_BRACKET_CLOSE;
         return implode(parent::NEW_LINE, $lines);
     }
     
@@ -105,11 +105,11 @@ class AppBuilder extends AppBuilderBase
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
         
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::DELETE)";
-        $lines[] = "{";
+        $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableDeletionRowIds())";
-        $lines[] = parent::TAB1."{";
+        $lines[] = parent::TAB1.parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getDeletionRowIds() as ".parent::VAR."rowId)";    
-        $lines[] = parent::TAB1.parent::TAB1."{";
+        $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_OPEN;
             
         if($withTrash)
         {
@@ -118,11 +118,11 @@ class AppBuilder extends AppBuilderBase
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectNameBk, $entityName);
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->findOneBy".$upperPkName."(".parent::VAR."rowId);";
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."if(".parent::VAR.$objectNameBk."->hasValue".$upperPkName."())";
-            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."{";       
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_OPEN;       
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectTrashName, $entityTrashName, $objectNameBk);
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectTrashName.parent::CALL_INSERT_END;
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->delete();";
-            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."}";
+            $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
 
         }
         else
@@ -133,9 +133,9 @@ class AppBuilder extends AppBuilderBase
         }    
             
             
-        $lines[] = parent::TAB1.parent::TAB1."}";
-        $lines[] = parent::TAB1."}";
-        $lines[] = "}";
+        $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
+        $lines[] = parent::TAB1.parent::CURLY_BRACKET_CLOSE;
+        $lines[] = parent::CURLY_BRACKET_CLOSE;
         
         return implode(parent::NEW_LINE, $lines);
     }
@@ -160,16 +160,16 @@ class AppBuilder extends AppBuilderBase
         $upperActivationKey = PicoStringUtil::upperCamelize($activationKey);
         $act = $activationValue?'true':'false';
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
-        $lines[] = "{";
+        $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableAtivationRowIds())";
-        $lines[] = parent::TAB1."{";
+        $lines[] = parent::TAB1.parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getAtivationRowIds() as ".parent::VAR."rowId)";    
-        $lines[] = parent::TAB1.parent::TAB1."{";
+        $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperActivationKey."($act)->update();";
-        $lines[] = parent::TAB1.parent::TAB1."}";
-        $lines[] = parent::TAB1."}";
-        $lines[] = "}";
+        $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
+        $lines[] = parent::TAB1.parent::CURLY_BRACKET_CLOSE;
+        $lines[] = parent::CURLY_BRACKET_CLOSE;
         
         return implode(parent::NEW_LINE, $lines);
     }

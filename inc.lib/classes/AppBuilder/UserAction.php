@@ -12,5 +12,6 @@ class UserAction
     const DETAIL = "detail";
     const APPROVE = "approve";
     const REJECT = "reject";
+    const SORT_ORDER = "sort_order";
     const SPECIAL_ACTION = "special_action";
 }

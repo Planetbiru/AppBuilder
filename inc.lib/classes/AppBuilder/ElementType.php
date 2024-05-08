@@ -2,8 +2,6 @@
 
 namespace AppBuilder;
 
-use MagicObject\SecretObject;
-
 class ElementType
 {
     const TEXT = "text";
