@@ -97,7 +97,7 @@
             "filterElementType": "select",
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS",
-            "reference": {
+            "referenceData": {
                 "type": "entity",
                 "entity": {
                     "entityName": "Producer",

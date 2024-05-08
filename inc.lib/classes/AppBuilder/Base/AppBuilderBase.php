@@ -735,6 +735,76 @@ class AppBuilderBase //NOSONAR
     }
 
     /**
+     * Create GUI LIST section 
+     *
+     * @param MagicObject $mainEntity
+     * @param AppField[] $appFields
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
+     * @return string
+     */
+    public function createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval)
+    {
+        $dom = new DOMDocument();
+        $filterSection = $dom->createElement('div');
+        $filterSection->setAttribute('class', 'filter-section');
+        $filterSection->appendChild($this->createFilterForm($dom));
+        $dataSection = $dom->createElement('div');
+        $dataSection->setAttribute('class', 'data-section');
+
+        $dom->appendChild($filterSection);
+        $dom->appendChild($dataSection);
+        $xml = $dom->saveXML();
+
+        $htmlList = $this->xmlToHtml($xml);
+        $htmlList = $this->fixTable($htmlList);
+        $htmlList = $this->fixPhpCode($htmlList);
+        $htmlList = trim($htmlList, self::NEW_LINE);
+        
+        $htmlList = $this->addTab($htmlList, 2);
+        $htmlList = $this->addIndent($htmlList, 2);
+        $htmlList = $this->addWrapper($htmlList, self::WRAPPER_LIST);
+
+        
+        $getData = array();
+
+        $getData[] = $this->getIncludeHeader();
+
+        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlList.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = $this->getIncludeFooter();
+
+
+
+        return 
+        "{\r\n"
+        .implode(self::NEW_LINE, $getData)
+        .self::CURLY_BRACKET_CLOSE;
+    }
+
+    public function createFilterForm($dom)
+    {
+        $form = $dom->createElement('form');
+        $form->setAttribute('action', '');
+        $form->setAttribute('method', 'get');
+        $form->setAttribute('class', 'filter-form');
+
+
+        $submitWrapper = $dom->createElement('span');
+        $submitWrapper->setAttribute('class', 'filter-group');
+
+        $buttonSearch = $dom->createElement('input');
+        $buttonSearch->setAttribute('type', 'submit');
+        $buttonSearch->setAttribute('class', 'btn btn-success');
+        $buttonSearch->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage".self::CALL_GET."ButtonSearch();".self::PHP_CLOSE_TAG);
+
+        $submitWrapper->appendChild($buttonSearch);
+
+        $form->appendChild($submitWrapper);
+
+        return $form;
+    }
+
+    /**
      * Create insert form table
      *
      * @param DOMDocument $dom
@@ -1057,7 +1127,8 @@ class AppBuilderBase //NOSONAR
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-            $input = $this->appendOption($dom, $input, $objectName, $insertField);
+            $referenceData = $insertField->getReferenceData();
+            $input = $this->appendOption($dom, $input, $objectName, $insertField, $referenceData);
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
@@ -1074,7 +1145,6 @@ class AppBuilderBase //NOSONAR
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
-
         }
         if($insertField->getRequired())
         {
@@ -1141,8 +1211,8 @@ class AppBuilderBase //NOSONAR
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-
-            $input = $this->appendOption($dom, $input, $objectName, $insertField, self::VAR.$objectName.'->get'.$upperFieldName.'()');
+            $referenceData = $insertField->getReferenceData();
+            $input = $this->appendOption($dom, $input, $objectName, $insertField, $referenceData, self::VAR.$objectName.'->get'.$upperFieldName.'()');
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
@@ -1188,22 +1258,21 @@ class AppBuilderBase //NOSONAR
         return $element;
     }
     
-    private function appendOption($dom, $input, $objectName, $insertField, $selected = null)
+    private function appendOption($dom, $input, $objectName, $insertField, $referenceData, $selected = null)
     {
-        $reference = $insertField->getReference();
-        if($reference != null)
+        if($referenceData != null)
         {            
-            if($reference->getType() == 'map')
+            if($referenceData->getType() == 'map')
             {
-                $map = $reference->getMap();
+                $map = $referenceData->getMap();
                 $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
-            else if($reference->getType() == 'entity')
+            else if($referenceData->getType() == 'entity')
             {      
-                $entity = $reference->getEntity();
-                $specification = $reference->getSpecification();
-                $sortable = $reference->getSortable();
-                $additionalOutput = $reference->getAdditionalOutput();
+                $entity = $referenceData->getEntity();
+                $specification = $referenceData->getSpecification();
+                $sortable = $referenceData->getSortable();
+                $additionalOutput = $referenceData->getAdditionalOutput();
                 
                 if(isset($entity) && $entity->getEntityName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
                 {

@@ -452,21 +452,25 @@ class AppBuilderApproval extends AppBuilderBase
 
     protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName)
     {
+        $currentUser = $this->getCurrentAction()->getUserFunction();
         return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::VAR.$objectName.", "
-        .parent::VAR.$entityInfoName.", ".parent::VAR.$entityApvInfoName.", "
-        .parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if return false, approval can not be done".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when approved".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when rejected".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.");"; //NOSONAR
+        .parent::VAR.$entityInfoName.", ".parent::VAR.$entityApvInfoName.", ".parent::VAR.$currentUser.", ".parent::NEW_LINE
+        .parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3, ".parent::VAR."userId){".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if the return is incorrect, approval cannot take place".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE 
+
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// return ".parent::VAR."param1->notEquals".PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit())."(".parent::VAR."userId);".parent::NEW_LINE 
+
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when approved".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when rejected".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.");"; 
     }
 }

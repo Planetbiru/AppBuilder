@@ -33,25 +33,26 @@ class ScriptGenerator
         $insertFields = array();
         $editFields = array();
         $detailFields = array();
+        $listFields = array();
         $referenceEntity = array();
         foreach($request->getFields() as $value)
         {
             $field = new AppField($value);
-            if($value->getIncludeInsert())
-            {
+            if($value->getIncludeInsert()) {
                 $insertFields[$field->getFieldName()] = $field;
             }
-            if($value->getIncludeEdit())
-            {
+            if($value->getIncludeEdit()) {
                 $editFields[$field->getFieldName()] = $field;
             }
-            if($value->getIncludeDetail())
-            {
+            if($value->getIncludeDetail()) {
                 $detailFields[$field->getFieldName()] = $field;
             }
-            if($value->getReference() != null && $value->getReference()->getType() == 'entity' && $value->getReference()->getEntity() != null && $value->getReference()->getEntity()->getEntityName() != null)
+            if($value->getIncludeList()) {
+                $listFields[$field->getFieldName()] = $field;
+            }
+            if($value->getReferenceData() != null && $value->getReferenceData()->getType() == 'entity' && $value->getReferenceData()->getEntity() != null && $value->getReferenceData()->getEntity()->getEntityName() != null)
             {
-                $referenceEntity[] = $value->getReference()->getEntity()->getEntityName();
+                $referenceEntity[] = $value->getReferenceData()->getEntity()->getEntityName();
             }
         }
         
@@ -91,8 +92,7 @@ class ScriptGenerator
         $uses[] = "use AppBuilder\\PicoTestUtil;";
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
         
-        if($approvalRequired)
-        {
+        if($approvalRequired) {
             $entityApproval = $entity->getApprovalEntity();
             $entityApprovalName = $entityApproval->getEntityName();
             $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
@@ -147,6 +147,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $approvalRequired, $entityApproval); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval); 
         }
         else
         {
@@ -171,6 +172,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval); 
         }
         
     
@@ -191,6 +193,7 @@ class ScriptGenerator
         ->add($guiInsert)
         ->add($guiUpdate)
         ->add($guiDetail)
+        ->add($guiList)
         ;
 
         $merged = (new AppSection(AppSection::SEPARATOR_NEW_LINE))

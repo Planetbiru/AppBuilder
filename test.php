@@ -167,7 +167,7 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
-				// if return false, approval can not be done
+				// if the return is incorrect, approval cannot take place
 				
 				return true;
 			}, 
@@ -255,7 +255,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
 			function($param1, $param2, $param3){
 				// approval validation here
-				// if return false, approval can not be done
+				// if the return is incorrect, approval cannot take place
 				
 				return true;
 			}, 

@@ -94,11 +94,19 @@ class AppField
     private $inputFilter;
     
     /**
-     * Reference
+     * Reference data
      *
      * @var MagicObject
      */
-    private $reference = array();
+    private $referenceData = array();
+
+
+    /**
+     * Reference filter
+     *
+     * @var MagicObject
+     */
+    private $referenceFilter = array();
 
     /**
      * Additional output
@@ -121,7 +129,8 @@ class AppField
         $this->dataType = $value->getdataType();
         $this->filterElementType = $value->getFilterElementType();
         $this->inputFilter = $value->getInputFilter();
-        $this->reference = PicoObjectParser::parseJsonRecursive($value->getreference());
+        $this->referenceData = PicoObjectParser::parseJsonRecursive($value->getreferenceData());
+        $this->referenceFilter = PicoObjectParser::parseJsonRecursive($value->getreferenceFilter());
         $this->additionalOutput = $value->getAdditionalOutput();
     }
 
@@ -259,13 +268,23 @@ class AppField
     }
 
     /**
-     * Get reference
+     * Get reference data
      *
      * @return MagicObject
      */ 
-    public function getReference()
+    public function getReferenceData()
     {
-        return $this->reference;
+        return $this->referenceData;
+    }
+
+    /**
+     * Get reference filter
+     *
+     * @return MagicObject
+     */ 
+    public function getReferenceFilter()
+    {
+        return $this->referenceFilter;
     }
 
     /**
