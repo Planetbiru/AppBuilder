@@ -26,8 +26,6 @@ try
     }
 
     $reference = new AppSecretObject($referenceConfig->getReferenceData());
-    error_log($reference);
-
     $fieldName = $inputGet->getFieldName();
     $camelFieldName = PicoStringUtil::camelize($fieldName);
     if(PicoStringUtil::endsWith($fieldName, "_id"))
@@ -39,27 +37,21 @@ try
         $entityName = PicoStringUtil::upperCamelize($fieldName);
     }
     $fieldReference = $reference->get($fieldName);
-    error_log($fieldReference);
-    if($fieldReference == null || $fieldReference->empty())
+    if($fieldReference == null)
     {
         $fieldReference = new AppSecretObject($fieldName);
         $fieldReference->setType("entity");
         $entity = new AppSecretObject();
         $entity->setEntityName($entityName);
         $entity->setPrimaryKey($camelFieldName);
-        $entity->setValue(PicoStringUtil::camelize('name'));
-        $additionalOutput = array(
-            PicoStringUtil::camelize('brith_day'),
-            PicoStringUtil::camelize('phone_number')
-        );
-        $entity->setAdditionalOutput($additionalOutput);
+        $entity->setValue(PicoStringUtil::camelize($entityInfo->getName()));
         $specification = array(
-            (new AppSecretObject())->setColumn("active")->setValue(true),
-            (new AppSecretObject())->setColumn("draft")->setValue(false)
+            (new AppSecretObject())->setColumn($entityInfo->getActive())->setValue(true),
+            (new AppSecretObject())->setColumn($entityInfo->getDraft())->setValue(false)
         );
         $sortable = array(
-            (new AppSecretObject())->setOrderBy("sortOrder")->setOrderType('PicoSort:SORT_ASC'),
-            (new AppSecretObject())->setOrderBy($camelFieldName)->setOrderType('PicoSort:SORT_ASC')
+            (new AppSecretObject())->setOrderBy($entityInfo->getSortOrder())->setOrderType('PicoSort::SORT_ASC'),
+            (new AppSecretObject())->setOrderBy($camelFieldName)->setOrderType('PicoSort::SORT_ASC')
         );
         $entity->setSpecification($specification);
         $entity->setSortable($sortable);
