@@ -29,10 +29,9 @@ AppBuilder uses MagicObject as its library. MagicObjects is very useful for crea
 ```php
 <?php
 
-// This script is generated automaticaly by AppBuilder
+// This script is generated automatically by AppBuilder
 // Visit https://github.com/Planetbiru/AppBuilder
 
-use MagicObject\MagicObject;
 use MagicObject\SetterGetter;
 use MagicObject\Database\PicoPredicate;
 use MagicObject\Database\PicoSort;
@@ -41,7 +40,6 @@ use MagicObject\Database\PicoSpecification;
 use MagicObject\Request\PicoFilterConstant;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
-use MagicObject\Util\AttrUtil;
 use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
@@ -120,18 +118,22 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
-	if($inputPost->countableAtivationRowIds())
+	if($inputPost->countableCheckedRowId())
 	{
-		foreach($inputPost->getAtivationRowIds() as $rowId)
+		foreach($inputPost->getCheckedRowId() as $rowId)
 		{
 			$album = new Album(null, $database);
 			try
 			{
-				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
-				$album->setAdminAskEdit($currentAction->getUserId());
-				$album->setTimeAskEdit($currentAction->getTime());
-				$album->setIpAskEdit($currentAction->getIp());
-				$album->setWaitingFor(WaitingFor::ACTIVATE)->update();
+				$album->where(PicoSpecification::getInstance()
+					->addAnd(PicoPredicate::getInstance()->setAlbumId($rowId))
+					->addAnd(PicoPredicate::getInstance()->setWaitingFor(WaitingFor::NOTHING))
+				)
+				->setAdminAskEdit($currentAction->getUserId())
+				->setTimeAskEdit($currentAction->getTime())
+				->setIpAskEdit($currentAction->getIp())
+				->setWaitingFor(WaitingFor::ACTIVATE)
+				->update();
 			}
 			catch(Exception $e)
 			{
@@ -142,18 +144,22 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 }
 else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 {
-	if($inputPost->countableAtivationRowIds())
+	if($inputPost->countableCheckedRowId())
 	{
-		foreach($inputPost->getAtivationRowIds() as $rowId)
+		foreach($inputPost->getCheckedRowId() as $rowId)
 		{
 			$album = new Album(null, $database);
 			try
 			{
-				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
-				$album->setAdminAskEdit($currentAction->getUserId());
-				$album->setTimeAskEdit($currentAction->getTime());
-				$album->setIpAskEdit($currentAction->getIp());
-				$album->setWaitingFor(WaitingFor::DEACTIVATE)->update();
+				$album->where(PicoSpecification::getInstance()
+					->addAnd(PicoPredicate::getInstance()->setAlbumId($rowId))
+					->addAnd(PicoPredicate::getInstance()->setWaitingFor(WaitingFor::NOTHING))
+				)
+				->setAdminAskEdit($currentAction->getUserId())
+				->setTimeAskEdit($currentAction->getTime())
+				->setIpAskEdit($currentAction->getIp())
+				->setWaitingFor(WaitingFor::DEACTIVATE)
+				->update();
 			}
 			catch(Exception $e)
 			{
@@ -164,18 +170,22 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 }
 else if($inputGet->getUserAction() == UserAction::DELETE)
 {
-	if($inputPost->countableAtivationRowIds())
+	if($inputPost->countableCheckedRowId())
 	{
-		foreach($inputPost->getAtivationRowIds() as $rowId)
+		foreach($inputPost->getCheckedRowId() as $rowId)
 		{
 			$album = new Album(null, $database);
 			try
 			{
-				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
-				$album->setAdminAskEdit($currentAction->getUserId());
-				$album->setTimeAskEdit($currentAction->getTime());
-				$album->setIpAskEdit($currentAction->getIp());
-				$album->setWaitingFor(WaitingFor::DELETE)->update();
+				$album->where(PicoSpecification::getInstance()
+					->addAnd(PicoPredicate::getInstance()->setAlbumId($rowId))
+					->addAnd(PicoPredicate::getInstance()->setWaitingFor(WaitingFor::NOTHING))
+				)
+				->setAdminAskEdit($currentAction->getUserId())
+				->setTimeAskEdit($currentAction->getTime())
+				->setIpAskEdit($currentAction->getIp())
+				->setWaitingFor(WaitingFor::DELETE)
+				->update();
 			}
 			catch(Exception $e)
 			{
@@ -193,11 +203,13 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 		$album->findOneByAlbumId($albumId);
 		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
-			function($param1, $param2, $param3){
+			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, $currentAction->getUserId(), 
+
+			function($param1, $param2, $param3, $userId){
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
 				
+				// return $param1->notEqualsAdminAskEdit($userId);
 				return true;
 			}, 
 			function($param1, $param2, $param3){
@@ -281,11 +293,13 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 		$album->findOneByAlbumId($albumId);
 		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
-			function($param1, $param2, $param3){
+			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, $currentAction->getUserId(), 
+
+			function($param1, $param2, $param3, $userId){
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
 				
+				// return $param1->notEqualsAdminAskEdit($userId);
 				return true;
 			}, 
 			function($param1, $param2, $param3){
@@ -338,12 +352,13 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo $selecOptionReference->showList(new Producer(null, $database), 
-								(new PicoSpecification())
-									->and(new PicoPredicate("numberOfSong", 3))
-									->and(new PicoPredicate("releaseDate", '2024-01-03'))
-									->and(new PicoPredicate("active", true)), 
-								(new PicoSortable())
-									->add(new PicoSort("timeCreate", PicoSort::ORDER_TYPE_ASC)), 
+								PicoSpecification::getInstance()
+									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
+								PicoSortable::getInstance()
+									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
 								"producerId", "name", null, array("numberOfSong", "releaseDate")); ?>
 							</select>
 						</td>
@@ -424,7 +439,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-update">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="updateform" id="updateform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -456,12 +471,13 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo $selecOptionReference->showList(new Producer(null, $database), 
-								(new PicoSpecification())
-									->and(new PicoPredicate("numberOfSong", 3))
-									->and(new PicoPredicate("releaseDate", '2024-01-03'))
-									->and(new PicoPredicate("active", true)), 
-								(new PicoSortable())
-									->add(new PicoSort("timeCreate", PicoSort::ORDER_TYPE_ASC)), 
+								PicoSpecification::getInstance()
+									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
+								PicoSortable::getInstance()
+									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
 								"producerId", "name", $album->getProducerId(), array("numberOfSong", "releaseDate")); ?>
 							</select>
 						</td>
@@ -563,7 +579,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-detail">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="detailform" id="detailform" action="" method="post">
 			<div class="alert alert-warning"><?php echo $appLanguage->message($album->getWaitingFor());?></div>
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
@@ -761,7 +777,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-detail">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="detailform" id="detailform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -867,8 +883,6 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		// Do somtething here when exception
 	}
 }
-
-
 ```
 
 ### Entity
