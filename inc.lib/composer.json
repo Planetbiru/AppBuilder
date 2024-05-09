@@ -5,6 +5,6 @@
         }
     },
     "require": {
-        "planetbiru/magic-object": "^1.4"
+        "planetbiru/magic-object": "^1.5"
     }
 }

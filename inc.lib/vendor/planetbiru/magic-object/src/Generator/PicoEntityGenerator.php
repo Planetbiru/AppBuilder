@@ -87,7 +87,6 @@ class PicoEntityGenerator
      */
     protected function createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra)
     {
-
         $propertyName = PicoStringUtil::camelize($columnName);
         $description = $this->getPropertyName($columnName);
         $type = $this->getDataType($typeMap, $columnType);
@@ -128,7 +127,7 @@ class PicoEntityGenerator
             $attrs[] = "length=$length";
         }
 
-        if($columnDefault != '')
+        if(!empty($columnDefault))
         {
             $attrs[] = "default_value=\"".$columnDefault."\"";
         }
@@ -149,7 +148,7 @@ class PicoEntityGenerator
         }
 
         $docs[] = "\t * @Column(".implode(", ", $attrs).")";
-        if($columnDefault != '')
+        if(!empty($columnDefault))
         {
             $docs[] = "\t * @DefaultColumn(value=\"".$columnDefault."\")";        
         }

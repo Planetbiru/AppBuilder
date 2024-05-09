@@ -123,6 +123,10 @@
                     {
                         "sortBy": "time_create",
                         "sortType": "PicoSort::ORDER_TYPE_ASC"
+                    },
+                    {
+                        "sortBy": "producer_id",
+                        "sortType": "PicoSort::ORDER_TYPE_ASC"
                     }
                 ],
                 "additionalOutput": [

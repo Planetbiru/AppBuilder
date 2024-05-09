@@ -1373,17 +1373,17 @@ class AppBuilderBase //NOSONAR
     private function buildSpecification($specification)
     {
         $specs = array();
-        $specs[] = '(new PicoSpecification())';
+        $specs[] = 'PicoSpecification::getInstance()';
         if($specification != null)
         {
             foreach($specification as $spc)
             {
                 if($spc->getColumn() != null && $spc->getValue() != null)
                 {
-                    $field = PicoStringUtil::camelize($spc->getColumn());
+                    $upperField = PicoStringUtil::upperCamelize($spc->getColumn());
                     $value = $spc->getValue();
                     $value = $this->fixValue($value);
-                    $specs[]  = self::NEW_LINE_N.self::TAB4.self::TAB3."->and(new PicoPredicate(\"$field\", $value))";
+                    $specs[]  = self::NEW_LINE_N.self::TAB4.self::TAB3."->addAnd(PicoPredicate::getInstance()->set$upperField($value))";
                 }
             }
         }
@@ -1399,16 +1399,16 @@ class AppBuilderBase //NOSONAR
     private function buildSortable($sortable)
     {
         $specs = array();
-        $specs[] = '(new PicoSortable())';
+        $specs[] = 'PicoSortable::getInstance()';
         if($sortable != null)
         {
             foreach($sortable as $srt)
             {
                 if($srt->getSortBy() != null && $srt->getSortType() != null)
                 {
-                    $field = PicoStringUtil::camelize($srt->getSortBy());
+                    $upperField = PicoStringUtil::upperCamelize($srt->getSortBy());
                     $type = $this->getSortType($srt->getSortType());
-                    $specs[]  = self::NEW_LINE_N.self::TAB4.self::TAB3."->add(new PicoSort(\"$field\", $type))";
+                    $specs[]  = self::NEW_LINE_N.self::TAB4.self::TAB3."->add(PicoSort::getInstance()->sortBy$upperField($type))";
                 }
             }
         }
