@@ -41,9 +41,7 @@ try
 			}
 			$tables[$data['table_name']]['primary_key'][] = $data['column_name'];
 		}
-		
 	}
-
 	header('Content-type: application/json');
 	echo json_encode($tables);
 }

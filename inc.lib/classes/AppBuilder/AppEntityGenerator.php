@@ -10,18 +10,17 @@ use MagicObject\Util\PicoStringUtil;
 class AppEntityGenerator extends PicoEntityGenerator
 {
     /**
-     * Constructor
+     * Prepare directory
      *
-     * @param PicoDatabase $database
-     * @param string $baseDir
-     * @param string $tableName
-     * @param string $baseNamespace
-     * @param string $entityName
-     * @param boolean $prettify
+     * @param string $dir
+     * @return void
      */
-    public function __construct($database, $baseDir, $tableName, $baseNamespace, $entityName)
+    private function prepareDir($dir)
     {
-        parent::__construct($database, $baseDir, $tableName, $baseNamespace, $entityName);
+        if(!file_exists($dir))
+        {
+            mkdir($dir, 0755, true);
+        }
     }
     /**
      * Generate custom entity
@@ -48,13 +47,10 @@ class AppEntityGenerator extends PicoEntityGenerator
         }
         $fileName = $this->baseNamespace."/".$className;
         $path = $this->baseDir."/".$fileName.".php";
-        $path = str_replace("\\", "/", $path);
-        
+        $path = str_replace("\\", "/", $path); 
         $dir = dirname($path);
-        if(!file_exists($dir))
-        {
-            mkdir($dir, 0755, true);
-        }
+        
+        $this->prepareDir($dir);
 
         $rows = PicoColumnGenerator::getColumnList($this->database, $picoTableName);
         
@@ -74,14 +70,11 @@ class AppEntityGenerator extends PicoEntityGenerator
                 $columnNull = $row['Null'];
                 $columnDefault = $row['Default'];
                 $columnExtra = $row['Extra'];
-
                 $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra);
                 $attrs[] = $prop;
             }
-        }
-        
+        }      
         $prettify = $this->prettify ? 'true' : 'false';
-        
         if($realTableName != null)
         {
             $picoTableName = $realTableName;
@@ -90,10 +83,8 @@ class AppEntityGenerator extends PicoEntityGenerator
         {
             $picoTableName = $this->tableName;
         }
-
         $uses = array();
         $uses[] = "";
-
         $classStr = '<?php
 
 namespace '.$this->baseNamespace.';

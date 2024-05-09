@@ -145,8 +145,6 @@ class AppField
         return $value == '1' || strtolower($value) == 'true' || $value === 1 || $value === true;
     }
 
-
-
     /**
      * Get field name
      *

@@ -47,13 +47,14 @@ class ScriptGenerator
     public function getAuthFile($appConf)
     {
         $includeDir = trim($appConf->getBaseIncludeDirectory(), "/\\");
-        if(!empty($includeDir)) {
+        if(!empty($includeDir)) 
+        {
             $includeDir = '"/'.$includeDir.'/auth.php"';
         }
-        else {
+        else 
+        {
             $includeDir = '"/auth.php"';
         }
-
         return $includeDir;
     }
 
@@ -65,7 +66,10 @@ class ScriptGenerator
      */
     public function hasReferenceData($value)
     {
-        return $value->getReferenceData() != null && $value->getReferenceData()->getType() == 'entity' && $value->getReferenceData()->getEntity() != null && $value->getReferenceData()->getEntity()->getEntityName() != null;
+        return $value->getReferenceData() != null 
+        && $value->getReferenceData()->getType() == 'entity' 
+        && $value->getReferenceData()->getEntity() != null 
+        && $value->getReferenceData()->getEntity()->getEntityName() != null;
     }
 
     /**
@@ -79,7 +83,8 @@ class ScriptGenerator
      */
     public function addUseFromApproval($uses, $appConf, $approvalRequired, $entity)
     {
-        if($approvalRequired) {
+        if($approvalRequired) 
+        {
             $entityApproval = $entity->getApprovalEntity();
             $entityApprovalName = $entityApproval->getEntityName();
             $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityApprovalName;";
@@ -98,7 +103,8 @@ class ScriptGenerator
      */
     public function addUseFromTrash($uses, $appConf, $trashRequired, $entity)
     {
-        if($trashRequired) {
+        if($trashRequired) 
+        {
             $entityTrash = $entity->getTrashEntity();
             $entityTrashName = $entityTrash->getEntityName();
             $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityTrashName;";
@@ -116,7 +122,8 @@ class ScriptGenerator
      */
     public function addUseFromReferenceData($uses, $appConf, $referenceEntity)
     {
-        foreach($referenceEntity as $ref) {
+        foreach($referenceEntity as $ref) 
+        {
             $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$ref;";
         }
         return $uses;
@@ -171,7 +178,6 @@ class ScriptGenerator
         $trashRequired = AppBuilderBase::isTrue($entity->getTrashRequired());
         
         $activationKey = $entityInfo->getActive();
-
         
         $appConf = new AppSecretObject($appConfig->getApplication());
         
@@ -248,7 +254,6 @@ class ScriptGenerator
             
             $deleteSection = $this->createDeleteWithoutApproval($appBuilder, $entityMain, $trashRequired, $entityTrash);
 
-
             $approvalSection = "";
             $rejectionSection = "";
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
@@ -256,8 +261,6 @@ class ScriptGenerator
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields); 
             $guiList = $appBuilder->createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval); 
         }
-        
-    
         
         // prepare CRUD section end
         

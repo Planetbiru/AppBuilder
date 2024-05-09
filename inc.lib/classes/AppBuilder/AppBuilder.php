@@ -96,7 +96,6 @@ class AppBuilder extends AppBuilderBase
     {
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
-        
 
         $objectName = lcfirst($entityName);
         
@@ -123,15 +122,12 @@ class AppBuilder extends AppBuilderBase
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectTrashName.parent::CALL_INSERT_END;
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->delete();";
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
-
         }
         else
         {
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectNameBk, $entityName);
             $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectNameBk."->deleteOneBy".$upperPkName."(".parent::VAR."rowId);";
-
-        }    
-            
+        }   
             
         $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_CLOSE;
