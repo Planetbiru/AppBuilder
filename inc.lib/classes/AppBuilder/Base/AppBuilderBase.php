@@ -589,6 +589,8 @@ class AppBuilderBase //NOSONAR
         $objectName = lcfirst($entityName);
         
         $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $pkName);
+        echo "########### objectApprovalName = '$objectApprovalName' \r\n";
+
         $htmlDetailCompare = $this->createTableDetailCompare($mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
 
         $getData = array();
@@ -709,7 +711,8 @@ class AppBuilderBase //NOSONAR
         $div->appendChild($message);
         
         $formDetail->appendChild($div);
-        
+
+        echo "########### objectApprovalName = '$objectApprovalName' \r\n";
         
         $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
         $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
@@ -895,6 +898,7 @@ class AppBuilderBase //NOSONAR
      */
     private function createDetailTableCompare($dom, $mainEntity, $objectName, $insertFields, $pkName, $approvalEntity, $objectApprovalName)
     {
+        echo "---objectApprovalName = '$objectApprovalName' \r\n";
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
         foreach($insertFields as $field)
@@ -1033,6 +1037,8 @@ class AppBuilderBase //NOSONAR
      */
     private function createDetailCompareRow($dom, $mainEntity, $objectName, $field, $pkName, $approvalEntity, $objectApprovalName)
     {
+        echo "objectName = '$objectName' \r\n";
+        echo "objectApprovalName = '$objectApprovalName' \r\n";
         $yes = self::VAR."appLanguage->getYes()";
         $no = self::VAR."appLanguage->getNo()";
         $tr = $dom->createElement('tr');

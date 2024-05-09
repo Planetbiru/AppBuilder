@@ -173,6 +173,15 @@ class ScriptGenerator
         $entityApproval = new MagicObject();
         $entityTrash = new MagicObject();
 
+        if($entity->getApprovalEntity() != null)
+        {
+            $entityApproval = $entity->getApprovalEntity();
+        }
+        if($entity->getTrashEntity() != null)
+        {
+            $entityTrash = $entity->getTrashEntity();
+        }
+
         $entityMainName = $entityMain->getEntityName();
         $approvalRequired = AppBuilderBase::isTrue($entity->getApprovalRequired());
         $trashRequired = AppBuilderBase::isTrue($entity->getTrashRequired());
