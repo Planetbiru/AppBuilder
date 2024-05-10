@@ -589,7 +589,6 @@ class AppBuilderBase //NOSONAR
         $objectName = lcfirst($entityName);
         
         $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $pkName);
-        echo "########### objectApprovalName = '$objectApprovalName' \r\n";
 
         $htmlDetailCompare = $this->createTableDetailCompare($mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
 
@@ -711,8 +710,6 @@ class AppBuilderBase //NOSONAR
         $div->appendChild($message);
         
         $formDetail->appendChild($div);
-
-        echo "########### objectApprovalName = '$objectApprovalName' \r\n";
         
         $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
         $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
@@ -791,7 +788,6 @@ class AppBuilderBase //NOSONAR
         $form->setAttribute('action', '');
         $form->setAttribute('method', 'get');
         $form->setAttribute('class', 'filter-form');
-
 
         $submitWrapper = $dom->createElement('span');
         $submitWrapper->setAttribute('class', 'filter-group');
@@ -898,7 +894,6 @@ class AppBuilderBase //NOSONAR
      */
     private function createDetailTableCompare($dom, $mainEntity, $objectName, $insertFields, $pkName, $approvalEntity, $objectApprovalName)
     {
-        echo "---objectApprovalName = '$objectApprovalName' \r\n";
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
         foreach($insertFields as $field)
@@ -1037,8 +1032,6 @@ class AppBuilderBase //NOSONAR
      */
     private function createDetailCompareRow($dom, $mainEntity, $objectName, $field, $pkName, $approvalEntity, $objectApprovalName)
     {
-        echo "objectName = '$objectName' \r\n";
-        echo "objectApprovalName = '$objectApprovalName' \r\n";
         $yes = self::VAR."appLanguage->getYes()";
         $no = self::VAR."appLanguage->getNo()";
         $tr = $dom->createElement('tr');
@@ -1182,7 +1175,7 @@ class AppBuilderBase //NOSONAR
 
             $input = $this->addAttributeId($input, $id);  
             
-            $input->setAttribute('value', $this->createPhpOutputValue(self::VAR.$objectName.'->get'.$upperFieldName.'()'));
+            $input->setAttribute('value', $this->createPhpOutputValue(self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()'));
             $input->setAttribute('autocomplete', 'off');
         }
         else if($insertField->getElementType() == ElementType::TEXTAREA)
@@ -1197,7 +1190,7 @@ class AppBuilderBase //NOSONAR
             
             $value = $dom->createTextNode('');
             $input->appendChild($value);
-            $value = $dom->createTextNode($this->createPhpOutputValue(self::VAR.$objectName.'->get'.$upperFieldName.'()'));
+            $value = $dom->createTextNode($this->createPhpOutputValue(self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()'));
             $input->appendChild($value);
             $input->setAttribute('spellcheck', 'false');
         }
@@ -1219,7 +1212,7 @@ class AppBuilderBase //NOSONAR
             $value->appendChild($textLabel);
             $input->appendChild($value);
             $referenceData = $insertField->getReferenceData();
-            $input = $this->appendOption($dom, $input, $objectName, $insertField, $referenceData, self::VAR.$objectName.'->get'.$upperFieldName.'()');
+            $input = $this->appendOption($dom, $input, $objectName, $insertField, $referenceData, self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()');
         }
         else if($insertField->getElementType() == ElementType::CHECKBOX)
         {
