@@ -95,7 +95,6 @@ class AppBuilderApproval extends AppBuilderBase
         $entityApprovalName = $approvalEntity->getEntityName();
         $pkeyApprovalName = $approvalEntity->getPrimaryKey();
         $upperPkeyName = PicoStringUtil::upperCamelize($mainEntity->getPrimaryKey());
-        $upperApprovalPkName = PicoStringUtil::upperCamelize($approvalEntity->getPrimaryKey());
         $approvalId = PicoStringUtil::upperCamelize($this->entityInfo->getApprovalId());
 
         $objectApprovalName = lcfirst($entityApprovalName);
