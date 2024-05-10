@@ -348,7 +348,6 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback before update data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
@@ -356,8 +355,7 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after update data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR     
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
@@ -365,8 +363,7 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after activate data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR     
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
@@ -374,8 +371,7 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after deactivate data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR     
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
@@ -383,8 +379,7 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback before delete data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR     
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
@@ -393,7 +388,20 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after delete data".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        
+        .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
+
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterApprove(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after approve data".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
+
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback->setAfterReject(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after reject data".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName when user approve data modification. You can add or remove it".parent::NEW_LINE
@@ -460,23 +468,23 @@ class AppBuilderApproval extends AppBuilderBase
     protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName)
     {
         $currentUser = $this->getCurrentAction()->getUserFunction();
-        return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::VAR.$objectName.", "
-        .parent::VAR.$entityInfoName.", ".parent::VAR.$entityApvInfoName.", ".parent::VAR.$currentUser.", ".parent::NEW_LINE
-        .parent::NEW_LINE 
+        $currentTime = $this->getCurrentAction()->getTimeFunction();
+        $currentIp = $this->getCurrentAction()->getIpFunction();
+        return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.", ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$entityInfoName.", ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$entityApvInfoName.", ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentUser.",  ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentTime.",  ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentIp.", ".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3, ".parent::VAR."userId){".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if the return is incorrect, approval cannot take place".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE 
 
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// return ".parent::VAR."param1->notEquals".PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit())."(".parent::VAR."userId);".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// e.g. return ".parent::VAR."param1->notEquals".PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit())."(".parent::VAR."userId);".parent::NEW_LINE 
 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when approved".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1."}, ".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3){".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback when rejected".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.");"; 
     }
