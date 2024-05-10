@@ -4,7 +4,6 @@ namespace AppBuilder;
 
 use MagicObject\MagicObject;
 use MagicObject\SecretObject;
-use MagicObject\Util\PicoGenericObject;
 
 class AppInclude
 {

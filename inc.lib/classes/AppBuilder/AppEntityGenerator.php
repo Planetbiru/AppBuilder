@@ -2,7 +2,6 @@
 
 namespace AppBuilder;
 
-use MagicObject\Database\PicoDatabase;
 use MagicObject\Generator\PicoColumnGenerator;
 use MagicObject\Generator\PicoEntityGenerator;
 use MagicObject\Util\PicoStringUtil;

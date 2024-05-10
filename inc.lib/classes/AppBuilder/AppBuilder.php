@@ -3,7 +3,6 @@
 namespace AppBuilder;
 
 use AppBuilder\Base\AppBuilderBase;
-use AppBuilder\Base\AppBuilderInterface;
 use MagicObject\MagicObject;
 use MagicObject\Util\PicoStringUtil;
 

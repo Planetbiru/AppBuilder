@@ -3,7 +3,6 @@
 namespace AppBuilder;
 
 use MagicObject\MagicObject;
-use MagicObject\Util\PicoGenericObject;
 
 class AppFeatures
 {
