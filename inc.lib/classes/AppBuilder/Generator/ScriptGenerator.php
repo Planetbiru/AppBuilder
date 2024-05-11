@@ -202,6 +202,7 @@ class ScriptGenerator
         $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
         $uses[] = "use MagicObject\\Request\\InputGet;";
         $uses[] = "use MagicObject\\Request\\InputPost;";
+        $uses[] = "use AppBuilder\\Field;";
         $uses[] = "use AppBuilder\\PicoApproval;";
         $uses[] = "use AppBuilder\\UserAction;";
         $uses[] = "use AppBuilder\\AppInclude;";

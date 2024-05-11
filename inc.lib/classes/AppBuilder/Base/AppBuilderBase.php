@@ -1335,9 +1335,9 @@ class AppBuilderBase //NOSONAR
                 $output = array();
                 foreach($additionalOutput as $add)
                 {
-                    $output[] = PicoStringUtil::camelize($add->getColumn());
+                    $output[] = $this->getStringOf(PicoStringUtil::camelize($add->getColumn()));
                 }
-                $paramAdditionalOutput = ', array("'.implode('", "', $output).'")';
+                $paramAdditionalOutput = ', array('.implode(', ', $output).')';
             }
             else
             {
@@ -1346,6 +1346,9 @@ class AppBuilderBase //NOSONAR
             
             $specStr = $this->buildSpecification($specification);
             $sortStr = $this->buildSortable($sortable);
+
+            $pk = $this->getStringOf(PicoStringUtil::camelize($entity->getPrimaryKey()));
+            $val = $this->getStringOf(PicoStringUtil::camelize($entity->getValue()));
             
             $option = $dom->createTextNode(self::NEW_LINE_N.self::TAB3.self::TAB3
             .self::PHP_OPEN_TAG.self::ECHO.self::VAR.'selecOptionReference'
@@ -1353,12 +1356,13 @@ class AppBuilderBase //NOSONAR
             .self::NEW_LINE_N.self::TAB3.self::TAB3
             .$specStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
             .$sortStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
-            .'"'.PicoStringUtil::camelize($entity->getPrimaryKey()).'", "'.PicoStringUtil::camelize($entity->getValue()).'"'.$paramSelected.$paramAdditionalOutput.'); '.self::PHP_CLOSE_TAG.self::NEW_LINE_N.self::TAB3.self::TAB2);
+            .$pk.', '.$val.$paramSelected.$paramAdditionalOutput.'); '.self::PHP_CLOSE_TAG.self::NEW_LINE_N.self::TAB3.self::TAB2);
 
             $input->appendChild($option);
         }
         return $input;
     }
+
     
     /**
      * Build specification
@@ -2002,4 +2006,23 @@ class AppBuilderBase //NOSONAR
         }
         return rtrim($html, self::NEW_LINE);
     }
+
+    /**
+     * Get string of
+     *
+     * @param string $str
+     * @return string
+     */
+    public function getStringOf($str)
+    {
+        if(strpos($str, " ") === false)
+        {
+            return 'Field::of()->'.$str;
+        }
+        else
+        {
+            return '"'.$str.'"';
+        }
+    }
+    
 }
