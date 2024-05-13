@@ -218,7 +218,7 @@
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
-            "filterElementType": "",
+            "filterElementType": "text",
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
