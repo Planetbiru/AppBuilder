@@ -214,6 +214,7 @@ class ScriptGenerator
         $uses[] = "use AppBuilder\\EntityLabel;";
         $uses[] = "use AppBuilder\\WaitingFor;";
         $uses[] = "use AppBuilder\\PicoTestUtil;";
+        $uses[] = "use AppBuilder\\FormBuilder;";
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
 
         $uses = $this->addUseFromApproval($uses, $appConf, $approvalRequired, $entity);
@@ -307,7 +308,7 @@ class ScriptGenerator
         $moduleFile = $request->getModuleFile();
 
         $baseDir = $appConf->getApplicationBaseDirectory();
-        $this->prepageApplication($appConf, $baseDir);
+        $this->prepareApplication($appConf, $baseDir);
 
         $path = $baseDir."/".$moduleFile;
         file_put_contents($path, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
@@ -318,13 +319,34 @@ class ScriptGenerator
         $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
     }
 
-    public function prepageApplication($appConf, $baseDir)
+    public function prepareApplication($appConf, $baseDir)
     {
         if(!file_exists($baseDir)) 
         {    
+            
             $this->prepareDir($baseDir);
             $this->prepareComposer($appConf);
+                  
+            $baseAppBuilder = $appConf->getEntityBaseDirectory()."";
+            $this->prepareDir($baseAppBuilder);
+            $arr = array( 
+                'AppBuilder/Field.php',
+                'AppBuilder/PicoApproval.php',
+                'AppBuilder/UserAction.php',
+                'AppBuilder/AppInclude.php',
+                'AppBuilder/EntityLabel.php',
+                'AppBuilder/WaitingFor.php',
+                'AppBuilder/PicoTestUtil.php',            
+                'AppBuilder/FormBuilder.php'            
+            );
+            foreach($arr as $file)
+            {
+                copy(dirname(dirname(__DIR__))."/".$file, $baseAppBuilder."/".$file);
+            }
+            
         }
+   
+        
     }
     public function prepareComposer($appConf)
     {
@@ -351,6 +373,11 @@ class ScriptGenerator
         if(!file_exists($baseDir)) {
             mkdir($baseDir, 0755, true);
         }
+        
+        
+
+        
+        
     }
     
     public function updateComposer($appConf, $composer)
@@ -372,12 +399,12 @@ class ScriptGenerator
         {
             if(!isset($composerJson->autoload->psr0))
             {
-                $composerJson->autoload->psr0 = new stdClass;
+                $composerJson->autoload->{'psr-0'} = new stdClass;
             }
             $psr0BaseDirectory = $composer->getPsr0BaseDirectory();       
             foreach($psr0BaseDirectory as $dir)
             {
-                $composerJson->autoload->psr0->{$dir->getNamespace()."\\"} = $dir->getDirectory()."/";
+                $composerJson->autoload->{'psr-0'}->{$dir->getNamespace()."\\"} = $dir->getDirectory()."/";
             }
         }
         
@@ -385,25 +412,25 @@ class ScriptGenerator
         
         if($psr4)
         {
-            if(!isset($composerJson->autoload->psr4))
+            if(!isset($composerJson->autoload->{'psr-4'}))
             {
-                $composerJson->autoload->psr4 = new stdClass;
+                $composerJson->autoload->{'psr-4'} = new stdClass;
             }
             $psr0BaseDirectory = $composer->getPsr0BaseDirectory();       
             foreach($psr0BaseDirectory as $dir)
             {
-                $composerJson->autoload->psr4->{$dir->getNamespace()."\\"} = $dir->getDirectory()."/";
+                $composerJson->autoload->{'psr-4'}->{$dir->getNamespace()."\\"} = $dir->getDirectory()."/";
             }
         }
         
         $this->prepareDir($appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/classes/AppBuilder");
         
         
-        if(!isset($composerJson->autoload->psr0))
+        if(!isset($composerJson->autoload->{'psr-0'}))
         {
-            $composerJson->autoload->psr0 = new stdClass;
+            $composerJson->autoload->{'psr-0'} = new stdClass;
         }
-        $composerJson->autoload->psr0->{"AppBuilder\\"} = $dir->getDirectory()."/";
+        $composerJson->autoload->{'psr-0'}->{"AppBuilder\\"} = $dir->getDirectory()."/";
 
         
         file_put_contents($composerJsonFile, json_encode($composerJson, JSON_PRETTY_PRINT));

@@ -1481,7 +1481,7 @@ class AppBuilderBase //NOSONAR
             $val = $this->getStringOf(PicoStringUtil::camelize($entity->getValue()));
             
             $option = $dom->createTextNode(self::NEW_LINE_N.self::TAB3.self::TAB3
-            .self::PHP_OPEN_TAG.self::ECHO.self::VAR.'selecOptionReference'
+            .self::PHP_OPEN_TAG.self::ECHO.'FormBuilder::getInstance()'
             .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.$this->appConfig->getGlobalVariableDatabase().'), '
             .self::NEW_LINE_N.self::TAB3.self::TAB3
             .$specStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
