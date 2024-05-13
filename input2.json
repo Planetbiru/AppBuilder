@@ -52,7 +52,7 @@
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
-            "filterElementType": "",
+            "filterElementType": "text",
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
@@ -66,7 +66,7 @@
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
-            "filterElementType": "",
+            "filterElementType": "text",
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
@@ -137,7 +137,48 @@
                         "column": "release_date"
                     }
                 ]
-            }
+            },
+            "referenceFilter": {
+                "type": "entity",
+                "entity": {
+                    "entityName": "Producer",
+                    "tableName": "producer",
+                    "primaryKey": "producer_id",
+                    "value": "name"
+                },
+                "specification": [
+                    {
+                        "column": "number_of_song",
+                        "value": 3
+                    },
+                    {
+                        "column": "release_date",
+                        "value": "2024-01-03"
+                    },
+                    {
+                        "column": "active",
+                        "value": true
+                    }
+                ],
+                "sortable": [
+                    {
+                        "sortBy": "time_create",
+                        "sortType": "PicoSort::ORDER_TYPE_ASC"
+                    },
+                    {
+                        "sortBy": "producer_id",
+                        "sortType": "PicoSort::ORDER_TYPE_ASC"
+                    }
+                ],
+                "additionalOutput": [
+                    {
+                        "column": "number_of_song"
+                    },
+                    {
+                        "column": "release_date"
+                    }
+                ]
+            }         
         },
         {
             "fieldName": "release_date",
@@ -149,7 +190,7 @@
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
-            "filterElementType": "",
+            "filterElementType": "text",
             "dataType": "date",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },

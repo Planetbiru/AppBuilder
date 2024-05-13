@@ -147,6 +147,7 @@ class ScriptGenerator
         $editFields = array();
         $detailFields = array();
         $listFields = array();
+        $filterFields = array();
         $referenceEntity = array();
         foreach($request->getFields() as $value) {
             $field = new AppField($value);
@@ -161,6 +162,9 @@ class ScriptGenerator
             }
             if($value->getIncludeList()) {
                 $listFields[$field->getFieldName()] = $field;
+            }
+            if($value->getFilterElementType() != "") {
+                $filterFields[$field->getFieldName()] = $field;
             }
             if($this->hasReferenceData($value)){
                 $referenceEntity[] = $value->getReferenceData()->getEntity()->getEntityName();
@@ -251,7 +255,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $approvalRequired, $entityApproval); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval); 
         }
         else
         {
@@ -270,7 +274,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval); 
         }
         
         // prepare CRUD section end

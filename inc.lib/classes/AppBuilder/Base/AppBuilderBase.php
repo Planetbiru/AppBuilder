@@ -741,14 +741,21 @@ class AppBuilderBase //NOSONAR
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiList($entityMain, $listFields, $approvalRequired, $entityApproval)
+    public function createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval)
     {
         $dom = new DOMDocument();
         $filterSection = $dom->createElement('div');
         $filterSection->setAttribute('class', 'filter-section');
-        $filterSection->appendChild($this->createFilterForm($dom));
+        
+        $whiteSpace = $dom->createTextNode("\n\t");
+        $filterSection->appendChild($whiteSpace);
+        
+        $filterSection->appendChild($this->createFilterForm($dom, $listFields, $filterFields));
         $dataSection = $dom->createElement('div');
         $dataSection->setAttribute('class', 'data-section');
+        
+        $cariageReturn = $dom->createTextNode("\n");
+        $filterSection->appendChild($cariageReturn);
 
         $dom->appendChild($filterSection);
         $dom->appendChild($dataSection);
@@ -779,13 +786,26 @@ class AppBuilderBase //NOSONAR
         .self::CURLY_BRACKET_CLOSE;
     }
 
-    public function createFilterForm($dom)
+    /**
+     * Create filter
+     *
+     * @param DOMDocument $dom
+     * @param AppField[] $listFields
+     * @param AppField[] $filterFields
+     * @return DOMElement
+     */
+    public function createFilterForm($dom, $listFields, $filterFields)
     {
         $form = $dom->createElement('form');
         $form->setAttribute('action', '');
         $form->setAttribute('method', 'get');
         $form->setAttribute('class', 'filter-form');
 
+        
+        $form = $this->appendFilter($dom, $form, $filterFields);
+        
+        
+        
         $submitWrapper = $dom->createElement('span');
         $submitWrapper->setAttribute('class', 'filter-group');
 
@@ -793,12 +813,122 @@ class AppBuilderBase //NOSONAR
         $buttonSearch->setAttribute('type', 'submit');
         $buttonSearch->setAttribute('class', 'btn btn-success');
         $buttonSearch->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage".self::CALL_GET."ButtonSearch();".self::PHP_CLOSE_TAG);
-
+        $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
+        $submitWrapper->appendChild($whiteSpace2);
         $submitWrapper->appendChild($buttonSearch);
+        
+        $whiteSpace4 = $dom->createTextNode("\n\t\t");
+        $submitWrapper->appendChild($whiteSpace4);
 
+        
+        $whiteSpace = $dom->createTextNode("\n\t\t");
+        $form->appendChild($whiteSpace);
+        
         $form->appendChild($submitWrapper);
 
+        $whiteSpace3 = $dom->createTextNode("\n\t");
+        $form->appendChild($whiteSpace3);
+
         return $form;
+    }
+    
+    /**
+     * Append filter
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $form
+     * @param AppField[] $filterFields
+     * @return DOMElement
+     */
+    public function appendFilter($dom, $form, $filterFields)
+    {
+        
+        foreach($filterFields as $field)
+        {
+            if($field->getFilterElementType() == "text")
+            {
+                $whiteSpace = $dom->createTextNode("\n\t\t");
+                $form->appendChild($whiteSpace);
+                
+                $filterElementWrapper = $dom->createElement('span');
+                $filterElementWrapper->setAttribute('class', 'filter-group');
+
+                $filterElement = $dom->createElement('input');
+                $filterElement->setAttribute('type', 'text');
+                $filterElement->setAttribute('name', $field->getFieldName());
+                $filterElement->setAttribute('class', 'form-control');
+                
+                $fieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+
+                
+                $filterElement->setAttribute('value', AppBuilderBase::PHP_OPEN_TAG.AppBuilderBase::ECHO.AppBuilderBase::VAR."inputGet".AppBuilderBase::CALL_GET.$fieldName."();".AppBuilderBase::PHP_CLOSE_TAG);
+                $filterElement->setAttribute('autocomplete', 'off');
+                
+                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
+                $filterElementWrapper->appendChild($whiteSpace2);
+                
+                $filterElementWrapper->appendChild($filterElement);
+                
+                
+                $whiteSpace = $dom->createTextNode("\n\t\t");
+                $filterElementWrapper->appendChild($whiteSpace);
+                
+                $form->appendChild($filterElementWrapper);
+                
+                $whiteSpace4 = $dom->createTextNode("\n\t\t");
+                $form->appendChild($whiteSpace4);
+                
+                
+            }
+            else if($field->getFilterElementType() == "select")
+            {
+                $whiteSpace = $dom->createTextNode("\n\t\t");
+                $form->appendChild($whiteSpace);
+                
+                $filterElementWrapper = $dom->createElement('span');
+                $filterElementWrapper->setAttribute('class', 'filter-group');
+
+                $filterElement = $dom->createElement('select');
+                $filterElement->setAttribute('name', $field->getFieldName());
+                $filterElement->setAttribute('class', 'form-control');
+                
+                $objectName = lcfirst($this->getObjectNameFromFieldName($field->getFieldName()));
+
+                $referenceFilter = $field->getReferenceFilter();
+                
+                $filterElement = $this->appendOption($dom, $filterElement, $objectName, $field, $referenceFilter);
+
+                $whiteSpace2 = $dom->createTextNode("\n\t\t\t\t\t");
+                $filterElementWrapper->appendChild($whiteSpace2);
+                
+                $filterElementWrapper->appendChild($filterElement);
+                
+                
+                $whiteSpace = $dom->createTextNode("\n\t\t");
+                $filterElementWrapper->appendChild($whiteSpace);
+                
+                $form->appendChild($filterElementWrapper);
+                
+                $whiteSpace4 = $dom->createTextNode("\n\t\t");
+                $form->appendChild($whiteSpace4);
+            }
+            
+            
+        }
+        
+        return $form;
+    }
+    
+    public function getObjectNameFromFieldName($fieldName)
+    {
+        if(PicoStringUtil::endsWith($fieldName, "_id"))
+        {
+            return PicoStringUtil::camelize(substr($fieldName, 0, strlen($fieldName) - 3));
+        }
+        else
+        {
+            return PicoStringUtil::camelize($fieldName);
+        }
     }
 
     /**
