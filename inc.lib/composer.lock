@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5ce9b4753588c31bc00dc4ac98037aed",
+    "content-hash": "2cd4edf348c48b34940d16edffa84e21",
     "packages": [
         {
             "name": "planetbiru/magic-object",
