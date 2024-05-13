@@ -14,6 +14,7 @@ use AppBuilder\EntityInfo;
 use MagicObject\Database\PicoDatabase;
 use MagicObject\MagicObject;
 use MagicObject\Request\InputPost;
+use stdClass;
 
 class ScriptGenerator
 {
@@ -315,8 +316,8 @@ class ScriptGenerator
 
     public function prepageApplication($appConf, $baseDir)
     {
-        if(!file_exists($baseDir)) {
-            
+        if(!file_exists($baseDir)) 
+        {    
             $this->prepareDir($baseDir);
             $this->prepareComposer($appConf);
         }
@@ -325,8 +326,7 @@ class ScriptGenerator
     {
         $composer = new AppSecretObject($appConf->getComposer());
         $mo = new AppSecretObject($appConf->getMagicObject());
-        
-        $magicObjectVersion = $mo->getVersion;
+        $magicObjectVersion = $mo->getVersion();
         if(!empty($magicObjectVersion))
         {
             $magicObjectVersion = ":".$magicObjectVersion;
@@ -338,7 +338,8 @@ class ScriptGenerator
         if($success)
         {
             $cmd = "cd $targetDir"."&&"."php composer.phar require planetbiru/magic-object$magicObjectVersion";
-            exec($cmd);
+            exec($cmd);     
+            $this->updateComposer($appConf, $composer);
         }
     }
     public function prepareDir($baseDir)
@@ -346,5 +347,66 @@ class ScriptGenerator
         if(!file_exists($baseDir)) {
             mkdir($baseDir, 0755, true);
         }
+    }
+    
+    public function updateComposer($appConf, $composer)
+    {
+        $composerJsonFile = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/composer.json";
+        
+        
+        $composerJson = json_decode(file_get_contents($composerJsonFile));
+        if(!isset($composerJson->autoload))
+        {
+            $composerJson->autoload = new stdClass;
+        }
+        
+        
+        $psr0 = $composer->getPsr0();
+        $psr4 = $composer->getPsr4();
+        
+        if($psr0)
+        {
+            if(!isset($composerJson->autoload->psr0))
+            {
+                $composerJson->autoload->psr0 = new stdClass;
+            }
+            $psr0BaseDirectory = $composer->getPsr0BaseDirectory();       
+            foreach($psr0BaseDirectory as $dir)
+            {
+                $composerJson->autoload->psr0->{$dir->getNamespace()."\\"} = $dir->getDirectory()."/";
+            }
+        }
+        
+        
+        
+        if($psr4)
+        {
+            if(!isset($composerJson->autoload->psr4))
+            {
+                $composerJson->autoload->psr4 = new stdClass;
+            }
+            $psr0BaseDirectory = $composer->getPsr0BaseDirectory();       
+            foreach($psr0BaseDirectory as $dir)
+            {
+                $composerJson->autoload->psr4->{$dir->getNamespace()."\\"} = $dir->getDirectory()."/";
+            }
+        }
+        
+        $this->prepareDir($appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/classes/AppBuilder");
+        
+        
+        if(!isset($composerJson->autoload->psr0))
+        {
+            $composerJson->autoload->psr0 = new stdClass;
+        }
+        $composerJson->autoload->psr0->{"AppBuilder\\"} = $dir->getDirectory()."/";
+
+        
+        file_put_contents($composerJsonFile, json_encode($composerJson, JSON_PRETTY_PRINT));
+
+        $targetDir = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."";
+        $cmd = "cd $targetDir"."&&"."php composer.phar update";
+        exec($cmd);
+
     }
 }
