@@ -784,6 +784,7 @@ class AppBuilderBase //NOSONAR
         return 
         "{\r\n"
         .implode(self::NEW_LINE, $getData)
+        .self::NEW_LINE
         .self::CURLY_BRACKET_CLOSE;
     }
 
@@ -857,8 +858,7 @@ class AppBuilderBase //NOSONAR
                 
             if($field->getFilterElementType() == "text")
             {
-                $whiteSpace = $dom->createTextNode("\n\t\t");
-                $form->appendChild($whiteSpace);
+                $form->appendChild($dom->createTextNode("\n\t\t"));
                 
                 $filterGroup = $dom->createElement('span');
                 $filterGroup->setAttribute('class', 'filter-group');
@@ -874,39 +874,32 @@ class AppBuilderBase //NOSONAR
                 $input->setAttribute('value', AppBuilderBase::PHP_OPEN_TAG.AppBuilderBase::ECHO.AppBuilderBase::VAR."inputGet".AppBuilderBase::CALL_GET.$fieldName."();".AppBuilderBase::PHP_CLOSE_TAG);
                 $input->setAttribute('autocomplete', 'off');
                 
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
-                $filterGroup->appendChild($whiteSpace2);
+                $filterGroup->appendChild($dom->createTextNode("\n\t\t\t"));
                 
                 $filterGroup->appendChild($labelWrapper);
                 
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
-                $filterGroup->appendChild($whiteSpace2);
+                $filterGroup->appendChild($dom->createTextNode("\n\t\t\t"));
                 
                 $inputWrapper = $dom->createElement('span');
                 $inputWrapper->setAttribute('class', 'filter-control');
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t\t");
-                $inputWrapper->appendChild($whiteSpace2);
+                $inputWrapper->appendChild($dom->createTextNode("\n\t\t\t\t"));
                 $inputWrapper->appendChild($input);
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
-                $inputWrapper->appendChild($whiteSpace2);
+                $inputWrapper->appendChild($dom->createTextNode("\n\t\t\t"));
                 
                 $filterGroup->appendChild($inputWrapper);
                 
                 
-                $whiteSpace = $dom->createTextNode("\n\t\t");
-                $filterGroup->appendChild($whiteSpace);
+                $filterGroup->appendChild($dom->createTextNode("\n\t\t"));
                 
                 $form->appendChild($filterGroup);
                 
-                $whiteSpace4 = $dom->createTextNode("\n\t\t");
-                $form->appendChild($whiteSpace4);
+                $form->appendChild($dom->createTextNode("\n\t\t"));
                 
                 
             }
             else if($field->getFilterElementType() == "select")
             {
-                $whiteSpace = $dom->createTextNode("\n\t\t");
-                $form->appendChild($whiteSpace);
+                $form->appendChild($dom->createTextNode("\n\t\t"));
                 
                 $filterGroup = $dom->createElement('span');
                 $filterGroup->setAttribute('class', 'filter-group');
@@ -921,35 +914,29 @@ class AppBuilderBase //NOSONAR
                 
                 $select = $this->appendOption($dom, $select, $objectName, $field, $referenceFilter);
 
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
-                $filterGroup->appendChild($whiteSpace2);
+                $filterGroup->appendChild($dom->createTextNode("\n\t\t\t"));
                 
                 $filterGroup->appendChild($labelWrapper);
                 
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
-                $filterGroup->appendChild($whiteSpace2);
+                $filterGroup->appendChild($dom->createTextNode("\n\t\t\t"));
                 
                 
                 $inputWrapper = $dom->createElement('span');
                 $inputWrapper->setAttribute('class', 'filter-control');
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t\t\t");
-                $inputWrapper->appendChild($whiteSpace2);
+                $inputWrapper->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
                 $inputWrapper->appendChild($select);
-                $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
-                $inputWrapper->appendChild($whiteSpace2);
+                $inputWrapper->appendChild($dom->createTextNode("\n\t\t\t"));
                 
                 $filterGroup->appendChild($inputWrapper);
                                 
                 
-                $whiteSpace = $dom->createTextNode("\n\t\t");
-                $filterGroup->appendChild($whiteSpace);
+                $filterGroup->appendChild($dom->createTextNode("\n\t\t"));
                 
 
                 
                 $form->appendChild($filterGroup);
                 
-                $whiteSpace4 = $dom->createTextNode("\n\t\t");
-                $form->appendChild($whiteSpace4);
+                $form->appendChild($dom->createTextNode("\n\t\t"));
             }
             
             

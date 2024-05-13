@@ -306,7 +306,7 @@ class AppBuilderApproval extends AppBuilderBase
             $prop = PicoStringUtil::camelize($val);
             if(!in_array($val, $this->skipedAutoSetter) && $prop != $camelPkName)
             {
-                $toBeCopied[] = $prop;
+                $toBeCopied[] = $this->getStringOf($prop);
             }
         }
         $entityInfoName = "entityInfo";
@@ -408,7 +408,7 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName when user approve data modification. You can add or remove it".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"'.implode('", '.parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.'"', $toBeCopied).'"'.parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.implode(', '.parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1, $toBeCopied).parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.");";
         $lines[] = "";
 
