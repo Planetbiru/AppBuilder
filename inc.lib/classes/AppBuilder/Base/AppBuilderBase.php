@@ -1416,7 +1416,9 @@ class AppBuilderBase //NOSONAR
     private function appendOption($dom, $input, $objectName, $insertField, $referenceData, $selected = null)
     {
         if($referenceData != null)
-        {            
+        {        
+            
+    
             if($referenceData->getType() == 'map')
             {
                 $map = $referenceData->getMap();
@@ -1424,6 +1426,7 @@ class AppBuilderBase //NOSONAR
             }
             else if($referenceData->getType() == 'entity')
             {      
+                
                 $entity = $referenceData->getEntity();
                 $specification = $referenceData->getSpecification();
                 $sortable = $referenceData->getSortable();
@@ -1486,9 +1489,11 @@ class AppBuilderBase //NOSONAR
     {
         if($entity != null)
         {
+            
             $paramAdditionalOutput = "";
             if($additionalOutput != null && !empty($additionalOutput))
             {
+                
                 $paramSelected = ($selected != null) ? ", $selected": ", null";
                 $output = array();
                 foreach($additionalOutput as $add)
@@ -1496,9 +1501,11 @@ class AppBuilderBase //NOSONAR
                     $output[] = $this->getStringOf(PicoStringUtil::camelize($add->getColumn()));
                 }
                 $paramAdditionalOutput = ', array('.implode(', ', $output).')';
+                
             }
             else
             {
+                
                 $paramSelected = ($selected != null) ? ", $selected": "";
             }
             
@@ -1515,7 +1522,6 @@ class AppBuilderBase //NOSONAR
             .$specStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
             .$sortStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
             .$pk.', '.$val.$paramSelected.$paramAdditionalOutput.'); '.self::PHP_CLOSE_TAG.self::NEW_LINE_N.self::TAB3.self::TAB2);
-
             $input->appendChild($option);
         }
         return $input;
