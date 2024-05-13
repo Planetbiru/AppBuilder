@@ -909,10 +909,12 @@ class AppBuilderBase //NOSONAR
                 $select->setAttribute('class', 'form-control');
                 
                 $objectName = lcfirst($this->getObjectNameFromFieldName($field->getFieldName()));
+                
+                $inputGetName = PicoStringUtil::upperCamelize($field->getFieldName());
 
                 $referenceFilter = $field->getReferenceFilter();
                 
-                $select = $this->appendOption($dom, $select, $objectName, $field, $referenceFilter);
+                $select = $this->appendOption($dom, $select, $objectName, $field, $referenceFilter, self::VAR."inputGet".self::CALL_GET.$inputGetName."()");
 
                 $filterGroup->appendChild($dom->createTextNode("\n\t\t\t"));
                 
