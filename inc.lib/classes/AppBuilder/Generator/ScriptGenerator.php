@@ -301,18 +301,47 @@ class ScriptGenerator
 
         $moduleFile = $request->getModuleFile();
 
-        $baseDir = $appConf->getBaseDirectory();
-        $this->prepageDir($baseDir);
+        $baseDir = $appConf->getApplicationBaseDirectory();
+        $this->prepageApplication($appConf, $baseDir);
 
         $path = $baseDir."/".$moduleFile;
         file_put_contents($path, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
+
         
         $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
         $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
         $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
     }
 
-    public function prepageDir($baseDir)
+    public function prepageApplication($appConf, $baseDir)
+    {
+        if(!file_exists($baseDir)) {
+            
+            $this->prepareDir($baseDir);
+            $this->prepareComposer($appConf);
+        }
+    }
+    public function prepareComposer($appConf)
+    {
+        $composer = new AppSecretObject($appConf->getComposer());
+        $mo = new AppSecretObject($appConf->getMagicObject());
+        
+        $magicObjectVersion = $mo->getVersion;
+        if(!empty($magicObjectVersion))
+        {
+            $magicObjectVersion = ":".$magicObjectVersion;
+        }
+        $this->prepareDir($appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory());
+        $targetDir = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."";
+        $targetPath = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/composer.phar";
+        $success = copy(dirname(dirname(dirname(__DIR__)))."/composer.phar", $targetPath);
+        if($success)
+        {
+            $cmd = "cd $targetDir"."&&"."php composer.phar require planetbiru/magic-object$magicObjectVersion";
+            exec($cmd);
+        }
+    }
+    public function prepareDir($baseDir)
     {
         if(!file_exists($baseDir)) {
             mkdir($baseDir, 0755, true);
