@@ -440,7 +440,7 @@ class AppBuilderBase //NOSONAR
      */
     private function fixPhpCode($html)
     {
-        return str_replace(array('&lt;?php', '?&gt;', '-&gt;'), array('<'.'?'.'php', '?'.'>', '->'), $html);
+        return str_replace(array('&lt;?php', '?&gt;', '-&gt;', '=&gt;', ' &gt; ', ' &lt; '), array('<'.'?'.'php', '?'.'>', '->', '=>', ' > ', ' < '), $html);
     }
     
     /**
@@ -744,19 +744,36 @@ class AppBuilderBase //NOSONAR
     public function createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval)
     {
         $entityName = $entityMain->getentityName();
+        $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         $filterSection = $dom->createElement('div');
         $filterSection->setAttribute('class', 'filter-section');
         
-        $whiteSpace = $dom->createTextNode("\n\t");
-        $filterSection->appendChild($whiteSpace);
-        
+        $filterSection->appendChild($dom->createTextNode("\n\t"));      
         $filterSection->appendChild($this->createFilterForm($dom, $listFields, $filterFields));
+        $filterSection->appendChild($dom->createTextNode("\n"));
+        
         $dataSection = $dom->createElement('div');
         $dataSection->setAttribute('class', 'data-section');
         
-        $cariageReturn = $dom->createTextNode("\n");
-        $filterSection->appendChild($cariageReturn);
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
+        
+        $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getNumber() > 0)")); 
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_OPEN)); 
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
+        $dataSection->appendChild($dom->createTextNode("\n\t")); 
+        
+        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName));
+        
+        
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_CLOSE)); 
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
+        $dataSection->appendChild($dom->createTextNode("\n\t")); 
+        
+        $dataSection->appendChild($dom->createTextNode("\n"));
+        
+        
 
         $dom->appendChild($filterSection);
         $dom->appendChild($dataSection);
@@ -786,6 +803,151 @@ class AppBuilderBase //NOSONAR
         .implode(self::NEW_LINE, $getData)
         .self::NEW_LINE
         .self::CURLY_BRACKET_CLOSE;
+    }
+    
+    /**
+     * Create list
+     *
+     * @param DOMDocument $dom
+     * @param AppField[] $listFields
+     * @param string $objectName
+     * @return DOMElement
+     */
+    public function createDataList($dom, $listFields, $objectName)
+    {
+        $form = $dom->createElement('form');
+        $form->setAttribute('action', '');
+        $form->setAttribute('method', 'post');
+        $form->setAttribute('class', 'data-form');
+
+        $div1 = $dom->createElement('div');
+        $div1->setAttribute('class', 'data-wrapper');
+        
+        $table = $this->createDataTableList($dom, $listFields, $objectName);
+        
+        $div1->appendChild($dom->createTextNode("\n\t\t\t")); 
+        $div1->appendChild($table);
+        $div1->appendChild($dom->createTextNode("\n\t\t")); 
+        
+        $form->appendChild($dom->createTextNode("\n\t\t")); 
+        $form->appendChild($div1);
+        $form->appendChild($dom->createTextNode("\n\t")); 
+        
+        
+        
+        return $form;
+    }
+    
+    /**
+     * Create table list
+     *
+     * @param DOMDocument $dom
+     * @param AppField[] $listFields
+     * @return DOMElement
+     */
+    public function createDataTableList($dom, $listFields, $objectName)
+    {
+        $table = $dom->createElement('table');
+        $table->setAttribute('class', 'table table-row');
+        
+        $thead = $this->createTableListHead($dom, $listFields);
+        $tbody = $this->createTableListBody($dom, $listFields, $objectName);
+        
+        $table->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        $table->appendChild($thead);
+        $table->appendChild($dom->createTextNode("\n\t\t\t")); 
+        
+        $table->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        $table->appendChild($tbody);
+        $table->appendChild($dom->createTextNode("\n\t\t\t")); 
+        
+        
+        
+        return $table;
+    }
+    
+    /**
+     * Create table list head
+     *
+     * @param DOMDocument $dom
+     * @param AppField[] $listFields
+     * @return DOMElement
+     */
+    public function createTableListHead($dom, $listFields)
+    {
+        
+        $thead = $dom->createElement('thead');
+        
+        $trh = $dom->createElement('tr');
+        
+        foreach($listFields as $field)
+        {
+            $td = $dom->createElement('td');
+            $td->setAttribute('data-field', $field->getFieldName());
+            $td->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
+            
+            $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+            $trh->appendChild($td);
+        }
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        
+        $thead->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        $thead->appendChild($trh);
+        $thead->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        
+        return $thead;
+    }
+    
+    /**
+     * Create table list body
+     *
+     * @param DOMDocument $dom
+     * @param AppField[] $listFields
+     * @return DOMElement
+     */
+    public function createTableListBody($dom, $listFields, $objectName)
+    {
+        
+        $tbody = $dom->createElement('tbody');
+        
+        $trh = $dom->createElement('tr');
+        
+        foreach($listFields as $field)
+        {
+            $td = $dom->createElement('td');
+            $td->setAttribute('data-field', $field->getFieldName());
+            
+            $value = $this->createDetailValue($dom, $objectName, $field);
+            
+            $td->appendChild($value); 
+            
+            $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+            $trh->appendChild($td);
+        }
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        $tbody->appendChild($dom->createTextNode(self::PHP_OPEN_TAG));
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        $tbody->appendChild($dom->createTextNode("foreach(\$resultSet as \$dataIndex => \$album)")); 
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t".self::CURLY_BRACKET_OPEN)); 
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+
+        $tbody->appendChild($dom->createTextNode(self::PHP_CLOSE_TAG));  
+        
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        $tbody->appendChild($trh);
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        
+        $tbody->appendChild($dom->createTextNode(self::PHP_OPEN_TAG));
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t".self::CURLY_BRACKET_CLOSE)); 
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        $tbody->appendChild($dom->createTextNode(self::PHP_CLOSE_TAG));  
+        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        
+        return $tbody;
     }
 
     /**
@@ -1143,15 +1305,43 @@ class AppBuilderBase //NOSONAR
      */
     private function createDetailRow($dom, $mainEntity, $objectName, $field, $pkName)
     {
-        $yes = self::VAR."appLanguage->getYes()";
-        $no = self::VAR."appLanguage->getNo()";
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+
         $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
+
+
+        $td1->appendChild($label);
+        
+        $value = $this->createDetailValue($dom, $objectName, $field);
+
+        $td2->appendChild($value);
+        
+
+        $tr->appendChild($td1);
+        $tr->appendChild($td2);
+
+        return $tr;
+    }
+    
+    /**
+     * Create detail form table
+     *
+     * @param DOMDocument $dom
+     * @param string $objectName
+     * @param AppField $insertField
+     * @return DOMElement
+     */
+    private function createDetailValue($dom, $objectName, $field)
+    {
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        
+        $yes = self::VAR."appLanguage->getYes()";
+        $no = self::VAR."appLanguage->getNo()";
         
         if($field->getElementType() == 'checkbox')
         {
@@ -1162,17 +1352,8 @@ class AppBuilderBase //NOSONAR
             $val = "".self::CALL_GET.$upperFieldName."();";
         }
         
-        $value = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
+        return $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
 
-        $td1->appendChild($label);
-
-        $td2->appendChild($value);
-        
-
-        $tr->appendChild($td1);
-        $tr->appendChild($td2);
-
-        return $tr;
     }
 
     /**
