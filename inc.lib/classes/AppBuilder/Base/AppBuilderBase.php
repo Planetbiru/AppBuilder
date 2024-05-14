@@ -758,7 +758,12 @@ class AppBuilderBase //NOSONAR
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
         
-        $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getNumber() > 0)")); 
+        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $objectName))); 
+        
+        $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
+        
+        
+        
         $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_OPEN)); 
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
@@ -803,6 +808,26 @@ class AppBuilderBase //NOSONAR
         .implode(self::NEW_LINE, $getData)
         .self::NEW_LINE
         .self::CURLY_BRACKET_CLOSE;
+    }
+    
+    public function beforeListScript($dom, $entityMain, $listFields, $objectName)
+    {
+
+        $script = 
+'
+$specification = new PicoSpecification();
+$pageable = new PicoPageable();
+$sortable = new PicoSortable();
+$dataLoader = new '.$entityMain->getEntityName().'(null, $database);
+$pageData = $dataLoader->findAll($specification, $pagable, $sortable);
+$resultSet = $pageData->getResult();
+';
+
+        $script = str_replace("\r\n", "\n", $script);
+        $script = $this->addIndent($script, 1);
+        $script = str_replace("\r\n", "\n", $script);
+        
+        return $script;
     }
     
     /**
