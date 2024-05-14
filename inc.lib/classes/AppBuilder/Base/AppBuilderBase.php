@@ -1098,7 +1098,7 @@ $resultSet = $pageData->getResult();
         // edit begin
         $edit = $dom->createElement('a');
         $edit->setAttribute('class', 'edit-control');
-        $href = '<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&'.$primaryKey.'=".$objectName->get'.$upperPkName.'();?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', $objectName->get'.$upperPkName.');?>';
         $edit->setAttribute('href', $href);
         $spanEdit = $dom->createElement('span');
         $spanEdit->setAttribute('class', 'fa fa-edit');
@@ -1118,7 +1118,7 @@ $resultSet = $pageData->getResult();
         // detail begin
         $detail = $dom->createElement('a');
         $detail->setAttribute('class', 'detail-control field-master');
-        $href = '<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&'.$primaryKey.'=".$objectName->get'.$upperPkName.'();?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', $objectName->get'.$upperPkName.');?>';
         $detail->setAttribute('href', $href);
         $spanDetail = $dom->createElement('span');
         $spanDetail->setAttribute('class', 'fa fa-folder');
@@ -1202,15 +1202,36 @@ $resultSet = $pageData->getResult();
         $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
         $submitWrapper->appendChild($whiteSpace2);
         $submitWrapper->appendChild($buttonSearch);
+        $submitWrapper->appendChild($dom->createTextNode("\n\t\t"));
+        
+        $addWrapper = $dom->createElement('span');
+        $addWrapper->setAttribute('class', 'filter-group');
+        
+        $buttonSearch = $dom->createElement('input');
+        $buttonSearch->setAttribute('type', 'button');
+        $buttonSearch->setAttribute('class', 'btn btn-primary');
+        $buttonSearch->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage".self::CALL_GET."ButtonAdd();".self::PHP_CLOSE_TAG);
+        $buttonSearch->setAttribute('onlick', "window.location='".self::PHP_OPEN_TAG.self::ECHO.self::VAR."currentModule".self::CALL_GET."RedirectUrl(UserAction::INSERT);".self::PHP_CLOSE_TAG."'");
+        $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
+        
+        
+        $addWrapper->appendChild($dom->createTextNode("\n\t\t\t"));
+   
+        $addWrapper->appendChild($buttonSearch);
         
         $whiteSpace4 = $dom->createTextNode("\n\t\t");
-        $submitWrapper->appendChild($whiteSpace4);
+        
+    
+        $addWrapper->appendChild($whiteSpace4);
 
         
         $whiteSpace = $dom->createTextNode("\n\t\t");
         $form->appendChild($whiteSpace);
         
         $form->appendChild($submitWrapper);
+        $form->appendChild($dom->createTextNode("\n\n\t\t"));
+
+        $form->appendChild($addWrapper);
 
         $whiteSpace3 = $dom->createTextNode("\n\t");
         $form->appendChild($whiteSpace3);
