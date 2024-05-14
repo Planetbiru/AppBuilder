@@ -966,6 +966,16 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			if($pageData->getTotalResult() > 0)
 			{
 			?>
+			<div class="pagination pagination-top">
+			    <div class="pagination-number">
+			    <?php
+			    foreach($rowData->getPagination() as $pg)
+			    {
+			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="#"><?php echo $pg['page'];?></a></span><?php
+			    }
+			    ?>
+			    </div>
+			</div>
 			<form action="" method="post" class="data-form">
 				<div class="data-wrapper">
 					<table class="table table-row">
@@ -1044,10 +1054,26 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 					</table>
 				</div>
 			</form>
+			<div class="pagination pagination-bottom">
+			    <div class="pagination-number">
+			    <?php
+			    foreach($rowData->getPagination() as $pg)
+			    {
+			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="#"><?php echo $pg['page'];?></a></span><?php
+			    }
+			    ?>
+			    </div>
+			</div>
+			
 			<?php 
 			}
+			else
+			{
 			?>
-			
+			    <div class="alert alert-info"><?php echo $appLanguage->getMessageDataNotFound();?></div>
+			<?php
+			}
+			?>
 		</div>
 	</div>
 </div>

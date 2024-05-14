@@ -441,8 +441,8 @@ class AppBuilderBase //NOSONAR
     private function fixPhpCode($html)
     {
         return str_replace(
-            array('&lt;?php', '?&gt;', '-&gt;', '=&gt;', ' &gt; ', ' &lt; ', '&quot;', '&amp;'), 
-            array('<'.'?'.'php', '?'.'>', '->', '=>', ' > ', ' < ', '"', '&'), 
+            array('&lt;?php', '?&gt;', '-&gt;', '=&gt;', '&gt;', '&lt;', '&quot;', '&amp;'), 
+            array('<'.'?'.'php', '?'.'>', '->', '=>', '>', '<', '"', '&'), 
             $html
         );
     }
@@ -771,19 +771,29 @@ class AppBuilderBase //NOSONAR
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_OPEN)); 
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
+        
+        $pagination1 = $dom->createTextNode($this->createPagination("pagination-top"));
+        $pagination2 = $dom->createTextNode($this->createPagination("pagination-bottom"));
+        
+        $dataSection->appendChild($dom->createTextNode("\n")); 
+        $dataSection->appendChild($pagination1);
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
         
         $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName, $primaryKey));
         
-        
-        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
-        $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_CLOSE)); 
-        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
+        $dataSection->appendChild($dom->createTextNode("\n")); 
+        $dataSection->appendChild($pagination2);
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
+       
         
-        $dataSection->appendChild($dom->createTextNode("\n"));
+
+        $dataSection->appendChild($dom->createTextNode("\n")); 
         
+        $dataSection->appendChild($dom->createTextNode($this->scriptWhenListNotFound())); 
         
+        $dataSection->appendChild($dom->createTextNode("\n")); 
+
 
         $dom->appendChild($filterSection);
         $dom->appendChild($dataSection);
@@ -814,6 +824,52 @@ class AppBuilderBase //NOSONAR
         .self::NEW_LINE
         .self::CURLY_BRACKET_CLOSE;
     }
+    
+    public function scriptWhenListNotFound()
+    {
+        $script = 
+'}
+else
+{
+?>
+    <div class="alert alert-info"><?php echo $appLanguage->getMessageDataNotFound();?></div>
+<?php
+}
+?>';
+        $script = str_replace("\r\n", "\n", $script);
+        $script = $this->addIndent($script, 1);
+        $script = str_replace("\r\n", "\n", $script);
+        
+        return $script;
+    }
+    
+    /**
+     * Create pagination
+     *
+     * @param string $className
+     * @return string
+     */
+    public function createPagination($className)
+    {
+        $script = 
+'<div class="pagination '.$className.'">
+    <div class="pagination-number">
+    <?php
+    foreach($rowData->getPagination() as $pg)
+    {
+        ?><span class="page-selector<?php echo $pg'."['selected'] ? ' page-selected':'';?>".'" data-page-number="<?php echo $pg'."['page'];?>".'"><a href="#"><?php echo $pg'."['page']".';?></a></span><?php
+    }
+    ?>
+    </div>
+</div>';
+        $script = str_replace("\r\n", "\n", $script);
+        $script = $this->addIndent($script, 1);
+        $script = str_replace("\r\n", "\n", $script);
+        
+        return $script;
+        
+    }
+    
     /**
      * Create GUI LIST section 
      *
