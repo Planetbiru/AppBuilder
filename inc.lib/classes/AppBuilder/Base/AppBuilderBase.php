@@ -440,7 +440,11 @@ class AppBuilderBase //NOSONAR
      */
     private function fixPhpCode($html)
     {
-        return str_replace(array('&lt;?php', '?&gt;', '-&gt;', '=&gt;', ' &gt; ', ' &lt; '), array('<'.'?'.'php', '?'.'>', '->', '=>', ' > ', ' < '), $html);
+        return str_replace(
+            array('&lt;?php', '?&gt;', '-&gt;', '=&gt;', ' &gt; ', ' &lt; ', '&quot;', '&amp;'), 
+            array('<'.'?'.'php', '?'.'>', '->', '=>', ' > ', ' < ', '"', '&'), 
+            $html
+        );
     }
     
     /**
@@ -744,6 +748,7 @@ class AppBuilderBase //NOSONAR
     public function createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval)
     {
         $entityName = $entityMain->getentityName();
+        $primaryKey = $entityMain->getPrimaryKey();
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         $filterSection = $dom->createElement('div');
@@ -758,7 +763,7 @@ class AppBuilderBase //NOSONAR
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
         
-        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $objectName))); 
+        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName))); 
         
         $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
         
@@ -768,7 +773,7 @@ class AppBuilderBase //NOSONAR
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
         
-        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName));
+        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName, $primaryKey));
         
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
@@ -809,15 +814,36 @@ class AppBuilderBase //NOSONAR
         .self::NEW_LINE
         .self::CURLY_BRACKET_CLOSE;
     }
-    
-    public function beforeListScript($dom, $entityMain, $listFields, $objectName)
+    /**
+     * Create GUI LIST section 
+     *
+     * @param DOMDocument $dom
+     * @param MagicObject $mainEntity
+     * @param AppField[] $listFields
+     * @param AppField[] $filterFields
+     * @param string $objectName
+     * @return string
+     */
+    public function beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName)
     {
 
+        $arr = array();
+        foreach($filterFields as $field)
+        {
+            $arr[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
+        }
         $script = 
 '
-$specification = new PicoSpecification();
-$pageable = new PicoPageable();
-$sortable = new PicoSortable();
+$specMap = array(
+    '.implode(",\n\t", $arr).'
+);
+$sortOrderMap = array(
+    '.implode(",\n\t", $arr).'
+);
+            
+$specification = PicoSpecification::fromUserInput($inputGet, $specMap);
+$sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
+$pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 $dataLoader = new '.$entityMain->getEntityName().'(null, $database);
 $pageData = $dataLoader->findAll($specification, $pagable, $sortable);
 $resultSet = $pageData->getResult();
@@ -838,7 +864,7 @@ $resultSet = $pageData->getResult();
      * @param string $objectName
      * @return DOMElement
      */
-    public function createDataList($dom, $listFields, $objectName)
+    public function createDataList($dom, $listFields, $objectName, $primaryKey)
     {
         $form = $dom->createElement('form');
         $form->setAttribute('action', '');
@@ -848,7 +874,7 @@ $resultSet = $pageData->getResult();
         $div1 = $dom->createElement('div');
         $div1->setAttribute('class', 'data-wrapper');
         
-        $table = $this->createDataTableList($dom, $listFields, $objectName);
+        $table = $this->createDataTableList($dom, $listFields, $objectName, $primaryKey);
         
         $div1->appendChild($dom->createTextNode("\n\t\t\t")); 
         $div1->appendChild($table);
@@ -868,15 +894,16 @@ $resultSet = $pageData->getResult();
      *
      * @param DOMDocument $dom
      * @param AppField[] $listFields
+     * @param string $primaryKey
      * @return DOMElement
      */
-    public function createDataTableList($dom, $listFields, $objectName)
+    public function createDataTableList($dom, $listFields, $objectName, $primaryKey)
     {
         $table = $dom->createElement('table');
         $table->setAttribute('class', 'table table-row');
         
-        $thead = $this->createTableListHead($dom, $listFields);
-        $tbody = $this->createTableListBody($dom, $listFields, $objectName);
+        $thead = $this->createTableListHead($dom, $listFields, $objectName, $primaryKey);
+        $tbody = $this->createTableListBody($dom, $listFields, $objectName, $primaryKey);
         
         $table->appendChild($dom->createTextNode("\n\t\t\t\t")); 
         $table->appendChild($thead);
@@ -896,14 +923,66 @@ $resultSet = $pageData->getResult();
      *
      * @param DOMDocument $dom
      * @param AppField[] $listFields
+     * @param string $objectName
+     * @param string $primaryKey
      * @return DOMElement
      */
-    public function createTableListHead($dom, $listFields)
+    public function createTableListHead($dom, $listFields, $objectName, $primaryKey)
     {
         
         $thead = $dom->createElement('thead');
         
         $trh = $dom->createElement('tr');
+
+        // checkbox begin
+        $td = $dom->createElement('td');
+        $td->setAttribute('class', 'data-selector');
+        $td->setAttribute('data-key', $primaryKey);
+        $selector = '.checkbox-'.strtolower(str_replace('_', '-', $primaryKey));
+        
+        $chekcbox = $dom->createElement('input');
+        $chekcbox->setAttribute('type', 'checkbox');
+        $chekcbox->setAttribute('class', 'checkbox check-master');
+        $chekcbox->setAttribute('data-selector', $selector);
+        
+        $td->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td->appendChild($chekcbox);
+        $td->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td);
+        // checkbox end
+        
+        // edit begin
+        $spanEdit = $dom->createElement('span');
+        $spanEdit->setAttribute('class', 'fa fa-edit');
+        $spanEdit->appendChild($dom->createTextNode(''));
+        
+        $td2 = $dom->createElement('td');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td2->appendChild($spanEdit);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td2);
+        // edit end
+        
+        // detail begin
+        $spanDetail = $dom->createElement('span');
+        $spanDetail->setAttribute('class', 'fa fa-folder');
+        $spanDetail->appendChild($dom->createTextNode(''));
+        
+        $td2 = $dom->createElement('td');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td2->appendChild($spanDetail);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td2);
+        // detail end
+        
         
         foreach($listFields as $field)
         {
@@ -929,14 +1008,76 @@ $resultSet = $pageData->getResult();
      *
      * @param DOMDocument $dom
      * @param AppField[] $listFields
+     * @param string $primaryKey
      * @return DOMElement
      */
-    public function createTableListBody($dom, $listFields, $objectName)
+    public function createTableListBody($dom, $listFields, $objectName, $primaryKey)
     {
         
         $tbody = $dom->createElement('tbody');
         
         $trh = $dom->createElement('tr');
+        
+        // checkbox begin
+        $td = $dom->createElement('td');
+        $td->setAttribute('class', 'data-selector');
+        $td->setAttribute('data-key', $primaryKey);
+        $upperPkName = PicoStringUtil::upperCamelize($primaryKey);
+        $className = 'checkbox check-slave checkbox-'.strtolower(str_replace('_', '-', $primaryKey));
+        
+        $chekcbox = $dom->createElement('input');
+        $chekcbox->setAttribute('type', 'checkbox');
+        $chekcbox->setAttribute('class', $className);
+        $chekcbox->setAttribute('name', 'checked_row_id[]');
+        $chekcbox->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.self::CALL_GET.$upperPkName."();".self::PHP_CLOSE_TAG);
+        
+        $td->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td->appendChild($chekcbox);
+        $td->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td);
+        // checkbox end
+        
+        // edit begin
+        $edit = $dom->createElement('a');
+        $edit->setAttribute('class', 'edit-control');
+        $href = '<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&'.$primaryKey.'=".$objectName->get'.$upperPkName.'();?>';
+        $edit->setAttribute('href', $href);
+        $spanEdit = $dom->createElement('span');
+        $spanEdit->setAttribute('class', 'fa fa-edit');
+        $spanEdit->appendChild($dom->createTextNode(''));
+        $edit->appendChild($spanEdit);
+        
+        $td2 = $dom->createElement('td');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td2->appendChild($edit);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td2);
+        // edit end
+        
+        // detail begin
+        $detail = $dom->createElement('a');
+        $detail->setAttribute('class', 'detail-control field-master');
+        $href = '<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&'.$primaryKey.'=".$objectName->get'.$upperPkName.'();?>';
+        $detail->setAttribute('href', $href);
+        $spanDetail = $dom->createElement('span');
+        $spanDetail->setAttribute('class', 'fa fa-folder');
+        $spanDetail->appendChild($dom->createTextNode(''));
+        $detail->appendChild($spanDetail);
+        
+        $td2 = $dom->createElement('td');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td2->appendChild($detail);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td2);
+        // detail end
         
         foreach($listFields as $field)
         {
@@ -1623,11 +1764,17 @@ $resultSet = $pageData->getResult();
     {
         if($referenceData != null)
         {        
-            
-    
             if($referenceData->getType() == 'map')
             {
                 $map = $referenceData->getMap();
+                $input = $this->appendOptionList($dom, $input, $map, $selected);
+            }
+            else if($referenceData->getType() == 'boolean')
+            {
+                $map = array(
+                    (new MagicObject())->setValue('true')->setLabel('Yes'),
+                    (new MagicObject())->setValue('false')->setLabel('No')
+                );
                 $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
             else if($referenceData->getType() == 'entity')
@@ -1674,8 +1821,10 @@ $resultSet = $pageData->getResult();
             {
                 $option->setAttribute('selected', 'selected');
             }
+            $input->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
             $input->appendChild($option);
         }
+        $input->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         return $input;
     }
     

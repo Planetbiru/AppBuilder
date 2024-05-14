@@ -372,9 +372,12 @@
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "checkbox",
-            "filterElementType": "",
+            "filterElementType": "select",
             "dataType": "int",
-            "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
+            "inputFilter": "FILTER_SANITIZE_NUMBER_INT",
+            "referenceFilter": {
+                "type": "boolean"
+            }    
         }
     ]
 }

@@ -200,14 +200,16 @@ class ScriptGenerator
         $uses[] = "// Visit https://github.com/Planetbiru/AppBuilder";
         $uses[] = "";
         $uses[] = "use MagicObject\\SetterGetter;";
+        $uses[] = "use MagicObject\\Database\\PicoPage;";
+        $uses[] = "use MagicObject\\Database\\PicoPageable;";
         $uses[] = "use MagicObject\\Database\\PicoPredicate;";
         $uses[] = "use MagicObject\\Database\\PicoSort;";
-        $uses[] = "use MagicObject\\Database\\PicoPageable;";
         $uses[] = "use MagicObject\\Database\\PicoSortable;";
         $uses[] = "use MagicObject\\Database\\PicoSpecification;";
         $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
         $uses[] = "use MagicObject\\Request\\InputGet;";
         $uses[] = "use MagicObject\\Request\\InputPost;";
+        $uses[] = "use MagicObject\\Util\\AttrUtil;";
         $uses[] = "use AppBuilder\\Field;";
         $uses[] = "use AppBuilder\\PicoApproval;";
         $uses[] = "use AppBuilder\\UserAction;";

@@ -1,10 +1,11 @@
 <?php
 
-// This script is generated automaticaly by AppBuilder
+// This script is generated automatically by AppBuilder
 // Visit https://github.com/Planetbiru/AppBuilder
 
-use MagicObject\MagicObject;
 use MagicObject\SetterGetter;
+use MagicObject\Database\PicoPage;
+use MagicObject\Database\PicoPageable;
 use MagicObject\Database\PicoPredicate;
 use MagicObject\Database\PicoSort;
 use MagicObject\Database\PicoSortable;
@@ -13,18 +14,20 @@ use MagicObject\Request\PicoFilterConstant;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 use MagicObject\Util\AttrUtil;
+use AppBuilder\Field;
 use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
 use AppBuilder\EntityLabel;
 use AppBuilder\WaitingFor;
 use AppBuilder\PicoTestUtil;
+use AppBuilder\FormBuilder;
 use YourApplication\Data\Entity\Album;
 use YourApplication\Data\Entity\AlbumApv;
 use YourApplication\Data\Entity\AlbumTrash;
 use YourApplication\Data\Entity\Producer;
 
-require_once __DIR__ . "/auth.php";
+require_once __DIR__ . "/inc.app/auth.php";
 
 $inputGet = new InputGet();
 $inputPost = new InputPost();
@@ -91,18 +94,22 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 }
 else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 {
-	if($inputPost->countableAtivationRowIds())
+	if($inputPost->countableCheckedRowId())
 	{
-		foreach($inputPost->getAtivationRowIds() as $rowId)
+		foreach($inputPost->getCheckedRowId() as $rowId)
 		{
 			$album = new Album(null, $database);
 			try
 			{
-				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
-				$album->setAdminAskEdit($currentAction->getUserId());
-				$album->setTimeAskEdit($currentAction->getTime());
-				$album->setIpAskEdit($currentAction->getIp());
-				$album->setWaitingFor(WaitingFor::ACTIVATE)->update();
+				$album->where(PicoSpecification::getInstance()
+					->addAnd(PicoPredicate::getInstance()->setAlbumId($rowId))
+					->addAnd(PicoPredicate::getInstance()->setWaitingFor(WaitingFor::NOTHING))
+				)
+				->setAdminAskEdit($currentAction->getUserId())
+				->setTimeAskEdit($currentAction->getTime())
+				->setIpAskEdit($currentAction->getIp())
+				->setWaitingFor(WaitingFor::ACTIVATE)
+				->update();
 			}
 			catch(Exception $e)
 			{
@@ -113,18 +120,22 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 }
 else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 {
-	if($inputPost->countableAtivationRowIds())
+	if($inputPost->countableCheckedRowId())
 	{
-		foreach($inputPost->getAtivationRowIds() as $rowId)
+		foreach($inputPost->getCheckedRowId() as $rowId)
 		{
 			$album = new Album(null, $database);
 			try
 			{
-				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
-				$album->setAdminAskEdit($currentAction->getUserId());
-				$album->setTimeAskEdit($currentAction->getTime());
-				$album->setIpAskEdit($currentAction->getIp());
-				$album->setWaitingFor(WaitingFor::DEACTIVATE)->update();
+				$album->where(PicoSpecification::getInstance()
+					->addAnd(PicoPredicate::getInstance()->setAlbumId($rowId))
+					->addAnd(PicoPredicate::getInstance()->setWaitingFor(WaitingFor::NOTHING))
+				)
+				->setAdminAskEdit($currentAction->getUserId())
+				->setTimeAskEdit($currentAction->getTime())
+				->setIpAskEdit($currentAction->getIp())
+				->setWaitingFor(WaitingFor::DEACTIVATE)
+				->update();
 			}
 			catch(Exception $e)
 			{
@@ -135,18 +146,22 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 }
 else if($inputGet->getUserAction() == UserAction::DELETE)
 {
-	if($inputPost->countableAtivationRowIds())
+	if($inputPost->countableCheckedRowId())
 	{
-		foreach($inputPost->getAtivationRowIds() as $rowId)
+		foreach($inputPost->getCheckedRowId() as $rowId)
 		{
 			$album = new Album(null, $database);
 			try
 			{
-				$album->findOneByAlbumIdAndWaitingFor($rowId, WaitingFor::NOTHING);
-				$album->setAdminAskEdit($currentAction->getUserId());
-				$album->setTimeAskEdit($currentAction->getTime());
-				$album->setIpAskEdit($currentAction->getIp());
-				$album->setWaitingFor(WaitingFor::DELETE)->update();
+				$album->where(PicoSpecification::getInstance()
+					->addAnd(PicoPredicate::getInstance()->setAlbumId($rowId))
+					->addAnd(PicoPredicate::getInstance()->setWaitingFor(WaitingFor::NOTHING))
+				)
+				->setAdminAskEdit($currentAction->getUserId())
+				->setTimeAskEdit($currentAction->getTime())
+				->setIpAskEdit($currentAction->getIp())
+				->setWaitingFor(WaitingFor::DELETE)
+				->update();
 			}
 			catch(Exception $e)
 			{
@@ -164,79 +179,92 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 		$album->findOneByAlbumId($albumId);
 		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
-			function($param1, $param2, $param3){
+			$approval = new PicoApproval(
+			$album, 
+			$entityInfo, 
+			$entityApvInfo, 
+			$currentAction->getUserId(),  
+			$currentAction->getTime(),  
+			$currentAction->getIp(), 
+			function($param1, $param2, $param3, $userId) {
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
 				
+				// e.g. return $param1->notEqualsAdminAskEdit($userId);
 				return true;
-			}, 
-			function($param1, $param2, $param3){
-				// callback when approved
-			}, 
-			function($param1, $param2, $param3){
-				// callback when rejected
 			} 
 			);
 
 			$approvalCallback = new SetterGetter();
-			$approvalCallback->setAfterInsert(function($param1, $param2, $param3){
+			$approvalCallback->setAfterInsert(function($param1, $param2, $param3) {
 				// callback on new data
 				// you code here
 				
 				return true;
 			}); 
 
-			$approvalCallback->setBeforeUpdate(function($param1, $param2, $param3){
+			$approvalCallback->setBeforeUpdate(function($param1, $param2, $param3) {
 				// callback before update data
 				// you code here
 				
 			}); 
 
-			$approvalCallback->setAfterUpdate(function($param1, $param2, $param3){
+			$approvalCallback->setAfterUpdate(function($param1, $param2, $param3) {
 				// callback after update data
 				// you code here
 				
 			}); 
 
-			$approvalCallback->setAfterActivate(function($param1, $param2, $param3){
+			$approvalCallback->setAfterActivate(function($param1, $param2, $param3) {
 				// callback after activate data
 				// you code here
 				
 			}); 
 
-			$approvalCallback->setAfterDeactivate(function($param1, $param2, $param3){
+			$approvalCallback->setAfterDeactivate(function($param1, $param2, $param3) {
 				// callback after deactivate data
 				// you code here
 				
 			}); 
 
-			$approvalCallback->setBeforeDelete(function($param1, $param2, $param3){
+			$approvalCallback->setBeforeDelete(function($param1, $param2, $param3) {
 				// callback before delete data
 				// you code here
 				
 			}); 
 
-			$approvalCallback->setAfterDelete(function($param1, $param2, $param3){
+			$approvalCallback->setAfterDelete(function($param1, $param2, $param3) {
 				// callback after delete data
+				// you code here
+				
+			}); 
+
+			$approvalCallback->setAfterApprove(function($param1, $param2, $param3) {
+				// callback after approve data
+				// you code here
+				
+			}); 
+
+			$approvalCallback->setAfterReject(function($param1, $param2, $param3) {
+				// callback after reject data
 				// you code here
 				
 			}); 
 
 			// List of properties to be copied from AlbumApv to Album when user approve data modification. You can add or remove it
 			$columToBeCopied = array(
-				"name", 
-				"title", 
-				"description", 
-				"producerId", 
-				"releaseDate", 
-				"numberOfSong", 
-				"duration", 
-				"imagePath", 
-				"sortOrder", 
-				"locked", 
-				"asDraft", 
-				"active"
+				Field::of()->name, 
+				Field::of()->title, 
+				Field::of()->description, 
+				Field::of()->producerId, 
+				Field::of()->releaseDate, 
+				Field::of()->numberOfSong, 
+				Field::of()->duration, 
+				Field::of()->imagePath, 
+				Field::of()->sortOrder, 
+				Field::of()->locked, 
+				Field::of()->asDraft, 
+				Field::of()->active
 			);
 
 			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), $approvalCallback);
@@ -252,18 +280,19 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 		$album->findOneByAlbumId($albumId);
 		if($album->issetAlbumId())
 		{
-			$approval = new PicoApproval($album, $entityInfo, $entityApvInfo, 
-			function($param1, $param2, $param3){
+			$approval = new PicoApproval(
+			$album, 
+			$entityInfo, 
+			$entityApvInfo, 
+			$currentAction->getUserId(),  
+			$currentAction->getTime(),  
+			$currentAction->getIp(), 
+			function($param1, $param2, $param3, $userId) {
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
 				
+				// e.g. return $param1->notEqualsAdminAskEdit($userId);
 				return true;
-			}, 
-			function($param1, $param2, $param3){
-				// callback when approved
-			}, 
-			function($param1, $param2, $param3){
-				// callback when rejected
 			} 
 			);
 			$approval->reject(new AlbumApv());
@@ -308,14 +337,15 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<td><?php echo $appEntityLabel->getProducerId();?></td>
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
-								<?php echo $selecOptionReference->showList(new Producer(null, $database), 
-								(new PicoSpecification())
-									->and(new PicoPredicate("numberOfSong", 3))
-									->and(new PicoPredicate("releaseDate", '2024-01-03'))
-									->and(new PicoPredicate("active", true)), 
-								(new PicoSortable())
-									->add(new PicoSort("timeCreate", PicoSort::ORDER_TYPE_ASC)), 
-								"producerId", "name", null, array("numberOfSong", "releaseDate")); ?>
+								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
+								PicoSpecification::getInstance()
+									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
+								PicoSortable::getInstance()
+									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
+								Field::of()->producerId, Field::of()->name, null, array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
 							</select>
 						</td>
 					</tr>
@@ -395,7 +425,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-update">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="updateform" id="updateform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -426,14 +456,15 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						<td><?php echo $appEntityLabel->getProducerId();?></td>
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
-								<?php echo $selecOptionReference->showList(new Producer(null, $database), 
-								(new PicoSpecification())
-									->and(new PicoPredicate("numberOfSong", 3))
-									->and(new PicoPredicate("releaseDate", '2024-01-03'))
-									->and(new PicoPredicate("active", true)), 
-								(new PicoSortable())
-									->add(new PicoSort("timeCreate", PicoSort::ORDER_TYPE_ASC)), 
-								"producerId", "name", $album->getProducerId(), array("numberOfSong", "releaseDate")); ?>
+								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
+								PicoSpecification::getInstance()
+									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
+								PicoSortable::getInstance()
+									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
+								Field::of()->producerId, Field::of()->name, $album->getProducerId(), array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
 							</select>
 						</td>
 					</tr>
@@ -534,7 +565,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-detail">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="detailform" id="detailform" action="" method="post">
 			<div class="alert alert-warning"><?php echo $appLanguage->message($album->getWaitingFor());?></div>
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
@@ -732,7 +763,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-detail">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="detailform" id="detailform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -837,5 +868,190 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	{
 		// Do somtething here when exception
 	}
+}
+else {
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
+$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+?>
+<div class="page page-list">
+	<div class="row">
+		<div class="filter-section">
+			<form action="" method="get" class="filter-form">
+				<span class="filter-group">
+					<span class="filter-label"><?php echo $appEntityLabel->getName();?></span>
+					<span class="filter-control">
+						<input type="text" name="name" class="form-control" value="<?php echo $inputGet->getName();?>" autocomplete="off"/>
+					</span>
+				</span>
+				
+				<span class="filter-group">
+					<span class="filter-label"><?php echo $appEntityLabel->getTitle();?></span>
+					<span class="filter-control">
+						<input type="text" name="title" class="form-control" value="<?php echo $inputGet->getTitle();?>" autocomplete="off"/>
+					</span>
+				</span>
+				
+				<span class="filter-group">
+					<span class="filter-label"><?php echo $appEntityLabel->getProducerId();?></span>
+					<span class="filter-control">
+							<select name="producer_id" class="form-control">
+								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
+								PicoSpecification::getInstance()
+									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
+								PicoSortable::getInstance()
+									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
+								Field::of()->producerId, Field::of()->name, $inputGet->getProducerId(), array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
+							</select>
+					</span>
+				</span>
+				
+				<span class="filter-group">
+					<span class="filter-label"><?php echo $appEntityLabel->getReleaseDate();?></span>
+					<span class="filter-control">
+						<input type="text" name="release_date" class="form-control" value="<?php echo $inputGet->getReleaseDate();?>" autocomplete="off"/>
+					</span>
+				</span>
+				
+				<span class="filter-group">
+					<span class="filter-label"><?php echo $appEntityLabel->getDuration();?></span>
+					<span class="filter-control">
+						<input type="text" name="duration" class="form-control" value="<?php echo $inputGet->getDuration();?>" autocomplete="off"/>
+					</span>
+				</span>
+				
+				<span class="filter-group">
+					<span class="filter-label"><?php echo $appEntityLabel->getActive();?></span>
+					<span class="filter-control">
+							<select name="active" class="form-control" data-value="<?php echo $inputGet->getActive();?>">
+								<option value="true" <?php echo AttrUtil::selected($inputGet->getActive(), 'true');?>>Yes</option>
+								<option value="false" <?php echo AttrUtil::selected($inputGet->getActive(), 'false');?>>No</option>
+							</select>
+					</span>
+				</span>
+				
+				<span class="filter-group">
+					<input type="submit" class="btn btn-success" value="<?php echo $appLanguage->getButtonSearch();?>"/>
+				</span>
+			</form>
+		</div>
+		<div class="data-section">
+			<?php 	
+			$specMap = array(
+			    "name" => "name",
+				"title" => "title",
+				"producerId" => "producerId",
+				"releaseDate" => "releaseDate",
+				"duration" => "duration",
+				"active" => "active"
+			);
+			$sortOrderMap = array(
+			    "name" => "name",
+				"title" => "title",
+				"producerId" => "producerId",
+				"releaseDate" => "releaseDate",
+				"duration" => "duration",
+				"active" => "active"
+			);
+			            
+			$specification = PicoSpecification::fromUserInput($inputGet, $specMap);
+			$sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
+			$pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
+			$dataLoader = new Album(null, $database);
+			$pageData = $dataLoader->findAll($specification, $pagable, $sortable);
+			$resultSet = $pageData->getResult();
+			
+			if($pageData->getTotalResult() > 0)
+			{
+			?>
+			<form action="" method="post" class="data-form">
+				<div class="data-wrapper">
+					<table class="table table-row">
+						<thead>
+							<tr>
+								<td class="data-selector" data-key="album_id">
+									<input type="checkbox" class="checkbox check-master" data-selector=".checkbox-album-id"/>
+								</td>
+								<td>
+									<span class="fa fa-edit"></span>
+								</td>
+								<td>
+									<span class="fa fa-folder"></span>
+								</td>
+								<td data-field="album_id"><?php echo $appEntityLabel->getAlbumId();?></td>
+								<td data-field="name"><?php echo $appEntityLabel->getName();?></td>
+								<td data-field="title"><?php echo $appEntityLabel->getTitle();?></td>
+								<td data-field="description"><?php echo $appEntityLabel->getDescription();?></td>
+								<td data-field="producer_id"><?php echo $appEntityLabel->getProducerId();?></td>
+								<td data-field="release_date"><?php echo $appEntityLabel->getReleaseDate();?></td>
+								<td data-field="number_of_song"><?php echo $appEntityLabel->getNumberOfSong();?></td>
+								<td data-field="duration"><?php echo $appEntityLabel->getDuration();?></td>
+								<td data-field="image_path"><?php echo $appEntityLabel->getImagePath();?></td>
+								<td data-field="sort_order"><?php echo $appEntityLabel->getSortOrder();?></td>
+								<td data-field="time_create"><?php echo $appEntityLabel->getTimeCreate();?></td>
+								<td data-field="time_edit"><?php echo $appEntityLabel->getTimeEdit();?></td>
+								<td data-field="admin_create"><?php echo $appEntityLabel->getAdminCreate();?></td>
+								<td data-field="admin_edit"><?php echo $appEntityLabel->getAdminEdit();?></td>
+								<td data-field="ip_create"><?php echo $appEntityLabel->getIpCreate();?></td>
+								<td data-field="ip_edit"><?php echo $appEntityLabel->getIpEdit();?></td>
+								<td data-field="locked"><?php echo $appEntityLabel->getLocked();?></td>
+								<td data-field="as_draft"><?php echo $appEntityLabel->getAsDraft();?></td>
+								<td data-field="active"><?php echo $appEntityLabel->getActive();?></td>
+							</tr>
+						</thead>
+					
+						<tbody>
+							<?php 
+							foreach($resultSet as $dataIndex => $album)
+							{
+							?>
+							<tr>
+								<td class="data-selector" data-key="album_id">
+									<input type="checkbox" class="checkbox check-slave checkbox-album-id" name="checked_row_id[]" value="<?php echo $album->getAlbumId();?>"/>
+								</td>
+								<td>
+									<a class="edit-control" href="<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&album_id=".$objectName->getAlbumId();?>"><span class="fa fa-edit"></span></a>
+								</td>
+								<td>
+									<a class="detail-control field-master" href="<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&album_id=".$objectName->getAlbumId();?>"><span class="fa fa-folder"></span></a>
+								</td>
+								<td data-field="album_id"><?php echo $album->getAlbumId();?></td>
+								<td data-field="name"><?php echo $album->getName();?></td>
+								<td data-field="title"><?php echo $album->getTitle();?></td>
+								<td data-field="description"><?php echo $album->getDescription();?></td>
+								<td data-field="producer_id"><?php echo $album->getProducerId();?></td>
+								<td data-field="release_date"><?php echo $album->getReleaseDate();?></td>
+								<td data-field="number_of_song"><?php echo $album->getNumberOfSong();?></td>
+								<td data-field="duration"><?php echo $album->getDuration();?></td>
+								<td data-field="image_path"><?php echo $album->getImagePath();?></td>
+								<td data-field="sort_order"><?php echo $album->getSortOrder();?></td>
+								<td data-field="time_create"><?php echo $album->getTimeCreate();?></td>
+								<td data-field="time_edit"><?php echo $album->getTimeEdit();?></td>
+								<td data-field="admin_create"><?php echo $album->getAdminCreate();?></td>
+								<td data-field="admin_edit"><?php echo $album->getAdminEdit();?></td>
+								<td data-field="ip_create"><?php echo $album->getIpCreate();?></td>
+								<td data-field="ip_edit"><?php echo $album->getIpEdit();?></td>
+								<td data-field="locked"><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
+								<td data-field="as_draft"><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></td>
+								<td data-field="active"><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></td>
+							</tr>
+							<?php 
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<?php 
+			}
+			?>
+			
+		</div>
+	</div>
+</div>
+<?php 
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 }
 
