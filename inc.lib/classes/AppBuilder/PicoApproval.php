@@ -59,17 +59,13 @@ class PicoApproval
      * @param EntityInfo $entityInfo
      * @param EntityApvInfo $entityApvInfo
      * @param callable $callbackValidation
-     * @param callable $callbackOnApprove
-     * @param callable $callbackOnReject
      */
-    public function __construct($entity, $entityInfo, $entityApvInfo, $callbackValidation = null, $callbackOnApprove = null, $callbackOnReject = null)
+    public function __construct($entity, $entityInfo, $entityApvInfo, $callbackValidation = null)
     {
         $this->entity = $entity;
         $this->entityInfo = $entityInfo;
         $this->entityApvInfo = $entityApvInfo;
         $this->callbackValidation = $callbackValidation;
-        $this->callbackOnApprove = $callbackOnApprove;
-        $this->callbackOnReject = $callbackOnReject;
     }
     
     /**
@@ -81,49 +77,81 @@ class PicoApproval
      * @param SetterGetter $approvalCallback
      * @return self
      */
-    public function approve($columToBeCopied, $entityApv, $entityTrash, $approvalCallback)
+    public function approve($columToBeCopied, $entityApv, $entityTrash, $currentUser, $currentTime, $currentIp, $approvalCallback = null)
     {
         $this->validateApproval();
         $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
         if($waitingFor == WaitingFor::CREATE)
         {    
-            $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->set($this->entityInfo->getDraft(), false)->update();
+            $this->entity
+                ->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)
+                ->set($this->entityInfo->getDraft(), false)
+                ->set($this->entityInfo->getApprovalId(), null)
+                ->update();
         }
-        if($waitingFor == WaitingFor::ACTIVATE)
+        else if($waitingFor == WaitingFor::ACTIVATE)
         {
-            $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->set($this->entityInfo->getActive(), true)->update();
+            // copy into variables
+            $adminEdit = $this->entity->get($this->entityInfo->getAdminAskEdit());
+            $timeEdit = $this->entity->get($this->entityInfo->getTimeAskEdit());
+            $ipEdit = $this->entity->get($this->entityInfo->getIpAskEdit());
+            
+            $this->entity
+                ->set($this->entityInfo->getActive(), true)
+                ->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)
+                ->set($this->entityInfo->getAdminAskEdit(), $adminEdit)
+                ->set($this->entityInfo->getTimeAskEdit(), $timeEdit)
+                ->set($this->entityInfo->getIpAskEdit(), $ipEdit)
+                ->update();
         }
-        if($waitingFor == WaitingFor::DEACTIVATE)
+        else if($waitingFor == WaitingFor::DEACTIVATE)
         {
-            $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->set($this->entityInfo->getActive(), false)->update();
+            // copy into variables
+            $adminEdit = $this->entity->get($this->entityInfo->getAdminAskEdit());
+            $timeEdit = $this->entity->get($this->entityInfo->getTimeAskEdit());
+            $ipEdit = $this->entity->get($this->entityInfo->getIpAskEdit());
+            
+            $this->entity
+                ->set($this->entityInfo->getActive(), false)
+                ->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)
+                ->set($this->entityInfo->getAdminAskEdit(), $adminEdit)
+                ->set($this->entityInfo->getTimeAskEdit(), $timeEdit)
+                ->set($this->entityInfo->getIpAskEdit(), $ipEdit)
+                ->update();
         }
-        if($waitingFor == WaitingFor::UPDATE)
+        else if($waitingFor == WaitingFor::UPDATE)
         {
             $this->approveUpdate($entityApv, $columToBeCopied);
         }
-        if($waitingFor == WaitingFor::DELETE)
+        else if($waitingFor == WaitingFor::DELETE)
         {
-            if($approvalCallback != null && $approvalCallback->getBeforeDelete() != null && is_callable($approvalCallback->getBeforeDelete()))
-            {
-                call_user_func($approvalCallback->getBeforeDelete(), $this->entity, null, null);
-            }
-            if($entityTrash != null)
-            {
-                // copy database connection from entity to entityApv
-                $entityTrash->currentDatabase($this->entity->currentDatabase());
-
-                // copy data from entity to entityApv
-                $entityTrash->loadData($this->entity)->insert();
-            }
-            $this->entity->delete();
-            
-            if($approvalCallback != null && $approvalCallback->getAfterDelete() != null && is_callable($approvalCallback->getAfterDelete()))
-            {
-                call_user_func($approvalCallback->getAfterDelete(), $this->entity, null, null);
-            }
+            $this->approveDelete($entityTrash, $currentUser, $currentTime, $currentIp, $approvalCallback = null);
         }
         $this->callbackApprove();
         return $this;
+    }
+    
+    public function approveDelete($entityTrash, $currentUser, $currentTime, $currentIp, $approvalCallback = null)
+    {
+        if($approvalCallback != null && $approvalCallback->getBeforeDelete() != null && is_callable($approvalCallback->getBeforeDelete()))
+        {
+            call_user_func($approvalCallback->getBeforeDelete(), $this->entity, null, null);
+        }
+        if($entityTrash != null)
+        {
+            // copy database connection from entity to entityTrash
+            $entityTrash->currentDatabase($this->entity->currentDatabase());
+
+            // copy data from entity to entityTrash
+            $entityTrash->loadData($this->entity)->insert();
+        }
+        // delete data
+        $this->entity->delete();
+        
+        if($approvalCallback != null && $approvalCallback->getAfterDelete() != null && is_callable($approvalCallback->getAfterDelete()))
+        {
+            call_user_func($approvalCallback->getAfterDelete(), $this->entity, null, null);
+        }
     }
     
     /**
@@ -132,7 +160,7 @@ class PicoApproval
      * @param MagicObject $entityApv
      * @return self
      */
-    public function reject($entityApv)
+    public function reject($entityApv, $currentUser, $currentTime, $currentIp)
     {
         $this->validateApproval();
         $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
@@ -219,6 +247,17 @@ class PicoApproval
                         $updated++;
                     }
                 }
+                
+                $adminEdit = $this->entity->get($this->entityInfo->getAdminAskEdit());
+                $timeEdit = $this->entity->get($this->entityInfo->getTimeAskEdit());
+                $ipEdit = $this->entity->get($this->entityInfo->getIpAskEdit());
+                
+                $this->entity
+                    ->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)
+                    ->set($this->entityInfo->getAdminAskEdit(), $adminEdit)
+                    ->set($this->entityInfo->getTimeAskEdit(), $timeEdit)
+                    ->set($this->entityInfo->getIpAskEdit(), $ipEdit);
+                
                 if($updated > 0)
                 {
                     $this->entity->update();
