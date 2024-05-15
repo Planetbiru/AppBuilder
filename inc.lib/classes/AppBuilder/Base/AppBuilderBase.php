@@ -1054,9 +1054,15 @@ $specMap = array(
 $sortOrderMap = array(
     '.implode(",\n\t", $arrSort).'
 );
-            
+
+// You can define your own specifications
+// Pay attention to security issues
 $specification = PicoSpecification::fromUserInput($inputGet, $specMap);
+
+// You can define your own sortable
+// Pay attention to security issues
 $sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
+
 $pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 $dataLoader = new '.$entityMain->getEntityName().'(null, $database);
 $pageData = $dataLoader->findAll($specification, $pagable, $sortable);
