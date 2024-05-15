@@ -34,9 +34,12 @@ The following PHP code was created in less than 5 minute and already has the fol
 4. disable data
 5. delete data
 6. move the deleted data to the trash table
-7. agree to the creation, change and deletion of data
-8. refuse creation, change and deletion of data
+7. approve to the creation, change and deletion of data
+8. reject creation, change and deletion of data
 9. display data using filters and sorting data
+10. update sort order
+11. join entity
+12. select control with entity and map
 
 Apart from the features above, the module is also equipped with data filters that are adjusted to the data type.
 
