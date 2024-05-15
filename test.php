@@ -319,7 +319,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-insert">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="createform" id="createform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -554,16 +554,24 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 	</div>
 </div>
 <?php 
-require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
 		else
 		{
 			// Do somtething here when data is not found
+			?>
+			<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>
+			<?php
 		}
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	}
 	catch(Exception $e)
 	{
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 		// Do somtething here when exception
+		?>
+		<div class="alert alert-danger"><?php echo $e->getMessage();?></div>
+		<?php
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	}
 }
 else if($inputGet->getUserAction() == UserAction::DETAIL)
@@ -590,7 +598,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 <div class="page page-detail">
 	<div class="row">
 		<form name="detailform" id="detailform" action="" method="post">
-			<div class="alert alert-warning">	
+			<div class="alert alert-info">	
 			<?php
 			if($album->getWaitingFor() == WaitingFor::CREATE)
 			{
@@ -932,12 +940,22 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
 		else
 		{
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 			// Do somtething here when data is not found
+			?>
+			<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>
+			<?php
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
 	}
 	catch(Exception $e)
 	{
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 		// Do somtething here when exception
+		?>
+		<div class="alert alert-danger"><?php echo $e->getMessage();?></div>
+		<?php
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	}
 }
 else 
