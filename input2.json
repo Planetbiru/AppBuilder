@@ -112,7 +112,11 @@
                     },
                     {
                         "column": "release_date",
-                        "value": "2024-01-03"
+                        "value": "2024-01-05"
+                    },
+                    {
+                        "column": "draft",
+                        "value": false
                     },
                     {
                         "column": "active",
@@ -121,7 +125,7 @@
                 ],
                 "sortable": [
                     {
-                        "sortBy": "time_create",
+                        "sortBy": "sort_order",
                         "sortType": "PicoSort::ORDER_TYPE_ASC"
                     },
                     {
@@ -156,13 +160,17 @@
                         "value": "2024-01-03"
                     },
                     {
+                        "column": "draft",
+                        "value": false
+                    },
+                    {
                         "column": "active",
                         "value": true
                     }
                 ],
                 "sortable": [
                     {
-                        "sortBy": "time_create",
+                        "sortBy": "sort_order",
                         "sortType": "PicoSort::ORDER_TYPE_ASC"
                     },
                     {

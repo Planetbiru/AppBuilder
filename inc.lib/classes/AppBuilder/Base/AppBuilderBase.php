@@ -1877,8 +1877,9 @@ $resultSet = $pageData->getResult();
             else if($referenceData->getType() == 'boolean')
             {
                 $map = array(
-                    (new MagicObject())->setValue('true')->setLabel('Yes'),
-                    (new MagicObject())->setValue('false')->setLabel('No')
+                    (new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'),
+                    (new MagicObject())->setValue('true')->setLabel('<?php echo $appLanguage->getOptionLabelYes();?>'),
+                    (new MagicObject())->setValue('false')->setLabel('<?php echo $appLanguage->getOptionLabelNo();?>')
                 );
                 $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
@@ -2002,7 +2003,7 @@ $resultSet = $pageData->getResult();
         {
             foreach($specification as $spc)
             {
-                if($spc->getColumn() != null && $spc->getValue() != null)
+                if($spc->getColumn() != null && $spc->getValue() !== null)
                 {
                     $upperField = PicoStringUtil::upperCamelize($spc->getColumn());
                     $value = $spc->getValue();

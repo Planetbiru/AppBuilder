@@ -214,6 +214,7 @@ class ScriptGenerator
         $uses[] = "use AppBuilder\\PicoApproval;";
         $uses[] = "use AppBuilder\\UserAction;";
         $uses[] = "use AppBuilder\\AppInclude;";
+        $uses[] = "use AppBuilder\\AppModule;";
         $uses[] = "use AppBuilder\\EntityLabel;";
         $uses[] = "use AppBuilder\\WaitingFor;";
         $uses[] = "use AppBuilder\\PicoTestUtil;";
@@ -233,6 +234,7 @@ class ScriptGenerator
         
         $includes[] = "require_once __DIR__ . $includeDir;";
         $includes[] = "";
+        $includes[] = '$currentModule = new AppModule();';
         
         $usesSection = implode("\r\n", $uses);
         $includeSection = implode("\r\n", $includes);
@@ -337,6 +339,7 @@ class ScriptGenerator
                 'AppBuilder/PicoApproval.php',
                 'AppBuilder/UserAction.php',
                 'AppBuilder/AppInclude.php',
+                'AppBuilder/AppModule.php',
                 'AppBuilder/EntityLabel.php',
                 'AppBuilder/WaitingFor.php',
                 'AppBuilder/PicoTestUtil.php',            
