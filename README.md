@@ -60,7 +60,7 @@ use YourApplication\Data\Entity\Producer;
 
 require_once __DIR__ . "/inc.app/auth.php";
 
-$currentModule = new AppModule();
+$currentModule = new AppModule("album");
 $inputGet = new InputGet();
 $inputPost = new InputPost();
 
@@ -215,9 +215,6 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 			$album, 
 			$entityInfo, 
 			$entityApvInfo, 
-			$currentAction->getUserId(),  
-			$currentAction->getTime(),  
-			$currentAction->getIp(), 
 			function($param1, $param2, $param3, $userId) {
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
@@ -277,13 +274,7 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 				
 			}); 
 
-			$approvalCallback->setAfterReject(function($param1, $param2, $param3) {
-				// callback after reject data
-				// you code here
-				
-			}); 
-
-			// List of properties to be copied from AlbumApv to Album when user approve data modification. You can add or remove it
+			// List of properties to be copied from AlbumApv to Album when when the user approves data modification. You can add or delete them.
 			$columToBeCopied = array(
 				Field::of()->name, 
 				Field::of()->title, 
@@ -299,7 +290,11 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 				Field::of()->active
 			);
 
-			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), $approvalCallback);
+			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), 
+			$currentAction->getUserId(),  
+			$currentAction->getTime(),  
+			$currentAction->getIp(), 
+			$approvalCallback);
 		}
 	}
 }
@@ -316,9 +311,6 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 			$album, 
 			$entityInfo, 
 			$entityApvInfo, 
-			$currentAction->getUserId(),  
-			$currentAction->getTime(),  
-			$currentAction->getIp(), 
 			function($param1, $param2, $param3, $userId) {
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
@@ -327,7 +319,25 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 				return true;
 			} 
 			);
-			$approval->reject(new AlbumApv());
+
+			$approvalCallback->setBeforeReject(function($param1, $param2, $param3) {
+				// callback before reject data
+				// you code here
+				
+			}); 
+
+			$approvalCallback->setAfterReject(function($param1, $param2, $param3) {
+				// callback after reject data
+				// you code here
+				
+			}); 
+
+			$approval->reject(new AlbumApv(),
+			$currentAction->getUserId(),  
+			$currentAction->getTime(),  
+			$currentAction->getIp(), 
+			$approvalCallback
+			);
 		}
 	}
 }
@@ -338,7 +348,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
 <div class="page page-insert">
 	<div class="row">
-		<form name="insertform" id="insertform" action="" method="post">
+		<form name="createform" id="createform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -573,16 +583,24 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 	</div>
 </div>
 <?php 
-require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
 		else
 		{
 			// Do somtething here when data is not found
+			?>
+			<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>
+			<?php
 		}
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	}
 	catch(Exception $e)
 	{
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 		// Do somtething here when exception
+		?>
+		<div class="alert alert-danger"><?php echo $e->getMessage();?></div>
+		<?php
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	}
 }
 else if($inputGet->getUserAction() == UserAction::DETAIL)
@@ -609,7 +627,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 <div class="page page-detail">
 	<div class="row">
 		<form name="detailform" id="detailform" action="" method="post">
-			<div class="alert alert-warning">	
+			<div class="alert alert-info">	
 			<?php
 			if($album->getWaitingFor() == WaitingFor::CREATE)
 			{
@@ -820,6 +838,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<input type="submit" class="btn btn-success" name="action_approval" id="action_approval" value="<?php echo $appLanguage->getButtonApprove(); ?>"/>
 							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
 							<input type="hidden" name="user_action" value="<?php echo UserAction::APPROVE;?>"/>
+							<input type="hidden" name="album_id" value="<?php echo $album->getAlbumId();?>"/>
 							<?php
 							}
 							else
@@ -828,6 +847,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<input type="submit" class="btn btn-success" name="action_approval" id="action_approval" value="<?php echo $appLanguage->getButtonReject(); ?>"/>
 							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
 							<input type="hidden" name="user_action" value="<?php echo UserAction::REJECT;?>"/>
+							<input type="hidden" name="album_id" value="<?php echo $album->getAlbumId();?>"/>
 							<?php
 							}
 							?>
@@ -949,12 +969,22 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
 		else
 		{
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 			// Do somtething here when data is not found
+			?>
+			<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>
+			<?php
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		}
 	}
 	catch(Exception $e)
 	{
+require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 		// Do somtething here when exception
+		?>
+		<div class="alert alert-danger"><?php echo $e->getMessage();?></div>
+		<?php
+require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 	}
 }
 else 
