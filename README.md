@@ -38,6 +38,8 @@ The following PHP code was created in less than 5 minute and already has the fol
 8. refuse creation, change and deletion of data
 9. display data using filters and sorting data
 
+Apart from the features above, the module is also equipped with data filters that are adjusted to the data type.
+
 ```php
 <?php
 
