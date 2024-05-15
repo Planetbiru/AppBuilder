@@ -107,14 +107,6 @@
                 },
                 "specification": [
                     {
-                        "column": "number_of_song",
-                        "value": 3
-                    },
-                    {
-                        "column": "release_date",
-                        "value": "2024-01-05"
-                    },
-                    {
                         "column": "draft",
                         "value": false
                     },
@@ -151,14 +143,6 @@
                     "value": "name"
                 },
                 "specification": [
-                    {
-                        "column": "number_of_song",
-                        "value": 3
-                    },
-                    {
-                        "column": "release_date",
-                        "value": "2024-01-03"
-                    },
                     {
                         "column": "draft",
                         "value": false

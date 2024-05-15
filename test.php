@@ -352,8 +352,6 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-05'))
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
@@ -476,8 +474,6 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-05'))
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
@@ -987,8 +983,6 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<select name="producer_id" class="form-control">
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()

@@ -26,6 +26,18 @@ AppBuilder uses MagicObject as its library. MagicObjects is very useful for crea
 
 ## CRUD Example
 
+The following PHP code was created in less than 5 minute and already has the following features:
+
+1. create new data
+2. change existing data
+3. activate data
+4. disable data
+5. delete data
+6. move the deleted data to the trash table
+7. agree to the creation, change and deletion of data
+8. refuse creation, change and deletion of data
+9. display data using filters and sorting data
+
 ```php
 <?php
 
@@ -381,8 +393,6 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-05'))
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
@@ -505,8 +515,6 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-05'))
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
@@ -1016,8 +1024,6 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<select name="producer_id" class="form-control">
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
@@ -1222,6 +1228,8 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 
 ### Entity
 
+**Main ENtity**
+
 ```php
 <?php
 
@@ -1401,6 +1409,491 @@ class Album extends MagicObject
 	 * @var boolean
 	 */
 	protected $asDraft;
+
+}
+```
+
+**Approval Entity**
+
+```php
+<?php
+
+namespace YourApplication\Data\Entity;
+
+use MagicObject\MagicObject;
+
+/**
+ * AlbumApv is entity of table album_apv. You can join this entity to other entity using annotation JoinColumn. 
+ * Visit https://github.com/Planetbiru/MagicObject/blob/main/tutorial.md#entity
+ * 
+ * @Entity
+ * @JSON(property-naming-strategy=SNAKE_CASE, prettify=false)
+ * @Table(name="album_apv")
+ */
+class AlbumApv extends MagicObject
+{
+	/**
+	 * Album Apv ID
+	 * 
+	 * @Id
+	 * @GeneratedValue(strategy=GenerationType.UUID)
+	 * @Column(name="album_apv_id", type="varchar(40)", length=40, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="Album Apv ID")
+	 * @var string
+	 */
+	protected $albumApvId;
+
+	/**
+	 * Album ID
+	 * 
+	 * @NotNull
+	 * @Column(name="album_id", type="varchar(50)", length=50, nullable=false)
+	 * @Label(content="Album ID")
+	 * @var string
+	 */
+	protected $albumId;
+
+	/**
+	 * Name
+	 * 
+	 * @Column(name="name", type="varchar(50)", length=50, nullable=true)
+	 * @Label(content="Name")
+	 * @var string
+	 */
+	protected $name;
+
+	/**
+	 * Title
+	 * 
+	 * @Column(name="title", type="text", nullable=true)
+	 * @Label(content="Title")
+	 * @var string
+	 */
+	protected $title;
+
+	/**
+	 * Description
+	 * 
+	 * @Column(name="description", type="longtext", nullable=true)
+	 * @Label(content="Description")
+	 * @var string
+	 */
+	protected $description;
+
+	/**
+	 * Producer ID
+	 * 
+	 * @Column(name="producer_id", type="varchar(40)", length=40, nullable=true)
+	 * @Label(content="Producer ID")
+	 * @var string
+	 */
+	protected $producerId;
+
+	/**
+	 * Release Date
+	 * 
+	 * @Column(name="release_date", type="date", nullable=true)
+	 * @Label(content="Release Date")
+	 * @var string
+	 */
+	protected $releaseDate;
+
+	/**
+	 * Number Of Song
+	 * 
+	 * @Column(name="number_of_song", type="int(11)", length=11, nullable=true)
+	 * @Label(content="Number Of Song")
+	 * @var integer
+	 */
+	protected $numberOfSong;
+
+	/**
+	 * Duration
+	 * 
+	 * @Column(name="duration", type="float", nullable=true)
+	 * @Label(content="Duration")
+	 * @var double
+	 */
+	protected $duration;
+
+	/**
+	 * Image Path
+	 * 
+	 * @Column(name="image_path", type="text", nullable=true)
+	 * @Label(content="Image Path")
+	 * @var string
+	 */
+	protected $imagePath;
+
+	/**
+	 * Sort Order
+	 * 
+	 * @Column(name="sort_order", type="int(11)", length=11, nullable=true)
+	 * @Label(content="Sort Order")
+	 * @var integer
+	 */
+	protected $sortOrder;
+
+	/**
+	 * Time Create
+	 * 
+	 * @Column(name="time_create", type="timestamp", length=19, nullable=true, updatable=false)
+	 * @Label(content="Time Create")
+	 * @var string
+	 */
+	protected $timeCreate;
+
+	/**
+	 * Time Edit
+	 * 
+	 * @Column(name="time_edit", type="timestamp", length=19, nullable=true)
+	 * @Label(content="Time Edit")
+	 * @var string
+	 */
+	protected $timeEdit;
+
+	/**
+	 * Admin Create
+	 * 
+	 * @Column(name="admin_create", type="varchar(40)", length=40, nullable=true, updatable=false)
+	 * @Label(content="Admin Create")
+	 * @var string
+	 */
+	protected $adminCreate;
+
+	/**
+	 * Admin Edit
+	 * 
+	 * @Column(name="admin_edit", type="varchar(40)", length=40, nullable=true)
+	 * @Label(content="Admin Edit")
+	 * @var string
+	 */
+	protected $adminEdit;
+
+	/**
+	 * IP Create
+	 * 
+	 * @Column(name="ip_create", type="varchar(50)", length=50, nullable=true, updatable=false)
+	 * @Label(content="IP Create")
+	 * @var string
+	 */
+	protected $ipCreate;
+
+	/**
+	 * IP Edit
+	 * 
+	 * @Column(name="ip_edit", type="varchar(50)", length=50, nullable=true)
+	 * @Label(content="IP Edit")
+	 * @var string
+	 */
+	protected $ipEdit;
+
+	/**
+	 * Locked
+	 * 
+	 * @Column(name="locked", type="tinyint(1)", length=1, nullable=true)
+	 * @Label(content="Locked")
+	 * @var boolean
+	 */
+	protected $locked;
+
+	/**
+	 * As Draft
+	 * 
+	 * @Column(name="as_draft", type="tinyint(1)", length=1, default_value="1", nullable=true)
+	 * @DefaultColumn(value="1")
+	 * @Label(content="As Draft")
+	 * @var boolean
+	 */
+	protected $asDraft;
+
+	/**
+	 * Active
+	 * 
+	 * @Column(name="active", type="tinyint(1)", length=1, default_value="1", nullable=true)
+	 * @DefaultColumn(value="1")
+	 * @Label(content="Active")
+	 * @var boolean
+	 */
+	protected $active;
+
+	/**
+	 * Admin Ask Edit
+	 * 
+	 * @Column(name="admin_ask_edit", type="varchar(40)", length=40, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="Admin Ask Edit")
+	 * @var string
+	 */
+	protected $adminAskEdit;
+
+	/**
+	 * IP Ask Edit
+	 * 
+	 * @Column(name="ip_ask_edit", type="varchar(50)", length=50, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="IP Ask Edit")
+	 * @var string
+	 */
+	protected $ipAskEdit;
+
+	/**
+	 * Time Ask Edit
+	 * 
+	 * @Column(name="time_ask_edit", type="timestamp", length=19, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="Time Ask Edit")
+	 * @var string
+	 */
+	protected $timeAskEdit;
+
+	/**
+	 * Approval Status
+	 * 
+	 * @Column(name="approval_status", type="int(4)", length=4, nullable=true)
+	 * @Label(content="Approval Status")
+	 * @var integer
+	 */
+	protected $approvalStatus;
+
+}
+```
+
+**Trash Entity**
+
+```php
+<?php
+
+namespace YourApplication\Data\Entity;
+
+use MagicObject\MagicObject;
+
+/**
+ * AlbumTrash is entity of table album_trash. You can join this entity to other entity using annotation JoinColumn. 
+ * Visit https://github.com/Planetbiru/MagicObject/blob/main/tutorial.md#entity
+ * 
+ * @Entity
+ * @JSON(property-naming-strategy=SNAKE_CASE, prettify=false)
+ * @Table(name="album_trash")
+ */
+class AlbumTrash extends MagicObject
+{
+	/**
+	 * Album Trash ID
+	 * 
+	 * @Id
+	 * @GeneratedValue(strategy=GenerationType.UUID)
+	 * @Column(name="album_trash_id", type="varchar(40)", length=40, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="Album Trash ID")
+	 * @var string
+	 */
+	protected $albumTrashId;
+
+	/**
+	 * Album ID
+	 * 
+	 * @NotNull
+	 * @Column(name="album_id", type="varchar(50)", length=50, nullable=false)
+	 * @Label(content="Album ID")
+	 * @var string
+	 */
+	protected $albumId;
+
+	/**
+	 * Name
+	 * 
+	 * @Column(name="name", type="varchar(50)", length=50, nullable=true)
+	 * @Label(content="Name")
+	 * @var string
+	 */
+	protected $name;
+
+	/**
+	 * Title
+	 * 
+	 * @Column(name="title", type="text", nullable=true)
+	 * @Label(content="Title")
+	 * @var string
+	 */
+	protected $title;
+
+	/**
+	 * Description
+	 * 
+	 * @Column(name="description", type="longtext", nullable=true)
+	 * @Label(content="Description")
+	 * @var string
+	 */
+	protected $description;
+
+	/**
+	 * Producer ID
+	 * 
+	 * @Column(name="producer_id", type="varchar(40)", length=40, nullable=true)
+	 * @Label(content="Producer ID")
+	 * @var string
+	 */
+	protected $producerId;
+
+	/**
+	 * Release Date
+	 * 
+	 * @Column(name="release_date", type="date", nullable=true)
+	 * @Label(content="Release Date")
+	 * @var string
+	 */
+	protected $releaseDate;
+
+	/**
+	 * Number Of Song
+	 * 
+	 * @Column(name="number_of_song", type="int(11)", length=11, nullable=true)
+	 * @Label(content="Number Of Song")
+	 * @var integer
+	 */
+	protected $numberOfSong;
+
+	/**
+	 * Duration
+	 * 
+	 * @Column(name="duration", type="float", nullable=true)
+	 * @Label(content="Duration")
+	 * @var double
+	 */
+	protected $duration;
+
+	/**
+	 * Image Path
+	 * 
+	 * @Column(name="image_path", type="text", nullable=true)
+	 * @Label(content="Image Path")
+	 * @var string
+	 */
+	protected $imagePath;
+
+	/**
+	 * Sort Order
+	 * 
+	 * @Column(name="sort_order", type="int(11)", length=11, nullable=true)
+	 * @Label(content="Sort Order")
+	 * @var integer
+	 */
+	protected $sortOrder;
+
+	/**
+	 * Time Create
+	 * 
+	 * @Column(name="time_create", type="timestamp", length=19, nullable=true, updatable=false)
+	 * @Label(content="Time Create")
+	 * @var string
+	 */
+	protected $timeCreate;
+
+	/**
+	 * Time Edit
+	 * 
+	 * @Column(name="time_edit", type="timestamp", length=19, nullable=true)
+	 * @Label(content="Time Edit")
+	 * @var string
+	 */
+	protected $timeEdit;
+
+	/**
+	 * Admin Create
+	 * 
+	 * @Column(name="admin_create", type="varchar(40)", length=40, nullable=true, updatable=false)
+	 * @Label(content="Admin Create")
+	 * @var string
+	 */
+	protected $adminCreate;
+
+	/**
+	 * Admin Edit
+	 * 
+	 * @Column(name="admin_edit", type="varchar(40)", length=40, nullable=true)
+	 * @Label(content="Admin Edit")
+	 * @var string
+	 */
+	protected $adminEdit;
+
+	/**
+	 * IP Create
+	 * 
+	 * @Column(name="ip_create", type="varchar(50)", length=50, nullable=true, updatable=false)
+	 * @Label(content="IP Create")
+	 * @var string
+	 */
+	protected $ipCreate;
+
+	/**
+	 * IP Edit
+	 * 
+	 * @Column(name="ip_edit", type="varchar(50)", length=50, nullable=true)
+	 * @Label(content="IP Edit")
+	 * @var string
+	 */
+	protected $ipEdit;
+
+	/**
+	 * Locked
+	 * 
+	 * @Column(name="locked", type="tinyint(1)", length=1, nullable=true)
+	 * @Label(content="Locked")
+	 * @var boolean
+	 */
+	protected $locked;
+
+	/**
+	 * As Draft
+	 * 
+	 * @Column(name="as_draft", type="tinyint(1)", length=1, default_value="1", nullable=true)
+	 * @DefaultColumn(value="1")
+	 * @Label(content="As Draft")
+	 * @var boolean
+	 */
+	protected $asDraft;
+
+	/**
+	 * Active
+	 * 
+	 * @Column(name="active", type="tinyint(1)", length=1, default_value="1", nullable=true)
+	 * @DefaultColumn(value="1")
+	 * @Label(content="Active")
+	 * @var boolean
+	 */
+	protected $active;
+
+	/**
+	 * Admin Ask Edit
+	 * 
+	 * @Column(name="admin_ask_edit", type="varchar(40)", length=40, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="Admin Ask Edit")
+	 * @var string
+	 */
+	protected $adminAskEdit;
+
+	/**
+	 * IP Ask Edit
+	 * 
+	 * @Column(name="ip_ask_edit", type="varchar(50)", length=50, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="IP Ask Edit")
+	 * @var string
+	 */
+	protected $ipAskEdit;
+
+	/**
+	 * Time Ask Edit
+	 * 
+	 * @Column(name="time_ask_edit", type="timestamp", length=19, default_value="NULL", nullable=true)
+	 * @DefaultColumn(value="NULL")
+	 * @Label(content="Time Ask Edit")
+	 * @var string
+	 */
+	protected $timeAskEdit;
 
 }
 ```
