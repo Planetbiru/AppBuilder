@@ -206,6 +206,7 @@ class ScriptGenerator
         $uses[] = "use MagicObject\\Database\\PicoSort;";
         $uses[] = "use MagicObject\\Database\\PicoSortable;";
         $uses[] = "use MagicObject\\Database\\PicoSpecification;";
+        $uses[] = "use MagicObject\\Pagination\\PicoPagination;";
         $uses[] = "use MagicObject\\Request\\PicoFilterConstant;";
         $uses[] = "use MagicObject\\Request\\InputGet;";
         $uses[] = "use MagicObject\\Request\\InputPost;";

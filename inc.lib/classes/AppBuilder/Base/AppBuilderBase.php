@@ -885,7 +885,7 @@ else
     <?php
     foreach($rowData->getPagination() as $pg)
     {
-        ?><span class="page-selector<?php echo $pg'."['selected'] ? ' page-selected':'';?>".'" data-page-number="<?php echo $pg'."['page'];?>".'"><a href="#"><?php echo $pg'."['page']".';?></a></span><?php
+        ?><span class="page-selector<?php echo $pg'."['selected'] ? ' page-selected':'';?>".'" data-page-number="<?php echo $pg'."['page'];?>".'"><a href="<?php echo PicoPagination::getPageUrl($pg'."['page']".');?>"><?php echo $pg'."['page']".';?></a></span><?php
     }
     ?>
     </div>
