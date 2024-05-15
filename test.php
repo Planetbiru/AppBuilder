@@ -186,9 +186,6 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 			$album, 
 			$entityInfo, 
 			$entityApvInfo, 
-			$currentAction->getUserId(),  
-			$currentAction->getTime(),  
-			$currentAction->getIp(), 
 			function($param1, $param2, $param3, $userId) {
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
@@ -248,13 +245,7 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 				
 			}); 
 
-			$approvalCallback->setAfterReject(function($param1, $param2, $param3) {
-				// callback after reject data
-				// you code here
-				
-			}); 
-
-			// List of properties to be copied from AlbumApv to Album when user approve data modification. You can add or remove it
+			// List of properties to be copied from AlbumApv to Album when when the user approves data modification. You can add or delete them.
 			$columToBeCopied = array(
 				Field::of()->name, 
 				Field::of()->title, 
@@ -270,7 +261,11 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 				Field::of()->active
 			);
 
-			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), $approvalCallback);
+			$approval->approve($columToBeCopied, new AlbumApv(), new AlbumTrash(), 
+			$currentAction->getUserId(),  
+			$currentAction->getTime(),  
+			$currentAction->getIp(), 
+			$approvalCallback);
 		}
 	}
 }
@@ -287,9 +282,6 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 			$album, 
 			$entityInfo, 
 			$entityApvInfo, 
-			$currentAction->getUserId(),  
-			$currentAction->getTime(),  
-			$currentAction->getIp(), 
 			function($param1, $param2, $param3, $userId) {
 				// approval validation here
 				// if the return is incorrect, approval cannot take place
@@ -298,7 +290,25 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 				return true;
 			} 
 			);
-			$approval->reject(new AlbumApv());
+
+			$approvalCallback->setBeforeReject(function($param1, $param2, $param3) {
+				// callback before reject data
+				// you code here
+				
+			}); 
+
+			$approvalCallback->setAfterReject(function($param1, $param2, $param3) {
+				// callback after reject data
+				// you code here
+				
+			}); 
+
+			$approval->reject(new AlbumApv(),
+			$currentAction->getUserId(),  
+			$currentAction->getTime(),  
+			$currentAction->getIp(), 
+			$approvalCallback
+			);
 		}
 	}
 }
