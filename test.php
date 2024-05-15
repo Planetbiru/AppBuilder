@@ -32,7 +32,7 @@ require_once __DIR__ . "/inc.app/auth.php";
 $inputGet = new InputGet();
 $inputPost = new InputPost();
 
-if($inputGet->getUserAction() == UserAction::INSERT)
+if($inputGet->getUserAction() == UserAction::CREATE)
 {
 	$album = new Album(null, $database);
 	$album->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
@@ -299,7 +299,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 		}
 	}
 }
-if($inputGet->getUserAction() == UserAction::INSERT)
+if($inputGet->getUserAction() == UserAction::CREATE)
 {
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLabel = new EntityLabel(new Album(), $appConfig);
@@ -403,7 +403,11 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				<tbody>
 					<tr>
 						<td></td>
-						<td><input type="submit" class="btn btn-success" name="save-insert" id="save-insert" value="<?php echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+						<td>
+							<input type="submit" class="btn btn-success" name="save-insert" id="save-insert" value="<?php echo $appLanguage->getButtonSave(); ?>"/>
+							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
+							<input type="hidden" name="user_action" value="<?php echo UserAction::CREATE;?>"/>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -522,7 +526,11 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				<tbody>
 					<tr>
 						<td></td>
-						<td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+						<td>
+							<input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/>
+							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
+							<input type="hidden" name="user_action" value="<?php echo UserAction::UPDATE;?>"/>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -566,7 +574,30 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 <div class="page page-detail">
 	<div class="row">
 		<form name="detailform" id="detailform" action="" method="post">
-			<div class="alert alert-warning"><?php echo $appLanguage->message($album->getWaitingFor());?></div>
+			<div class="alert alert-warning">	
+			<?php
+			if($album->getWaitingFor() == WaitingFor::CREATE)
+			{
+			    echo $appLanguage->getMessageWaitingForCreate();
+			}
+			else if($album->getWaitingFor() == WaitingFor::UPDATE)
+			{
+			    echo $appLanguage->getMessageWaitingForUpdate();
+			}
+			else if($album->getWaitingFor() == WaitingFor::ACTIVATE)
+			{
+			    echo $appLanguage->getMessageWaitingForActivate();
+			}
+			else if($album->getWaitingFor() == WaitingFor::DEACTIVATE)
+			{
+			    echo $appLanguage->getMessageWaitingForDeactivate();
+			}
+			else if($album->getWaitingFor() == WaitingFor::DELETE)
+			{
+			    echo $appLanguage->getMessageWaitingForDelete();
+			}
+			?>
+			</div>
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
@@ -746,7 +777,26 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				<tbody>
 					<tr>
 						<td></td>
-						<td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+						<td>
+							<?php
+							if($inputGet->getNextAction() == UserAction::APPROVE)
+							{
+							?>
+							<input type="submit" class="btn btn-success" name="action_approval" id="action_approval" value="<?php echo $appLanguage->getButtonApprove(); ?>"/>
+							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
+							<input type="hidden" name="user_action" value="<?php echo UserAction::APPROVE;?>"/>
+							<?php
+							}
+							else
+							{
+							?>
+							<input type="submit" class="btn btn-success" name="action_approval" id="action_approval" value="<?php echo $appLanguage->getButtonReject(); ?>"/>
+							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
+							<input type="hidden" name="user_action" value="<?php echo UserAction::REJECT;?>"/>
+							<?php
+							}
+							?>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -848,7 +898,10 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				<tbody>
 					<tr>
 						<td></td>
-						<td><input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/> <input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $selfPath;?>';"/></td>
+						<td>
+							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonUpdate(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->album_id, $album->getAlbumId());?>';"/>
+							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonBackToList(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -934,6 +987,10 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				
 				<span class="filter-group">
 					<input type="submit" class="btn btn-success" value="<?php echo $appLanguage->getButtonSearch();?>"/>
+				</span>
+		
+				<span class="filter-group">
+					<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonAdd();?>" onlick="window.location='<?php echo $currentModule->getRedirectUrl(UserAction::CREATE);?>'"/>
 				</span>
 			</form>
 		</div>
@@ -1022,10 +1079,10 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 									<input type="checkbox" class="checkbox check-slave checkbox-album-id" name="checked_row_id[]" value="<?php echo $album->getAlbumId();?>"/>
 								</td>
 								<td>
-									<a class="edit-control" href="<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&album_id=".$objectName->getAlbumId();?>"><span class="fa fa-edit"></span></a>
+									<a class="edit-control" href="<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->album_id, $objectName->getAlbumId);?>"><span class="fa fa-edit"></span></a>
 								</td>
 								<td>
-									<a class="detail-control field-master" href="<?php echo $currentModule->getPath()."?user_action=".UserAction::UPDATE."&album_id=".$objectName->getAlbumId();?>"><span class="fa fa-folder"></span></a>
+									<a class="detail-control field-master" href="<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, Field::of()->album_id, $objectName->getAlbumId);?>"><span class="fa fa-folder"></span></a>
 								</td>
 								<td data-field="album_id"><?php echo $album->getAlbumId();?></td>
 								<td data-field="name"><?php echo $album->getName();?></td>

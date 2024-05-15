@@ -21,7 +21,7 @@ class AppBuilder extends AppBuilderBase
         $objectName = lcfirst($entityName);
         $lines = array();
         
-        $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::INSERT)";
+        $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::CREATE)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)

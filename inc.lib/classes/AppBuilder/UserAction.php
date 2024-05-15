@@ -4,7 +4,7 @@ namespace AppBuilder;
 
 class UserAction
 {
-    const INSERT = "insert";
+    const CREATE = "create";
     const UPDATE = "update";
     const DELETE = "delete";
     const ACTIVATE = "activate";

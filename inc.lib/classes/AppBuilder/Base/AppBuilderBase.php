@@ -459,17 +459,17 @@ class AppBuilderBase //NOSONAR
     public function createGuiInsert($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
     {
         $entityName = $mainEntity->getEntityName();
-        $pkName =  $mainEntity->getPrimaryKey();
+        $primaryKeyName =  $mainEntity->getPrimaryKey();
 
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
         $form = $this->createElementForm($dom, 'insertform');
         
-        $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+        $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName);
 
 
-        $table2 = $this->createButtonContainerTable($dom, "save-insert", "save-insert");
+        $table2 = $this->createButtonContainerTable($dom, "save-insert", "save-insert", 'UserAction::CREATE');
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -488,7 +488,7 @@ class AppBuilderBase //NOSONAR
         $html = $this->addIndent($html, 2);
         $html = $this->addWrapper($html, self::WRAPPER_INSERT);
         
-        return "if(".self::VAR."inputGet->getUserAction() == UserAction::INSERT)\r\n"
+        return "if(".self::VAR."inputGet->getUserAction() == UserAction::CREATE)\r\n"
         .self::CURLY_BRACKET_OPEN.self::NEW_LINE
         .$this->getIncludeHeader().self::NEW_LINE
         .$this->constructEntityLabel($entityName).self::NEW_LINE
@@ -510,19 +510,19 @@ class AppBuilderBase //NOSONAR
     {
         
         $entityName = $mainEntity->getEntityName();
-        $pkName =  $mainEntity->getPrimaryKey();
-        $upperPkName = PicoStringUtil::upperCamelize($pkName);
+        $primaryKeyName =  $mainEntity->getPrimaryKey();
+        $upperPkName = PicoStringUtil::upperCamelize($primaryKeyName);
 
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
         $form = $this->createElementForm($dom, 'updateform');
         
-        $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName);
+        $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName);
 
         
 
-        $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+        $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update", 'UserAction::UPDATE');
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -584,14 +584,14 @@ class AppBuilderBase //NOSONAR
         $entityName = $mainEntity->getEntityName();
         $entityApprovalName = $approvalEntity->getEntityName();
         $objectApprovalName = PicoStringUtil::camelize($entityApprovalName);
-        $pkName =  $mainEntity->getPrimaryKey();
-        $upperPkName = PicoStringUtil::upperCamelize($pkName);
+        $primaryKeyName =  $mainEntity->getPrimaryKey();
+        $upperPkName = PicoStringUtil::upperCamelize($primaryKeyName);
 
         $objectName = lcfirst($entityName);
         
-        $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $pkName);
+        $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $primaryKeyName);
 
-        $htmlDetailCompare = $this->createTableDetailCompare($mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
+        $htmlDetailCompare = $this->createTableDetailCompare($mainEntity, $objectName, $appFields, $primaryKeyName, $approvalEntity, $objectApprovalName);
 
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
@@ -652,16 +652,16 @@ class AppBuilderBase //NOSONAR
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $appFields
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return string
      */
-    public function createTableDetail($mainEntity, $objectName, $appFields, $pkName)
+    public function createTableDetail($mainEntity, $objectName, $appFields, $primaryKeyName)
     {
         $dom = new DOMDocument();
         
         $formDetail = $this->createElementForm($dom, 'detailform');
-        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $appFields, $pkName);
-        $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+        $tableDetail1 = $this->createDetailTable($dom, $mainEntity, $objectName, $appFields, $primaryKeyName);
+        $tableDetail2 = $this->createButtonContainerTableDetail($dom, "save-update", "save-update", 'UserAction::DETAIL', $objectName, $primaryKeyName);
 
         $formDetail->appendChild($tableDetail1);
         $formDetail->appendChild($tableDetail2);
@@ -690,10 +690,10 @@ class AppBuilderBase //NOSONAR
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $appFields
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return string
      */
-    public function createTableDetailCompare($mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName)
+    public function createTableDetailCompare($mainEntity, $objectName, $appFields, $primaryKeyName, $approvalEntity, $objectApprovalName)
     {
         $dom = new DOMDocument();
         
@@ -704,7 +704,35 @@ class AppBuilderBase //NOSONAR
         $div = $dom->createElement('div');
         $div->setAttribute('class', 'alert alert-warning');
         
-        $messagePhp = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->message(".self::VAR.$objectName.self::CALL_GET.$upperWaitingFor."());".self::PHP_CLOSE_TAG;
+        //$messagePhp = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->message(".self::VAR.$objectName.self::CALL_GET.$upperWaitingFor."());".self::PHP_CLOSE_TAG;
+        
+        $messagePhp = '
+<?php
+if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::CREATE)
+{
+    echo $appLanguage->getMessageWaitingForCreate();
+}
+else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::UPDATE)
+{
+    echo $appLanguage->getMessageWaitingForUpdate();
+}
+else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::ACTIVATE)
+{
+    echo $appLanguage->getMessageWaitingForActivate();
+}
+else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DEACTIVATE)
+{
+    echo $appLanguage->getMessageWaitingForDeactivate();
+}
+else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
+{
+    echo $appLanguage->getMessageWaitingForDelete();
+}
+?>
+';
+        $messagePhp = str_replace("\r\n", "\n", $messagePhp);
+        $messagePhp = $this->addIndent($messagePhp, 1);
+        $messagePhp = str_replace("\r\n", "\n", $messagePhp);
         
         $message = $dom->createTextNode($messagePhp);
 
@@ -712,8 +740,8 @@ class AppBuilderBase //NOSONAR
         
         $formDetail->appendChild($div);
         
-        $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $pkName, $approvalEntity, $objectApprovalName);
-        $tableDetail2 = $this->createButtonContainerTable($dom, "save-update", "save-update");
+        $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $primaryKeyName, $approvalEntity, $objectApprovalName);
+        $tableDetail2 = $this->createButtonContainerTableApproval($dom, "save-update", "save-update", '$inputGet->getNextAction()');
 
         $formDetail->appendChild($tableDetail1);
         $formDetail->appendChild($tableDetail2);
@@ -1211,7 +1239,7 @@ $resultSet = $pageData->getResult();
         $buttonSearch->setAttribute('type', 'button');
         $buttonSearch->setAttribute('class', 'btn btn-primary');
         $buttonSearch->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage".self::CALL_GET."ButtonAdd();".self::PHP_CLOSE_TAG);
-        $buttonSearch->setAttribute('onlick', "window.location='".self::PHP_OPEN_TAG.self::ECHO.self::VAR."currentModule".self::CALL_GET."RedirectUrl(UserAction::INSERT);".self::PHP_CLOSE_TAG."'");
+        $buttonSearch->setAttribute('onlick', "window.location='".self::PHP_OPEN_TAG.self::ECHO.self::VAR."currentModule".self::CALL_GET."RedirectUrl(UserAction::CREATE);".self::PHP_CLOSE_TAG."'");
         $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
         
         
@@ -1371,10 +1399,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $insertFields
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
+    private function createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
@@ -1382,7 +1410,7 @@ $resultSet = $pageData->getResult();
         {
             if($field->getIncludeInsert())
             {
-                $tr = $this->createInsertRow($dom, $mainEntity, $objectName, $field, $pkName);
+                $tr = $this->createInsertRow($dom, $mainEntity, $objectName, $field, $primaryKeyName);
                 $tbody->appendChild($tr);
             }
         }
@@ -1397,10 +1425,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $insertFields
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
+    private function createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
@@ -1408,7 +1436,7 @@ $resultSet = $pageData->getResult();
         {
             if($field->getIncludeEdit())
             {
-                $tr = $this->createUpdateRow($dom, $mainEntity, $objectName, $field, $pkName);
+                $tr = $this->createUpdateRow($dom, $mainEntity, $objectName, $field, $primaryKeyName);
                 $tbody->appendChild($tr);
             }
         }
@@ -1423,10 +1451,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $insertFields
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createDetailTable($dom, $mainEntity, $objectName, $insertFields, $pkName)
+    private function createDetailTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
@@ -1434,7 +1462,7 @@ $resultSet = $pageData->getResult();
         {
             if($field->getIncludeDetail())
             {
-                $tr = $this->createDetailRow($dom, $mainEntity, $objectName, $field, $pkName);
+                $tr = $this->createDetailRow($dom, $mainEntity, $objectName, $field, $primaryKeyName);
                 $tbody->appendChild($tr);
             }
         }
@@ -1449,10 +1477,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField[] $insertFields
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createDetailTableCompare($dom, $mainEntity, $objectName, $insertFields, $pkName, $approvalEntity, $objectApprovalName)
+    private function createDetailTableCompare($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName, $approvalEntity, $objectApprovalName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
@@ -1460,7 +1488,7 @@ $resultSet = $pageData->getResult();
         {
             if($field->getIncludeDetail())
             {
-                $tr = $this->createDetailCompareRow($dom, $mainEntity, $objectName, $field, $pkName, $approvalEntity, $objectApprovalName);
+                $tr = $this->createDetailCompareRow($dom, $mainEntity, $objectName, $field, $primaryKeyName, $approvalEntity, $objectApprovalName);
                 $tbody->appendChild($tr);
             }
         }
@@ -1475,10 +1503,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createInsertRow($dom, $mainEntity, $objectName, $field, $pkName)
+    private function createInsertRow($dom, $mainEntity, $objectName, $field, $primaryKeyName)
     {
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
@@ -1490,7 +1518,7 @@ $resultSet = $pageData->getResult();
 
         $td1->appendChild($label);
 
-        $input = $this->createInsertControl($dom, $mainEntity, $objectName, $field, $pkName, $field->getFieldName());
+        $input = $this->createInsertControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $field->getFieldName());
         if($input != null)
         {
             $td2->appendChild($input);
@@ -1509,10 +1537,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createUpdateRow($dom, $mainEntity, $objectName, $field, $pkName)
+    private function createUpdateRow($dom, $mainEntity, $objectName, $field, $primaryKeyName)
     {
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
@@ -1524,7 +1552,7 @@ $resultSet = $pageData->getResult();
 
         $td1->appendChild($label);
 
-        $input = $this->createUpdateControl($dom, $mainEntity, $objectName, $field, $pkName, $field->getFieldName());
+        $input = $this->createUpdateControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $field->getFieldName());
         if($input != null)
         {
             $td2->appendChild($input);
@@ -1543,10 +1571,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createDetailRow($dom, $mainEntity, $objectName, $field, $pkName)
+    private function createDetailRow($dom, $mainEntity, $objectName, $field, $primaryKeyName)
     {
         $tr = $dom->createElement('tr');
         $td1 = $dom->createElement('td');
@@ -1606,10 +1634,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createDetailCompareRow($dom, $mainEntity, $objectName, $field, $pkName, $approvalEntity, $objectApprovalName)
+    private function createDetailCompareRow($dom, $mainEntity, $objectName, $field, $primaryKeyName, $approvalEntity, $objectApprovalName)
     {
         $yes = self::VAR."appLanguage->getYes()";
         $no = self::VAR."appLanguage->getNo()";
@@ -1661,10 +1689,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createInsertControl($dom, $mainEntity, $objectName, $insertField, $pkName, $id = null)
+    private function createInsertControl($dom, $mainEntity, $objectName, $insertField, $primaryKeyName, $id = null)
     {
         $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
         $input = $dom->createElement('input');
@@ -1739,10 +1767,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $mainEntity
      * @param string $objectName
      * @param AppField $insertField
-     * @param string $pkName
+     * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createUpdateControl($dom, $mainEntity, $objectName, $insertField, $pkName, $id = null)
+    private function createUpdateControl($dom, $mainEntity, $objectName, $insertField, $primaryKeyName, $id = null)
     {
         $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
         $input = $dom->createElement('input');
@@ -2082,7 +2110,7 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @return DOMElement
      */
-    private function createButtonContainerTable($dom, $name, $id)
+    private function createButtonContainerTable($dom, $name, $id, $userAction)
     {
         $table = $this->createElementTableResponsive($dom);
         
@@ -2093,13 +2121,130 @@ $resultSet = $pageData->getResult();
         $td2 = $dom->createElement('td');
         
         $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), $name, $id);
-        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'selfPath');
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule->getRedirectUrl()');
         
-        $space = $dom->createTextNode(" ");
+        $inputUserAction = $dom->createElement("input");
+        $inputUserAction->setAttribute("type", "hidden");
+        $inputUserAction->setAttribute("name", "user_action");
+        $inputUserAction->setAttribute("value", '<?php echo '.$userAction.';?>');
         
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         $td2->appendChild($btn1);
-        $td2->appendChild($space);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         $td2->appendChild($btn2);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($inputUserAction);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t"));
+              
+        $tr2->appendChild($td1);
+        $tr2->appendChild($td2);
+        
+        $tbody->appendChild($tr2);
+        
+        $table->appendChild($tbody);
+
+        return $table;
+    }
+    
+    /**
+     * Create button container table
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createButtonContainerTableDetail($dom, $name, $id, $userAction, $objectName, $primaryKeyName)
+    {
+        $upperPrimaryKeyName = PicoStringUtil::upperCamelize($primaryKeyName);
+        $table = $this->createElementTableResponsive($dom);
+        
+        $tbody = $dom->createElement('tbody');
+        
+        $tr2 = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        
+        $btn1 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_update'), null, null, 'currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->'.$primaryKeyName.', $'.$objectName.'->get'.$upperPrimaryKeyName.'())');
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_back_to_list'), null, null, 'currentModule->getRedirectUrl()');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn1);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn2);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t"));
+              
+        $tr2->appendChild($td1);
+        $tr2->appendChild($td2);
+        
+        $tbody->appendChild($tr2);
+        
+        $table->appendChild($tbody);
+
+        return $table;
+    }
+    
+    /**
+     * Create button container table for approval
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createButtonContainerTableApproval($dom, $name, $id, $userAction)
+    {
+        $table = $this->createElementTableResponsive($dom);
+        
+        $tbody = $dom->createElement('tbody');
+        
+        $tr2 = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        
+        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_approve'), 'action_approval', 'action_approval');
+        $btn2 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_reject'), 'action_approval', 'action_approval');
+        $btn3 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule->getRedirectUrl()');
+        $btn4 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule->getRedirectUrl()');
+        
+        $inputUserActionApprove = $dom->createElement("input");
+        $inputUserActionApprove->setAttribute("type", "hidden");
+        $inputUserActionApprove->setAttribute("name", "user_action");
+        $inputUserActionApprove->setAttribute("value", '<?php echo UserAction::APPROVE;?>');
+        
+        $inputUserActionReject = $dom->createElement("input");
+        $inputUserActionReject->setAttribute("type", "hidden");
+        $inputUserActionReject->setAttribute("name", "user_action");
+        $inputUserActionReject->setAttribute("value", '<?php echo UserAction::REJECT;?>');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t".'if($inputGet->getNextAction() == UserAction::APPROVE)'));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t{"));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t?>"));
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn1);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn3);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($inputUserActionApprove);
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t}"));
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t".'else'));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t{"));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t?>"));
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn2);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn4);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($inputUserActionReject);
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t}"));
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t?>"));
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t"));
               
         $tr2->appendChild($td1);
         $tr2->appendChild($td2);

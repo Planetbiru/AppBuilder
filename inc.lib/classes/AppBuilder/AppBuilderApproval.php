@@ -33,7 +33,7 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines = array();
         
-        $lines[] = "if(".parent::VAR."inputGet".parent::CALL_GET."UserAction() == UserAction::INSERT)";
+        $lines[] = "if(".parent::VAR."inputGet".parent::CALL_GET."UserAction() == UserAction::CREATE)";
         $lines[] = "{";
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)

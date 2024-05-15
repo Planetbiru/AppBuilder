@@ -56,7 +56,7 @@ require_once __DIR__ . "/inc.app/auth.php";
 $inputGet = new InputGet();
 $inputPost = new InputPost();
 
-if($inputGet->getUserAction() == UserAction::INSERT)
+if($inputGet->getUserAction() == UserAction::CREATE)
 {
 	$album = new Album(null, $database);
 	$album->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
@@ -313,7 +313,7 @@ else if($inputGet->getUserAction() == UserAction::REJECT)
 		}
 	}
 }
-if($inputGet->getUserAction() == UserAction::INSERT)
+if($inputGet->getUserAction() == UserAction::CREATE)
 {
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLabel = new EntityLabel(new Album(), $appConfig);
