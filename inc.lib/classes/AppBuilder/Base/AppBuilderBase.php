@@ -494,12 +494,12 @@ class AppBuilderBase //NOSONAR
         $objectName = lcfirst($entityName);
         $dom = new DOMDocument();
         
-        $form = $this->createElementForm($dom, 'insertform');
+        $form = $this->createElementForm($dom, 'createform');
         
         $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName);
 
 
-        $table2 = $this->createButtonContainerTableCreate($dom, "save-insert", "save-insert", 'UserAction::CREATE');
+        $table2 = $this->createButtonContainerTableCreate($dom, "save-create", "save-create", 'UserAction::CREATE');
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -587,6 +587,9 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'?>';
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>';
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'<?php';
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
@@ -683,6 +686,9 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'?>';
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>';
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'<?php';
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
@@ -734,6 +740,9 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'?>';
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>';
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'<?php';
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
@@ -803,7 +812,7 @@ class AppBuilderBase //NOSONAR
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         
         $div = $dom->createElement('div');
-        $div->setAttribute('class', 'alert alert-warning');
+        $div->setAttribute('class', 'alert alert-info');
             
         $messagePhp = '
 <?php

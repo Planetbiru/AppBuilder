@@ -418,7 +418,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 					<tr>
 						<td></td>
 						<td>
-							<input type="submit" class="btn btn-success" name="save-insert" id="save-insert" value="<?php echo $appLanguage->getButtonSave(); ?>"/>
+							<input type="submit" class="btn btn-success" name="save-create" id="save-create" value="<?php echo $appLanguage->getButtonSave(); ?>"/>
 							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
 							<input type="hidden" name="user_action" value="<?php echo UserAction::CREATE;?>"/>
 						</td>
