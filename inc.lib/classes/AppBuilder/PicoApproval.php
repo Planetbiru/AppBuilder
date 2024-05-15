@@ -39,20 +39,6 @@ class PicoApproval
     private $callbackValidation = null;
     
     /**
-     * Callback on approve
-     *
-     * @var callable
-     */
-    private $callbackOnApprove = null;
-    
-    /**
-     * Callback on reject
-     *
-     * @var callable
-     */
-    private $callbackOnReject = null;
-    
-    /**
      * Constructor
      *
      * @param MagicObject $entity
@@ -127,7 +113,10 @@ class PicoApproval
         {
             $this->approveDelete($entityTrash, $currentUser, $currentTime, $currentIp, $approvalCallback = null);
         }
-        $this->callbackApprove();
+        if($approvalCallback != null && $approvalCallback->getAfterApprove() != null && is_callable($approvalCallback->getAfterApprove()))
+        {
+            call_user_func($approvalCallback->getAfterApprove(), $this->entity, null, null);
+        }
         return $this;
     }
     
@@ -160,8 +149,12 @@ class PicoApproval
      * @param MagicObject $entityApv
      * @return self
      */
-    public function reject($entityApv, $currentUser, $currentTime, $currentIp)
+    public function reject($entityApv, $currentUser, $currentTime, $currentIp, $approvalCallback = null)
     {
+        if($approvalCallback != null && $approvalCallback->getBeforeReject() != null && is_callable($approvalCallback->getBeforeReject()))
+        {
+            call_user_func($approvalCallback->getBeforeReject(), $this->entity, null, null);
+        }
         $this->validateApproval();
         $waitingFor = $this->entity->get($this->entityInfo->getWaitingFor());
         $entityApv->currentDatabase($this->entity->currentDatabase());
@@ -175,7 +168,10 @@ class PicoApproval
             $entityApv->set($this->entityApvInfo->getApprovalStatus(), self::APPROVAL_REJECT)->update();
             $this->entity->set($this->entityInfo->getWaitingFor(), WaitingFor::NOTHING)->update();
         }
-        $this->callbackReject();
+        if($approvalCallback != null && $approvalCallback->getAfterReject() != null && is_callable($approvalCallback->getAfterReject()))
+        {
+            call_user_func($approvalCallback->getAfterReject(), $this->entity, null, null);
+        }
         return $this;
     }
     
@@ -193,33 +189,6 @@ class PicoApproval
         return true;
     }
     
-    /**
-     * Callback approval
-     *
-     * @return boolean
-     */
-    private function callbackApprove()
-    {
-        if($this->callbackOnApprove != null && is_callable($this->callbackOnApprove))
-        {
-            return call_user_func($this->callbackOnApprove, $this->entity, null, null);
-        }
-        return true;
-    }
-    
-    /**
-     * Callback approval
-     *
-     * @return boolean
-     */
-    private function callbackReject()
-    {
-        if($this->callbackOnReject != null && is_callable($this->callbackOnReject))
-        {
-            return call_user_func($this->callbackOnReject, $this->entity, null, null);
-        }
-        return true;
-    }
     /**
      * Approve update
      *
