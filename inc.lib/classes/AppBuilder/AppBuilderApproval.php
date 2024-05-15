@@ -294,6 +294,10 @@ class AppBuilderApproval extends AppBuilderBase
      */
     public function createApprovalSection($mainEntity, $editFields, $approvalRequired, $approvalEntity, $trashRequired, $trashEntity)
     {
+        $currentUser = $this->getCurrentAction()->getUserFunction();
+        $currentTime = $this->getCurrentAction()->getTimeFunction();
+        $currentIp = $this->getCurrentAction()->getIpFunction();
+
         $entityName = $mainEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
         
@@ -399,14 +403,6 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
 
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback".parent::CALL_SET."AfterReject(function("
-        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3) {".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after reject data".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
-        .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
-
-
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."// List of properties to be copied from $entityApprovalName to $entityName when when the user approves data modification. You can add or delete them.".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."columToBeCopied = array(".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1.implode(', '.parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1, $toBeCopied).parent::NEW_LINE
@@ -415,7 +411,11 @@ class AppBuilderApproval extends AppBuilderBase
 
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
-        .parent::VAR."columToBeCopied, new $entityApprovalName(), new $entityTrashName(), ".parent::VAR."approvalCallback);";                                               
+        .parent::VAR."columToBeCopied, new $entityApprovalName(), new $entityTrashName(), ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentUser.",  ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentTime.",  ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentIp.", ".parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback);";                                               
 
 
         $lines[] = parent::TAB1.parent::TAB1."}";
@@ -437,6 +437,10 @@ class AppBuilderApproval extends AppBuilderBase
      */
     public function createRejectionSection($mainEntity, $approvalRequired, $approvalEntity)
     {
+        $currentUser = $this->getCurrentAction()->getUserFunction();
+        $currentTime = $this->getCurrentAction()->getTimeFunction();
+        $currentIp = $this->getCurrentAction()->getIpFunction();
+
         $entityName = $mainEntity->getEntityName();
         $entityApprovalName = $approvalEntity->getEntityName();
         $pkName =  $mainEntity->getPrimaryKey();
@@ -459,8 +463,29 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPrimaryKeyName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
-        $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
-        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityApprovalName());";
+        $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName).parent::NEW_LINE;
+        
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback".parent::CALL_SET."BeforeReject(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3) {".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback before reject data".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
+
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback".parent::CALL_SET."AfterReject(function("
+        .parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3) {".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// callback after reject data".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// you code here".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
+        .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
+
+
+        $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityApprovalName(),".parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentUser.",  ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentTime.",  ".parent::NEW_LINE 
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentIp.", ".parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback".parent::NEW_LINE
+        .parent::TAB1.parent::TAB1.parent::TAB1.");";
 
         $lines[] = parent::TAB1.parent::TAB1."}";
 
@@ -471,16 +496,10 @@ class AppBuilderApproval extends AppBuilderBase
 
     protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName)
     {
-        $currentUser = $this->getCurrentAction()->getUserFunction();
-        $currentTime = $this->getCurrentAction()->getTimeFunction();
-        $currentIp = $this->getCurrentAction()->getIpFunction();
         return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.", ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$entityInfoName.", ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$entityApvInfoName.", ".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentUser.",  ".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentTime.",  ".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentIp.", ".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1."function(".parent::VAR."param1, ".parent::VAR."param2, ".parent::VAR."param3, ".parent::VAR."userId) {".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// approval validation here".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// if the return is incorrect, approval cannot take place".parent::NEW_LINE 
