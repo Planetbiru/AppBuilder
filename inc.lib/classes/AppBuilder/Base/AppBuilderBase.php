@@ -804,9 +804,7 @@ class AppBuilderBase //NOSONAR
         
         $div = $dom->createElement('div');
         $div->setAttribute('class', 'alert alert-warning');
-        
-        //$messagePhp = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->message(".self::VAR.$objectName.self::CALL_GET.$upperWaitingFor."());".self::PHP_CLOSE_TAG;
-        
+            
         $messagePhp = '
 <?php
 if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::CREATE)
@@ -842,7 +840,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         $formDetail->appendChild($div);
         
         $tableDetail1 = $this->createDetailTableCompare($dom, $mainEntity, $objectName, $appFields, $primaryKeyName, $approvalEntity, $objectApprovalName);
-        $tableDetail2 = $this->createButtonContainerTableApproval($dom, "save-update", "save-update", '$inputGet->getNextAction()');
+        $tableDetail2 = $this->createButtonContainerTableApproval($dom, "save-update", "save-update", '$inputGet->getNextAction()', $objectName, $primaryKeyName);
 
         $formDetail->appendChild($tableDetail1);
         $formDetail->appendChild($tableDetail2);
@@ -2350,8 +2348,9 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @return DOMElement
      */
-    private function createButtonContainerTableApproval($dom, $name, $id, $userAction)
+    private function createButtonContainerTableApproval($dom, $name, $id, $userAction, $objectName, $primaryKeyName)
     {
+        $upperPrimaryKeyName = PicoStringUtil::upperCamelize($primaryKeyName);
         $table = $this->createElementTableResponsive($dom);
         
         $tbody = $dom->createElement('tbody');
@@ -2375,6 +2374,17 @@ $resultSet = $pageData->getResult();
         $inputUserActionReject->setAttribute("name", "user_action");
         $inputUserActionReject->setAttribute("value", '<?php echo UserAction::REJECT;?>');
         
+        $pkInputApprove = $dom->createElement("input");
+        $pkInputApprove->setAttribute("type", "hidden");
+        $pkInputApprove->setAttribute("name", $primaryKeyName);
+        $pkInputApprove->setAttribute("value", '<?php echo $'.$objectName.'->get'.$upperPrimaryKeyName.'();?>');
+
+        $pkInputReject = $dom->createElement("input");
+        $pkInputReject->setAttribute("type", "hidden");
+        $pkInputReject->setAttribute("name", $primaryKeyName);
+        $pkInputReject->setAttribute("value", '<?php echo $'.$objectName.'->get'.$upperPrimaryKeyName.'();?>');
+
+        
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t".'if($inputGet->getNextAction() == UserAction::APPROVE)'));
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t{"));
@@ -2386,6 +2396,8 @@ $resultSet = $pageData->getResult();
         $td2->appendChild($btn3);
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         $td2->appendChild($inputUserActionApprove);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($pkInputApprove);
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t}"));
@@ -2400,6 +2412,8 @@ $resultSet = $pageData->getResult();
         $td2->appendChild($btn4);
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         $td2->appendChild($inputUserActionReject);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($pkInputReject);
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t}"));

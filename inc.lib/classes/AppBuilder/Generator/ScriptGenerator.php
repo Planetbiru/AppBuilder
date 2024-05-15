@@ -237,7 +237,7 @@ class ScriptGenerator
         
         $includes[] = "require_once __DIR__ . $includeDir;";
         $includes[] = "";
-        $includes[] = '$currentModule = new AppModule();';
+        $includes[] = '$currentModule = new AppModule("'.$request->getModuleName().'");';
         
         $usesSection = implode("\r\n", $uses);
         $includeSection = implode("\r\n", $includes);

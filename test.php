@@ -31,7 +31,7 @@ use YourApplication\Data\Entity\Producer;
 
 require_once __DIR__ . "/inc.app/auth.php";
 
-$currentModule = new AppModule();
+$currentModule = new AppModule("album");
 $inputGet = new InputGet();
 $inputPost = new InputPost();
 
@@ -791,6 +791,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<input type="submit" class="btn btn-success" name="action_approval" id="action_approval" value="<?php echo $appLanguage->getButtonApprove(); ?>"/>
 							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
 							<input type="hidden" name="user_action" value="<?php echo UserAction::APPROVE;?>"/>
+							<input type="hidden" name="album_id" value="<?php echo $album->getAlbumId();?>"/>
 							<?php
 							}
 							else
@@ -799,6 +800,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<input type="submit" class="btn btn-success" name="action_approval" id="action_approval" value="<?php echo $appLanguage->getButtonReject(); ?>"/>
 							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
 							<input type="hidden" name="user_action" value="<?php echo UserAction::REJECT;?>"/>
+							<input type="hidden" name="album_id" value="<?php echo $album->getAlbumId();?>"/>
 							<?php
 							}
 							?>
