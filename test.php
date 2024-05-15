@@ -10,6 +10,7 @@ use MagicObject\Database\PicoPredicate;
 use MagicObject\Database\PicoSort;
 use MagicObject\Database\PicoSortable;
 use MagicObject\Database\PicoSpecification;
+use MagicObject\Pagination\PicoPagination;
 use MagicObject\Request\PicoFilterConstant;
 use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
@@ -18,6 +19,7 @@ use AppBuilder\Field;
 use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
+use AppBuilder\AppModule;
 use AppBuilder\EntityLabel;
 use AppBuilder\WaitingFor;
 use AppBuilder\PicoTestUtil;
@@ -29,10 +31,11 @@ use YourApplication\Data\Entity\Producer;
 
 require_once __DIR__ . "/inc.app/auth.php";
 
+$currentModule = new AppModule();
 $inputGet = new InputGet();
 $inputPost = new InputPost();
 
-if($inputGet->getUserAction() == UserAction::CREATE)
+if($inputPost->getUserAction() == UserAction::CREATE)
 {
 	$album = new Album(null, $database);
 	$album->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
@@ -64,10 +67,10 @@ if($inputGet->getUserAction() == UserAction::CREATE)
 	$albumUpdate = new Album(null, $database);
 	$albumUpdate->setAlbumId($album->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->update();
 }
-else if($inputGet->getUserAction() == UserAction::UPDATE)
+else if($inputPost->getUserAction() == UserAction::UPDATE)
 {
 	$albumApv = new AlbumApv(null, $database);
-	$albumApv->setAlbumId($inputPost->getAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
+	$albumApv->setAlbumId($inputPost->getAppBuilderNewPkAlbumId(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
 	$albumApv->setName($inputPost->getName(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
 	$albumApv->setTitle($inputPost->getTitle(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
 	$albumApv->setDescription($inputPost->getDescription(PicoFilterConstant::FILTER_SANITIZE_SPECIAL_CHARS));
@@ -90,9 +93,9 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 	$album->setAdminAskEdit($currentAction->getUserId());
 	$album->setTimeAskEdit($currentAction->getTime());
 	$album->setIpAskEdit($currentAction->getIp());
-	$album->setAlbumId($albumApv->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->setApprovalIdWaitingFor(WaitingFor::UPDATE)->update();
+	$album->setAlbumId($inputPost->getAlbumId())->setApprovalId($albumApv->getAlbumApvId())->setApprovalIdWaitingFor(WaitingFor::UPDATE)->update();
 }
-else if($inputGet->getUserAction() == UserAction::ACTIVATE)
+else if($inputPost->getUserAction() == UserAction::ACTIVATE)
 {
 	if($inputPost->countableCheckedRowId())
 	{
@@ -118,7 +121,7 @@ else if($inputGet->getUserAction() == UserAction::ACTIVATE)
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
+else if($inputPost->getUserAction() == UserAction::DEACTIVATE)
 {
 	if($inputPost->countableCheckedRowId())
 	{
@@ -144,7 +147,7 @@ else if($inputGet->getUserAction() == UserAction::DEACTIVATE)
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::DELETE)
+else if($inputPost->getUserAction() == UserAction::DELETE)
 {
 	if($inputPost->countableCheckedRowId())
 	{
@@ -170,7 +173,7 @@ else if($inputGet->getUserAction() == UserAction::DELETE)
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::APPROVE)
+else if($inputPost->getUserAction() == UserAction::APPROVE)
 {
 	if($inputPost->issetAlbumId())
 	{
@@ -271,7 +274,7 @@ else if($inputGet->getUserAction() == UserAction::APPROVE)
 		}
 	}
 }
-else if($inputGet->getUserAction() == UserAction::REJECT)
+else if($inputPost->getUserAction() == UserAction::REJECT)
 {
 	if($inputPost->issetAlbumId())
 	{
@@ -340,10 +343,11 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
 									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-05'))
+									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
-									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortBySortOrder(PicoSort::ORDER_TYPE_ASC))
 									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
 								Field::of()->producerId, Field::of()->name, null, array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
 							</select>
@@ -435,7 +439,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLabel->getAlbumId();?></td>
 						<td>
-							<input class="form-control" type="text" name="album_id" id="album_id" value="<?php echo $album->getAlbumId();?>" autocomplete="off"/>
+							<input class="form-control" type="text" name="app_builder_new_pk_album_id" id="album_id" value="<?php echo $album->getAlbumId();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
@@ -463,10 +467,11 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
 								PicoSpecification::getInstance()
 									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
-									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-05'))
+									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
-									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortBySortOrder(PicoSort::ORDER_TYPE_ASC))
 									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
 								Field::of()->producerId, Field::of()->name, $album->getProducerId(), array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
 							</select>
@@ -530,6 +535,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							<input type="submit" class="btn btn-success" name="save-update" id="save-update" value="<?php echo $appLanguage->getButtonSave(); ?>"/>
 							<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonCancel(); ?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl();?>';"/>
 							<input type="hidden" name="user_action" value="<?php echo UserAction::UPDATE;?>"/>
+							<input type="hidden" name="album_id" value="<?php echo $album->getAlbumId();?>"/>
 						</td>
 					</tr>
 				</tbody>
@@ -557,7 +563,7 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
 		$album->findOneByAlbumId($inputGet->getAlbumId());
 		if($album->hasValueAlbumId())
 		{
-			if($album->nonNullApprovalId())
+			if($album->notNullApprovalId())
 			{
 				$albumApv = new AlbumApv(null, $database);
 				try
@@ -922,7 +928,8 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 		// Do somtething here when exception
 	}
 }
-else {
+else 
+{
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 ?>
@@ -952,9 +959,10 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 								PicoSpecification::getInstance()
 									->addAnd(PicoPredicate::getInstance()->setNumberOfSong(3))
 									->addAnd(PicoPredicate::getInstance()->setReleaseDate('2024-01-03'))
+									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
 								PicoSortable::getInstance()
-									->add(PicoSort::getInstance()->sortByTimeCreate(PicoSort::ORDER_TYPE_ASC))
+									->add(PicoSort::getInstance()->sortBySortOrder(PicoSort::ORDER_TYPE_ASC))
 									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
 								Field::of()->producerId, Field::of()->name, $inputGet->getProducerId(), array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
 							</select>
@@ -979,8 +987,9 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 					<span class="filter-label"><?php echo $appEntityLabel->getActive();?></span>
 					<span class="filter-control">
 							<select name="active" class="form-control" data-value="<?php echo $inputGet->getActive();?>">
-								<option value="true" <?php echo AttrUtil::selected($inputGet->getActive(), 'true');?>>Yes</option>
-								<option value="false" <?php echo AttrUtil::selected($inputGet->getActive(), 'false');?>>No</option>
+								<option value="" <?php echo AttrUtil::selected($inputGet->getActive(), '');?>><?php echo $appLanguage->getOptionLabelSelectOne();?></option>
+								<option value="true" <?php echo AttrUtil::selected($inputGet->getActive(), 'true');?>><?php echo $appLanguage->getOptionLabelYes();?></option>
+								<option value="false" <?php echo AttrUtil::selected($inputGet->getActive(), 'false');?>><?php echo $appLanguage->getOptionLabelNo();?></option>
 							</select>
 					</span>
 				</span>
@@ -1005,11 +1014,24 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				"active" => "active"
 			);
 			$sortOrderMap = array(
-			    "name" => "name",
+			    "albumId" => "albumId",
+				"name" => "name",
 				"title" => "title",
+				"description" => "description",
 				"producerId" => "producerId",
 				"releaseDate" => "releaseDate",
+				"numberOfSong" => "numberOfSong",
 				"duration" => "duration",
+				"imagePath" => "imagePath",
+				"sortOrder" => "sortOrder",
+				"timeCreate" => "timeCreate",
+				"timeEdit" => "timeEdit",
+				"adminCreate" => "adminCreate",
+				"adminEdit" => "adminEdit",
+				"ipCreate" => "ipCreate",
+				"ipEdit" => "ipEdit",
+				"locked" => "locked",
+				"asDraft" => "asDraft",
 				"active" => "active"
 			);
 			            
@@ -1028,7 +1050,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			    <?php
 			    foreach($rowData->getPagination() as $pg)
 			    {
-			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="#"><?php echo $pg['page'];?></a></span><?php
+			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="<?php echo PicoPagination::getPageUrl($pg['page']);?>"><?php echo $pg['page'];?></a></span><?php
 			    }
 			    ?>
 			    </div>
@@ -1116,7 +1138,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			    <?php
 			    foreach($rowData->getPagination() as $pg)
 			    {
-			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="#"><?php echo $pg['page'];?></a></span><?php
+			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="<?php echo PicoPagination::getPageUrl($pg['page']);?>"><?php echo $pg['page'];?></a></span><?php
 			    }
 			    ?>
 			    </div>

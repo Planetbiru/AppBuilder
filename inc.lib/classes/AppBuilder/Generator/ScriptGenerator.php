@@ -149,25 +149,27 @@ class ScriptGenerator
         $listFields = array();
         $filterFields = array();
         $referenceEntity = array();
+        $allField = array();
         foreach($request->getFields() as $value) {
             $field = new AppField($value);
-            if($value->getIncludeInsert()) {
+            $allField[] = $field;
+            if($field->getIncludeInsert()) {
                 $insertFields[$field->getFieldName()] = $field;
             }
-            if($value->getIncludeEdit()) {
+            if($field->getIncludeEdit()) {
                 $editFields[$field->getFieldName()] = $field;
             }
-            if($value->getIncludeDetail()) {
+            if($field->getIncludeDetail()) {
                 $detailFields[$field->getFieldName()] = $field;
             }
-            if($value->getIncludeList()) {
+            if($field->getIncludeList()) {
                 $listFields[$field->getFieldName()] = $field;
             }
-            if($value->getFilterElementType() != "") {
+            if($field->getFilterElementType() != "") {
                 $filterFields[$field->getFieldName()] = $field;
             }
-            if($this->hasReferenceData($value)){
-                $referenceEntity[] = $value->getReferenceData()->getEntity()->getEntityName();
+            if($this->hasReferenceData($field)){
+                $referenceEntity[] = $field->getReferenceData()->getEntity()->getEntityName();
             }
         }
         
@@ -247,7 +249,7 @@ class ScriptGenerator
         // prepare CRUD section begin
         if($appFeatures->isApprovalRequired())
         {
-            $appBuilder = new AppBuilderApproval($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo);
+            $appBuilder = new AppBuilderApproval($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo, $allField);
 
             // CRUD
             $createSection = $appBuilder->createInsertApprovalSection($entityMain, $insertFields, $approvalRequired, $entityApproval);
@@ -266,7 +268,7 @@ class ScriptGenerator
         }
         else
         {
-            $appBuilder = new AppBuilder($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo);
+            $appBuilder = new AppBuilder($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo, $allField);
 
             // CRUD
             $createSection = $appBuilder->createInsertSection($entityMain, $insertFields);

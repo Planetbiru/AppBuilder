@@ -3,6 +3,8 @@
 namespace AppBuilder;
 
 use AppBuilder\Base\AppBuilderBase;
+use MagicObject\Database\PicoPredicate;
+use MagicObject\Database\PicoSpecification;
 use MagicObject\MagicObject;
 use MagicObject\Util\PicoStringUtil;
 
@@ -64,21 +66,45 @@ class AppBuilder extends AppBuilderBase
     public function createUpdateSection($mainEntity, $appFields)
     {
         $entityName = $mainEntity->getEntityName();
+        $primaryKeyName = $mainEntity->getPrimaryKey();
+        $upperPrimaryKeyName = PicoStringUtil::upperCamelize($primaryKeyName);
         $objectName = lcfirst($entityName);
+        $updatePk = false;
         $lines = array();
         
         $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::UPDATE)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
+        
         foreach($appFields as $field)
         {
+            if($primaryKeyName == $field->getFieldName())
+            {
+                $updatePk = true;
+            }
             $line = $this->createSetter($objectName, $field->getFieldName(), $field->getInputFilter());
             if($line != null)
             {
                 $lines[] = $line;
             }
         }
+        if(!$updatePk)
+        {
+            $line = $this->createSetter($objectName, $primaryKeyName, $this->getInputFilter($primaryKeyName));
+            $lines[] = $line;
+        }
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_UPDATE_END;
+        
+        if($updatePk)
+        {
+            $lines[] = ''; 
+            $lines[] = parent::TAB1.'// update primary key value';      
+            $lines[] = parent::TAB1.'$specification = PicoSpecification::getInstance()->addAnd(new PicoPredicate(Field::of()->'.PicoStringUtil::camelize($primaryKeyName).', $inputPost->get'.$upperPrimaryKeyName.'()));';
+                
+            $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
+            $lines[] = parent::TAB1.parent::VAR.$objectName.'->where($specification)->set'.$upperPrimaryKeyName.'($inputPost->get'.PicoStringUtil::upperCamelize('app_builder_new_pk').$upperPrimaryKeyName.'())'.parent::CALL_UPDATE_END;
+        }
+        
         $lines[] = parent::CURLY_BRACKET_CLOSE;
         return implode(parent::NEW_LINE, $lines);
     }

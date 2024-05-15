@@ -104,6 +104,13 @@ class AppBuilderBase //NOSONAR
      * @var AppFeatures
      */
     protected $appFeatures;
+    
+    /**
+     * All field
+     *
+     * @var AppField[]
+     */
+    protected $allField;
 
     /**
      * Constructor
@@ -113,12 +120,14 @@ class AppBuilderBase //NOSONAR
      * @param AppFeatures $appFeatures
      * @param EntityInfo $entityInfo
      * @param EntityApvInfo $entityApvInfo
+     * @param AppField[] $allField
      */
-    public function __construct($appBuilderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo)
+    public function __construct($appBuilderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo, $allField)
     {
         $this->appBuilderConfig = $appBuilderConfig;
         $this->appConfig = $appConfig;
         $this->appFeatures = $appFeatures;
+        $this->allField = $allField;
         
         $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
@@ -139,6 +148,19 @@ class AppBuilderBase //NOSONAR
             $entityInfo->getApprovalId()
         );
     }
+    
+    public function getInputFilter($fieldName)
+    {
+        foreach($this->allField as $field)
+        {
+            if($field->getFieldName() == $fieldName)
+            {
+                return $field->getInputFilter();
+            }
+        }
+        return null;
+    }
+    
     /**
      * Load application config
      *
@@ -202,14 +224,22 @@ class AppBuilderBase //NOSONAR
      * @param string $fieldFilter
      * @return string
      */
-    protected function createSetter($objectName, $fieldName, $fieldFilter)
+    protected function createSetter($objectName, $fieldName, $fieldFilter, $primaryKeyName = null, $updatePk = false)
     {
         if (in_array($fieldName, $this->skipedAutoSetter)) {
             return null;
         }
         if ($this->style = self::STYLE_SETTER_GETTER) {
-            $method = PicoStringUtil::upperCamelize($fieldName);
-            return self::TAB1 . self::VAR . $objectName . self::CALL_SET . $method . "(" . self::VAR . "inputPost".self::CALL_GET.$method . "(PicoFilterConstant::" . $fieldFilter . "));";
+            if($primaryKeyName != null && $primaryKeyName == $fieldName && $updatePk)
+            {
+                $methodSource = PicoStringUtil::upperCamelize("app_builder_new_pk").PicoStringUtil::upperCamelize($fieldName);
+            }
+            else
+            {
+                $methodSource = PicoStringUtil::upperCamelize($fieldName);
+            }
+            $methodTarget = PicoStringUtil::upperCamelize($fieldName);
+            return self::TAB1 . self::VAR . $objectName . self::CALL_SET . $methodTarget . "(" . self::VAR . "inputPost".self::CALL_GET.$methodSource . "(PicoFilterConstant::" . $fieldFilter . "));";
         } else {
             return self::TAB1 . self::VAR . $objectName . self::CALL_SET."('" . $fieldName . "', " . self::VAR . "inputPost".self::CALL_GET."('" . $fieldName . "', PicoFilterConstant::" . $fieldFilter . "));";
         }
@@ -469,7 +499,7 @@ class AppBuilderBase //NOSONAR
         $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName);
 
 
-        $table2 = $this->createButtonContainerTable($dom, "save-insert", "save-insert", 'UserAction::CREATE');
+        $table2 = $this->createButtonContainerTableCreate($dom, "save-insert", "save-insert", 'UserAction::CREATE');
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -522,7 +552,7 @@ class AppBuilderBase //NOSONAR
 
         
 
-        $table2 = $this->createButtonContainerTable($dom, "save-update", "save-update", 'UserAction::UPDATE');
+        $table2 = $this->createButtonContainerTableUpdate($dom, "save-update", "save-update", 'UserAction::UPDATE', $objectName, $primaryKeyName);
 
         $form->appendChild($table1);
         $form->appendChild($table2);
@@ -581,6 +611,26 @@ class AppBuilderBase //NOSONAR
      */
     public function createGuiDetail($mainEntity, $appFields, $approvalRequired = false, $approvalEntity = null)
     {
+        if($approvalRequired)
+        {
+            return $this->createGuiDetailWithApproval($mainEntity, $appFields, $approvalRequired, $approvalEntity);
+        }
+        else
+        {
+            return $this->createGuiDetailWithoutApproval($mainEntity, $appFields);
+        }
+    }
+    /**
+     * Create GUI DETAIL section with approval
+     *
+     * @param MagicObject $mainEntity
+     * @param AppField[] $appFields
+     * @param boolean $approvalRequired
+     * @param MagicObject $approvalEntity
+     * @return string
+     */
+    public function createGuiDetailWithApproval($mainEntity, $appFields, $approvalRequired = false, $approvalEntity = null)
+    {
         $entityName = $mainEntity->getEntityName();
         $entityApprovalName = $approvalEntity->getEntityName();
         $objectApprovalName = PicoStringUtil::camelize($entityApprovalName);
@@ -600,7 +650,7 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
 
-        $getData[] = self::TAB1.self::TAB1.self::TAB1."if(".self::VAR.$objectName."->nonNullApprovalId())";
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."if(".self::VAR.$objectName."->notNullApprovalId())";
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1."try";
@@ -627,6 +677,57 @@ class AppBuilderBase //NOSONAR
         $getData[] = $this->getIncludeFooter();
 
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+            
+
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $getData[] = self::TAB1.self::TAB1."else";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
+        $getData[] = self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
+        $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE.self::NEW_LINE;
+
+        return "if(".self::VAR."inputGet->getUserAction() == UserAction::DETAIL)\r\n"
+        ."{\r\n"
+        .implode(self::NEW_LINE, $getData)
+        .self::CURLY_BRACKET_CLOSE;
+    }
+    
+    /**
+     * Create GUI DETAIL section with approval
+     *
+     * @param MagicObject $mainEntity
+     * @param AppField[] $appFields
+     * @return string
+     */
+    public function createGuiDetailWithoutApproval($mainEntity, $appFields)
+    {
+        $entityName = $mainEntity->getEntityName();
+        $primaryKeyName =  $mainEntity->getPrimaryKey();
+        $upperPkName = PicoStringUtil::upperCamelize($primaryKeyName);
+
+        $objectName = lcfirst($entityName);
+        
+        $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $primaryKeyName);
+
+
+        $getData = array();
+        $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
+        $getData[] = self::TAB1."try{";
+        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
+        $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
+        $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+
+
+
+        $getData[] = $this->getIncludeHeader();
+        $getData[] = $this->constructEntityLabel($entityName);
+        $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
+        $getData[] = $this->getIncludeFooter();
+
             
 
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
@@ -847,7 +948,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
 
 
         return 
-        "{\r\n"
+        "\r\n{\r\n"
         .implode(self::NEW_LINE, $getData)
         .self::NEW_LINE
         .self::CURLY_BRACKET_CLOSE;
@@ -911,18 +1012,23 @@ else
     public function beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName)
     {
 
-        $arr = array();
+        $arrFilter = array();
+        $arrSort = array();
         foreach($filterFields as $field)
         {
-            $arr[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
+            $arrFilter[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
+        }
+        foreach($listFields as $field)
+        {
+            $arrSort[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
         }
         $script = 
 '
 $specMap = array(
-    '.implode(",\n\t", $arr).'
+    '.implode(",\n\t", $arrFilter).'
 );
 $sortOrderMap = array(
-    '.implode(",\n\t", $arr).'
+    '.implode(",\n\t", $arrSort).'
 );
             
 $specification = PicoSpecification::fromUserInput($inputGet, $specMap);
@@ -1766,32 +1872,37 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $updateField
      * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createUpdateControl($dom, $mainEntity, $objectName, $insertField, $primaryKeyName, $id = null)
+    private function createUpdateControl($dom, $mainEntity, $objectName, $updateField, $primaryKeyName, $id = null)
     {
-        $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
+        $upperFieldName = PicoStringUtil::upperCamelize($updateField->getFieldName());
+        $fieldName = $updateField->getFieldName();
+        if($fieldName == $primaryKeyName)
+        {
+            $fieldName = "app_builder_new_pk_".$fieldName;
+        }
         $input = $dom->createElement('input');
-        if($insertField->getElementType() == ElementType::TEXT)
+        if($updateField->getElementType() == ElementType::TEXT)
         {
             $input = $dom->createElement('input');
-            $this->setInputTypeAttribute($input, $insertField->getDataType()); 
-            $input->setAttribute('name', $insertField->getFieldName());
+            $this->setInputTypeAttribute($input, $updateField->getDataType()); 
+            $input->setAttribute('name', $fieldName);
 
             $input = $this->addAttributeId($input, $id);  
             
             $input->setAttribute('value', $this->createPhpOutputValue(self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()'));
             $input->setAttribute('autocomplete', 'off');
         }
-        else if($insertField->getElementType() == ElementType::TEXTAREA)
+        else if($updateField->getElementType() == ElementType::TEXTAREA)
         {
             $input = $dom->createElement('textarea');
             $classes = array();
             $classes[] = 'form-control';
             $input->setAttribute('class', implode(' ', $classes));
-            $input->setAttribute('name', $insertField->getFieldName());
+            $input->setAttribute('name', $fieldName);
 
             $input = $this->addAttributeId($input, $id); 
             
@@ -1801,13 +1912,13 @@ $resultSet = $pageData->getResult();
             $input->appendChild($value);
             $input->setAttribute('spellcheck', 'false');
         }
-        else if($insertField->getElementType() == ElementType::SELECT)
+        else if($updateField->getElementType() == ElementType::SELECT)
         {
             $input = $dom->createElement('select');
             $classes = array();
             $classes[] = 'form-control';
             $input->setAttribute('class', implode(' ', $classes));
-            $input->setAttribute('name', $insertField->getFieldName());
+            $input->setAttribute('name', $fieldName);
 
             $input = $this->addAttributeId($input, $id);
 
@@ -1818,10 +1929,10 @@ $resultSet = $pageData->getResult();
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-            $referenceData = $insertField->getReferenceData();
-            $input = $this->appendOption($dom, $input, $objectName, $insertField, $referenceData, self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()');
+            $referenceData = $updateField->getReferenceData();
+            $input = $this->appendOption($dom, $input, $objectName, $updateField, $referenceData, self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()');
         }
-        else if($insertField->getElementType() == ElementType::CHECKBOX)
+        else if($updateField->getElementType() == ElementType::CHECKBOX)
         {
             $input = $dom->createElement('label');
             $inputStrl = $dom->createElement('input');
@@ -1829,7 +1940,7 @@ $resultSet = $pageData->getResult();
             $classes[] = 'form-check-input';
             $inputStrl->setAttribute('class', implode(' ', $classes));
             $inputStrl->setAttribute('type', 'checkbox');
-            $inputStrl->setAttribute('name', $insertField->getFieldName());
+            $inputStrl->setAttribute('name', $fieldName);
 
             $inputStrl = $this->addAttributeId($inputStrl, $id);
 
@@ -1842,7 +1953,7 @@ $resultSet = $pageData->getResult();
             $input->appendChild($textLabel);
 
         }
-        if($insertField->getRequired())
+        if($updateField->getRequired())
         {
             $input->setAttribute('required', 'required');
         }
@@ -2104,14 +2215,14 @@ $resultSet = $pageData->getResult();
         }
         return $input;
     }
-
+    
     /**
-     * Create button container table
+     * Create button container table for create
      *
      * @param DOMDocument $dom
      * @return DOMElement
      */
-    private function createButtonContainerTable($dom, $name, $id, $userAction)
+    private function createButtonContainerTableCreate($dom, $name, $id, $userAction)
     {
         $table = $this->createElementTableResponsive($dom);
         
@@ -2135,6 +2246,56 @@ $resultSet = $pageData->getResult();
         $td2->appendChild($btn2);
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         $td2->appendChild($inputUserAction);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t"));
+              
+        $tr2->appendChild($td1);
+        $tr2->appendChild($td2);
+        
+        $tbody->appendChild($tr2);
+        
+        $table->appendChild($tbody);
+
+        return $table;
+    }
+
+    /**
+     * Create button container table for update
+     *
+     * @param DOMDocument $dom
+     * @return DOMElement
+     */
+    private function createButtonContainerTableUpdate($dom, $name, $id, $userAction, $objectName, $primaryKeyName)
+    {
+        $upperPrimaryKeyName = PicoStringUtil::upperCamelize($primaryKeyName);
+        $table = $this->createElementTableResponsive($dom);
+        
+        $tbody = $dom->createElement('tbody');
+        
+        $tr2 = $dom->createElement('tr');
+        $td1 = $dom->createElement('td');
+        $td2 = $dom->createElement('td');
+        
+        $btn1 = $this->createSubmitButton($dom, $this->getTextOfLanguage('button_save'), $name, $id);
+        $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_cancel'), null, null, 'currentModule->getRedirectUrl()');
+        
+        $inputUserAction = $dom->createElement("input");
+        $inputUserAction->setAttribute("type", "hidden");
+        $inputUserAction->setAttribute("name", "user_action");
+        $inputUserAction->setAttribute("value", '<?php echo '.$userAction.';?>');
+        
+        $pkInput = $dom->createElement("input");
+        $pkInput->setAttribute("type", "hidden");
+        $pkInput->setAttribute("name", $primaryKeyName);
+        $pkInput->setAttribute("value", '<?php echo $'.$objectName.'->get'.$upperPrimaryKeyName.'();?>');
+        
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn1);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($btn2);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($inputUserAction);
+        $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
+        $td2->appendChild($pkInput);
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t"));
               
         $tr2->appendChild($td1);

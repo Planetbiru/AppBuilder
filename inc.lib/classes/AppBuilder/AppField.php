@@ -141,7 +141,15 @@ class AppField
      */
     private function isTrue($value)
     {
-        return $value == '1' || strtolower($value) == 'true' || $value === 1 || $value === true;
+        if(is_string($value))
+        {
+            $val = $value == '1' || strtolower($value) == 'true';
+        }
+        else
+        {
+            $val = $value === 1 || $value === true;
+        }
+        return $val;
     }
 
     /**
