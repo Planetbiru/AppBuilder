@@ -582,7 +582,6 @@ class AppBuilderBase //NOSONAR
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$html.self::NEW_LINE.self::PHP_OPEN_TAG;
-        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
@@ -591,10 +590,16 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>';
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'<?php';
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
         $getData[] = self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = $this->getIncludeHeader();
         $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
+        $getData[] = self::TAB1.self::TAB1.'?>';
+        $getData[] = self::TAB1.self::TAB1.'<div class="alert alert-danger"><?php echo $e->getMessage();?></div>';
+        $getData[] = self::TAB1.self::TAB1.'<?php';
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE.self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::UPDATE)\r\n"
@@ -685,15 +690,22 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1."else";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = $this->getIncludeHeader();
         $getData[] = self::TAB1.self::TAB1.self::TAB1."// Do somtething here when data is not found";
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'?>';
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'<div class="alert alert-warning"><?php echo $appLanguage->getMessageDataNotFound();?></div>';
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'<?php';
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
         $getData[] = self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = $this->getIncludeHeader();
         $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
+        $getData[] = self::TAB1.self::TAB1.'?>';
+        $getData[] = self::TAB1.self::TAB1.'<div class="alert alert-danger"><?php echo $e->getMessage();?></div>';
+        $getData[] = self::TAB1.self::TAB1.'<?php';
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE.self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::DETAIL)\r\n"
@@ -747,7 +759,12 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1."catch(Exception ".self::VAR."e)";
         $getData[] = self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = $this->getIncludeHeader();
         $getData[] = self::TAB1.self::TAB1."// Do somtething here when exception";
+        $getData[] = self::TAB1.self::TAB1.'?>';
+        $getData[] = self::TAB1.self::TAB1.'<div class="alert alert-danger"><?php echo $e->getMessage();?></div>';
+        $getData[] = self::TAB1.self::TAB1.'<?php';
+        $getData[] = $this->getIncludeFooter();
         $getData[] = self::TAB1.self::CURLY_BRACKET_CLOSE.self::NEW_LINE;
 
         return "if(".self::VAR."inputGet->getUserAction() == UserAction::DETAIL)\r\n"
