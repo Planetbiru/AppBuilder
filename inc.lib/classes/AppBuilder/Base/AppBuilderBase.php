@@ -129,7 +129,7 @@ class AppBuilderBase //NOSONAR
         $this->appFeatures = $appFeatures;
         $this->allField = $allField;
         
-        $this->currentAction = new AppSecretObject($appBuilderConfig->getCurrentAction());
+        $this->currentAction = $appBuilderConfig->getCurrentAction();
         $this->configBaseDirectory = $appBuilderConfig->getConfigBaseDirectory();
         $this->entityInfo = $entityInfo;
         $this->entityApvInfo = $entityApvInfo;
@@ -1153,6 +1153,17 @@ $resultSet = $pageData->getResult();
         $thead = $dom->createElement('thead');
         
         $trh = $dom->createElement('tr');
+        
+        if($this->appFeatures->isSortOrder())
+        {
+            // sort-control begin
+            $td = $dom->createElement('td');
+            $td->setAttribute('class', 'data-sort data-sort-header');
+            $td->appendChild($dom->createTextNode(""));
+            $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+            $trh->appendChild($td);
+            // sort-control end
+        }
 
         // checkbox begin
         $td = $dom->createElement('td');
@@ -1237,6 +1248,21 @@ $resultSet = $pageData->getResult();
         $tbody = $dom->createElement('tbody');
         
         $trh = $dom->createElement('tr');
+        
+        if($this->appFeatures->isSortOrder())
+        {
+            // sort-control begin
+            $td = $dom->createElement('td');
+            $td->setAttribute('class', 'data-sort data-sort-body data-sort-control');
+            $td->appendChild($dom->createTextNode(""));
+            $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+            $trh->appendChild($td);
+            
+            $trh->setAttribute("data-primary-key", '<?php echo $'.$objectName.'->get'.PicoStringUtil::upperCamelize($primaryKey).'();?>');
+            $trh->setAttribute("data-sort-order", '<?php echo $'.$objectName.'->get'.PicoStringUtil::upperCamelize($this->entityInfo->getSortOrder()).'();?>');
+            
+            // sort-control end
+        }
         
         // checkbox begin
         $td = $dom->createElement('td');

@@ -129,6 +129,44 @@ class ScriptGenerator
         }
         return $uses;
     }
+    
+    /**
+     * Get entity approval
+     *
+     * @param MagicObject $entity
+     * @return MagicObject
+     */
+    private function getEntityApproval($entity)
+    {
+        if($entity->getApprovalEntity() != null)
+        {
+            $entityApproval = $entity->getApprovalEntity();
+        }
+        else
+        {
+            $entityApproval = new MagicObject();
+        }
+        return $entityApproval;
+    }
+    
+    /**
+     * Get entity trash
+     *
+     * @param MagicObject $entity
+     * @return MagicObject
+     */
+    private function getEntityTrash($entity)
+    {
+        if($entity->getTrashEntity() != null)
+        {
+            $entityTrash = $entity->getTrashEntity();
+        }
+        else
+        {
+            $entityTrash = new MagicObject();
+        }
+        return $entityTrash;
+    }
 
     /**
      * Generate
@@ -177,17 +215,9 @@ class ScriptGenerator
         
         $entityMain = $entity->getMainEntity();
         
-        $entityApproval = new MagicObject();
-        $entityTrash = new MagicObject();
-
-        if($entity->getApprovalEntity() != null)
-        {
-            $entityApproval = $entity->getApprovalEntity();
-        }
-        if($entity->getTrashEntity() != null)
-        {
-            $entityTrash = $entity->getTrashEntity();
-        }
+        $entityApproval = $this->getEntityApproval($entity);
+        $entityTrash = $this->getEntityTrash($entity);
+     
 
         $entityMainName = $entityMain->getEntityName();
         $approvalRequired = AppBuilderBase::isTrue($entity->getApprovalRequired());
@@ -195,7 +225,7 @@ class ScriptGenerator
         
         $activationKey = $entityInfo->getActive();
         
-        $appConf = new AppSecretObject($appConfig->getApplication());
+        $appConf = $appConfig->getApplication();
         
         $uses = array();
         $uses[] = "// This script is generated automatically by AppBuilder";
@@ -244,7 +274,7 @@ class ScriptGenerator
         
         $declarationSection = implode("\r\n", array(AppBuilderBase::VAR."inputGet = new InputGet();", AppBuilderBase::VAR."inputPost = new InputPost();",""));
         
-        $appFeatures = new AppFeatures($request->getFeatures());
+        $appFeatures = $request->getFeatures();
 
         // prepare CRUD section begin
         if($appFeatures->isApprovalRequired())

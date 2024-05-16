@@ -1090,6 +1090,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 					<table class="table table-row">
 						<thead>
 							<tr>
+								<td class="data-sort data-sort-header"></td>
 								<td class="data-selector" data-key="album_id">
 									<input type="checkbox" class="checkbox check-master" data-selector=".checkbox-album-id"/>
 								</td>
@@ -1126,7 +1127,8 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 							foreach($resultSet as $dataIndex => $album)
 							{
 							?>
-							<tr>
+							<tr data-primary-key="<?php echo $album->getAlbumId();?>" data-sort-order="<?php echo $album->getSortOrder();?>">
+								<td class="data-sort data-sort-body data-sort-control"></td>
 								<td class="data-selector" data-key="album_id">
 									<input type="checkbox" class="checkbox check-slave checkbox-album-id" name="checked_row_id[]" value="<?php echo $album->getAlbumId();?>"/>
 								</td>
