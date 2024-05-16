@@ -359,8 +359,8 @@ class ScriptGenerator
     }
     public function prepareComposer($appConf)
     {
-        $composer = new AppSecretObject($appConf->getComposer());
-        $mo = new AppSecretObject($appConf->getMagicObject());
+        $composer = $appConf->getComposer();
+        $mo = $appConf->getMagicObject();
         $magicObjectVersion = $mo->getVersion();
         if(!empty($magicObjectVersion))
         {

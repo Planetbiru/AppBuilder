@@ -20,7 +20,7 @@ try
         }
     }
 
-    $reference = new AppSecretObject($referenceConfig->getReferenceData());
+    $reference = $referenceConfig->getReferenceData();
     $fieldName = $inputGet->getFieldName();
     $camelFieldName = PicoStringUtil::camelize($fieldName);
     if(PicoStringUtil::endsWith($fieldName, "_id"))

@@ -22,6 +22,7 @@ use MagicObject\Exceptions\NoRecordFoundException;
 use MagicObject\Util\ClassUtil\PicoAnnotationParser;
 use MagicObject\Util\ClassUtil\PicoObjectParser;
 use MagicObject\Util\Database\PicoDatabaseUtil;
+use MagicObject\Util\PicoArrayUtil;
 use MagicObject\Util\PicoEnvironmentVariable;
 use MagicObject\Util\PicoStringUtil;
 use MagicObject\Util\PicoYamlUtil;
@@ -177,11 +178,12 @@ class MagicObject extends stdClass // NOSONAR
     {
         // Parse without sections
         $data = parse_ini_string($rawData);
+        $data = PicoEnvironmentVariable::replaceValueAll($data, $data, true);
         if($systemEnv)
         {
-            $env = new PicoEnvironmentVariable();
-            $data = $env->replaceSysEnvAll($data, true);
+            $data = PicoEnvironmentVariable::replaceSysEnvAll($data, true);
         }
+        $data = PicoArrayUtil::camelize($data);
         $this->loadData($data);
         return $this;
     }
@@ -197,11 +199,12 @@ class MagicObject extends stdClass // NOSONAR
     {
         // Parse without sections
         $data = parse_ini_file($path);
+        $data = PicoEnvironmentVariable::replaceValueAll($data, $data, true);
         if($systemEnv)
         {
-            $env = new PicoEnvironmentVariable();
-            $data = $env->replaceSysEnvAll($data, true);
+            $data = PicoEnvironmentVariable::replaceSysEnvAll($data, true);
         }
+        $data = PicoArrayUtil::camelize($data);
         $this->loadData($data);
         return $this;
     }
@@ -218,11 +221,12 @@ class MagicObject extends stdClass // NOSONAR
     public function loadYamlString($rawData, $systemEnv = false, $asObject = false, $recursive = false)
     {
         $data = Yaml::parse($rawData);
+        $data = PicoEnvironmentVariable::replaceValueAll($data, $data, true);
         if($systemEnv)
         {
-            $env = new PicoEnvironmentVariable();
-            $data = $env->replaceSysEnvAll($data, true);
+            $data = PicoEnvironmentVariable::replaceSysEnvAll($data, true);
         }
+        $data = PicoArrayUtil::camelize($data);
         if($asObject)
         {
             // convert to object
@@ -262,11 +266,12 @@ class MagicObject extends stdClass // NOSONAR
     public function loadYamlFile($path, $systemEnv = false, $asObject = false, $recursive = false)
     {
         $data = Yaml::parseFile($path);
+        $data = PicoEnvironmentVariable::replaceValueAll($data, $data, true);
         if($systemEnv)
         {
-            $env = new PicoEnvironmentVariable();
-            $data = $env->replaceSysEnvAll($data, true);
+            $data = PicoEnvironmentVariable::replaceSysEnvAll($data, true);
         }
+        $data = PicoArrayUtil::camelize($data);
         if($asObject)
         {
             // convert to object
@@ -305,11 +310,12 @@ class MagicObject extends stdClass // NOSONAR
     public function loadJsonString($rawData, $systemEnv = false, $asObject = false, $recursive = false)
     {
         $data = json_decode($rawData);
+        $data = PicoEnvironmentVariable::replaceValueAll($data, $data, true);
         if($systemEnv)
         {
-            $env = new PicoEnvironmentVariable();
-            $data = $env->replaceSysEnvAll($data, true);
+            $data = PicoEnvironmentVariable::replaceSysEnvAll($data, true);
         }
+        $data = PicoArrayUtil::camelize($data);
         if($asObject)
         {
             // convert to object
@@ -348,11 +354,12 @@ class MagicObject extends stdClass // NOSONAR
     public function loadJsonFile($path, $systemEnv = false, $asObject = false, $recursive = false)
     {
         $data = json_decode(file_get_contents($path));
+        $data = PicoEnvironmentVariable::replaceValueAll($data, $data, true);
         if($systemEnv)
         {
-            $env = new PicoEnvironmentVariable();
-            $data = $env->replaceSysEnvAll($data, true);
+            $data = PicoEnvironmentVariable::replaceSysEnvAll($data, true);
         }
+        $data = PicoArrayUtil::camelize($data);
         if($asObject)
         {
             // convert to object
@@ -462,7 +469,7 @@ class MagicObject extends stdClass // NOSONAR
 
     /**
      * Save to database
-     * @param boolean $includeNull If TRUE, all column will be saved to database include null. If FALSE, only column with not null value will be saved to database
+     * @param boolean $includeNull If TRUE, all properties will be saved to database include null. If FALSE, only column with not null value will be saved to database
      * @return PDOStatement
      * NoDatabaseConnectionException|NoRecordFoundException|PDOException
      */
@@ -481,7 +488,7 @@ class MagicObject extends stdClass // NOSONAR
 
     /**
      * Query of save data
-     * @param boolean $includeNull If TRUE, all column will be saved to database include null. If FALSE, only column with not null value will be saved to database
+     * @param boolean $includeNull If TRUE, all properties will be saved to database include null. If FALSE, only column with not null value will be saved to database
      * @return PicoDatabaseQueryBuilder
      * NoDatabaseConnectionException|NoRecordFoundException
      */
@@ -570,7 +577,7 @@ class MagicObject extends stdClass // NOSONAR
     /**
      * Insert into database
      *
-     * @param boolean $includeNull If TRUE, all column will be saved to database include null. If FALSE, only column with not null value will be saved to database
+     * @param boolean $includeNull If TRUE, all properties will be saved to database include null. If FALSE, only column with not null value will be saved to database
      * @return PDOStatement
      * @throws NoDatabaseConnectionException|PDOException
      */
@@ -590,7 +597,7 @@ class MagicObject extends stdClass // NOSONAR
     /**
      * Get query of insert data
      *
-     * @param boolean $includeNull If TRUE, all column will be saved to database include null. If FALSE, only column with not null value will be saved to database
+     * @param boolean $includeNull If TRUE, all properties will be saved to database include null. If FALSE, only column with not null value will be saved to database
      * @return PicoDatabaseQueryBuilder
      * @throws NoDatabaseConnectionException
      */
@@ -610,7 +617,7 @@ class MagicObject extends stdClass // NOSONAR
     /**
      * Update data on database
      *
-     * @param boolean $includeNull If TRUE, all column will be saved to database include null. If FALSE, only column with not null value will be saved to database
+     * @param boolean $includeNull If TRUE, all properties will be saved to database include null. If FALSE, only column with not null value will be saved to database
      * @return PDOStatement
      * @throws NoDatabaseConnectionException|PDOException
      */
@@ -630,7 +637,7 @@ class MagicObject extends stdClass // NOSONAR
     /**
      * Get query of update data
      *
-     * @param boolean $includeNull If TRUE, all column will be saved to database include null. If FALSE, only column with not null value will be saved to database
+     * @param boolean $includeNull If TRUE, all properties will be saved to database include null. If FALSE, only column with not null value will be saved to database
      * @return PicoDatabaseQueryBuilder
      * @throws NoDatabaseConnectionException
      */

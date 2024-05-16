@@ -1058,9 +1058,15 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				"asDraft" => "asDraft",
 				"active" => "active"
 			);
-			            
+			
+			// You can define your own specifications
+			// Pay attention to security issues
 			$specification = PicoSpecification::fromUserInput($inputGet, $specMap);
+			
+			// You can define your own sortable
+			// Pay attention to security issues
 			$sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
+			
 			$pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 			$dataLoader = new Album(null, $database);
 			$pageData = $dataLoader->findAll($specification, $pagable, $sortable);
