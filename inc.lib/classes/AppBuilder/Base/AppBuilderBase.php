@@ -1219,7 +1219,7 @@ $resultSet = $pageData->getResult();
         {
             $td = $dom->createElement('td');
             $td->setAttribute('data-field', $field->getFieldName());
-            $td->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
+            $td->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
             
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
@@ -1443,7 +1443,7 @@ $resultSet = $pageData->getResult();
         foreach($filterFields as $field)
         {
             $fieldName = $field->getFieldName();
-            $labelStr = self::PHP_OPEN_TAG.self::ECHO.self::VAR.'appEntityLabel'.self::CALL_GET.PicoStringUtil::upperCamelize($fieldName)."();".self::PHP_CLOSE_TAG;
+            $labelStr = self::PHP_OPEN_TAG.self::ECHO.self::VAR.'appEntityLanguage'.self::CALL_GET.PicoStringUtil::upperCamelize($fieldName)."();".self::PHP_CLOSE_TAG;
             $label = $dom->createTextNode($labelStr);
             
             $labelWrapper = $dom->createElement('span');
@@ -1675,7 +1675,7 @@ $resultSet = $pageData->getResult();
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
         $td1->appendChild($label);
@@ -1709,7 +1709,7 @@ $resultSet = $pageData->getResult();
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
         $td1->appendChild($label);
@@ -1744,7 +1744,7 @@ $resultSet = $pageData->getResult();
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
 
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
 
@@ -1809,7 +1809,7 @@ $resultSet = $pageData->getResult();
         $td3 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
-        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+        $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
         
         if($field->getElementType() == 'checkbox')
@@ -1911,7 +1911,7 @@ $resultSet = $pageData->getResult();
             $inputStrl = $this->addAttributeId($inputStrl, $id);
             $inputStrl->setAttribute('value', '1');
             $input->appendChild($inputStrl);
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
         }
@@ -2004,7 +2004,7 @@ $resultSet = $pageData->getResult();
             $inputStrl->setAttribute('value', '1');
             $inputStrl->setAttribute("data-app-builder-encoded-script", base64_encode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.'->createChecked'.$upperFieldName.'();'.self::PHP_CLOSE_TAG));
             $input->appendChild($inputStrl);
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLabel".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
 
@@ -2867,7 +2867,7 @@ $resultSet = $pageData->getResult();
      */
     public function constructEntityLabel($entityName)
     {
-        return self::VAR."appEntityLabel = new EntityLabel(new $entityName(), ".self::VAR.self::APP_CONFIG.");";
+        return self::VAR."appEntityLanguage = new AppEntityLanguage(new $entityName(), ".self::VAR.self::APP_CONFIG.");";
     }
     
     /**

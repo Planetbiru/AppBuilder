@@ -248,7 +248,7 @@ class ScriptGenerator
         $uses[] = "use AppBuilder\\UserAction;";
         $uses[] = "use AppBuilder\\AppInclude;";
         $uses[] = "use AppBuilder\\AppModule;";
-        $uses[] = "use AppBuilder\\EntityLabel;";
+        $uses[] = "use AppBuilder\\AppEntityLanguage;";
         $uses[] = "use AppBuilder\\WaitingFor;";
         $uses[] = "use AppBuilder\\PicoTestUtil;";
         $uses[] = "use AppBuilder\\FormBuilder;";
@@ -373,7 +373,7 @@ class ScriptGenerator
                 'AppBuilder/UserAction.php',
                 'AppBuilder/AppInclude.php',
                 'AppBuilder/AppModule.php',
-                'AppBuilder/EntityLabel.php',
+                'AppBuilder/AppEntityLanguage.php',
                 'AppBuilder/WaitingFor.php',
                 'AppBuilder/PicoTestUtil.php',            
                 'AppBuilder/FormBuilder.php'            

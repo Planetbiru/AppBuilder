@@ -67,7 +67,7 @@ use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
 use AppBuilder\AppModule;
-use AppBuilder\EntityLabel;
+use AppBuilder\AppEntityLanguage;
 use AppBuilder\WaitingFor;
 use AppBuilder\PicoTestUtil;
 use AppBuilder\FormBuilder;
@@ -362,7 +362,7 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 if($inputGet->getUserAction() == UserAction::CREATE)
 {
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
-$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+$appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
 <div class="page page-insert">
 	<div class="row">
@@ -370,31 +370,31 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
-						<td><?php echo $appEntityLabel->getAlbumId();?></td>
+						<td><?php echo $appEntityLanguage->getAlbumId();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="text" name="album_id" id="album_id"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getName();?></td>
+						<td><?php echo $appEntityLanguage->getName();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="text" name="name" id="name"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTitle();?></td>
+						<td><?php echo $appEntityLanguage->getTitle();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="text" name="title" id="title"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDescription();?></td>
+						<td><?php echo $appEntityLanguage->getDescription();?></td>
 						<td>
 							<textarea class="form-control" name="description" id="description" spellcheck="false"></textarea>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getProducerId();?></td>
+						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
@@ -409,51 +409,51 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
+						<td><?php echo $appEntityLanguage->getReleaseDate();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="date" name="release_date" id="release_date"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
+						<td><?php echo $appEntityLanguage->getNumberOfSong();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="number" name="number_of_song" id="number_of_song"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDuration();?></td>
+						<td><?php echo $appEntityLanguage->getDuration();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="text" name="duration" id="duration"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getImagePath();?></td>
+						<td><?php echo $appEntityLanguage->getImagePath();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="text" name="image_path" id="image_path"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getSortOrder();?></td>
+						<td><?php echo $appEntityLanguage->getSortOrder();?></td>
 						<td>
 							<input autocomplete="off" class="form-control" type="number" name="sort_order" id="sort_order"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getLocked();?></td>
+						<td><?php echo $appEntityLanguage->getLocked();?></td>
 						<td>
-							<label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> <?php echo $appEntityLabel->getLocked();?></label>
+							<label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1"/> <?php echo $appEntityLanguage->getLocked();?></label>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAsDraft();?></td>
+						<td><?php echo $appEntityLanguage->getAsDraft();?></td>
 						<td>
-							<label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> <?php echo $appEntityLabel->getAsDraft();?></label>
+							<label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1"/> <?php echo $appEntityLanguage->getAsDraft();?></label>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getActive();?></td>
+						<td><?php echo $appEntityLanguage->getActive();?></td>
 						<td>
-							<label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> <?php echo $appEntityLabel->getActive();?></label>
+							<label><input class="form-check-input" type="checkbox" name="active" id="active" value="1"/> <?php echo $appEntityLanguage->getActive();?></label>
 						</td>
 					</tr>
 				</tbody>
@@ -484,7 +484,7 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 		if($album->hasValueAlbumId())
 		{
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
-$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+$appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
 <div class="page page-update">
 	<div class="row">
@@ -492,31 +492,31 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
-						<td><?php echo $appEntityLabel->getAlbumId();?></td>
+						<td><?php echo $appEntityLanguage->getAlbumId();?></td>
 						<td>
 							<input class="form-control" type="text" name="app_builder_new_pk_album_id" id="album_id" value="<?php echo $album->getAlbumId();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getName();?></td>
+						<td><?php echo $appEntityLanguage->getName();?></td>
 						<td>
 							<input class="form-control" type="text" name="name" id="name" value="<?php echo $album->getName();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTitle();?></td>
+						<td><?php echo $appEntityLanguage->getTitle();?></td>
 						<td>
 							<input class="form-control" type="text" name="title" id="title" value="<?php echo $album->getTitle();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDescription();?></td>
+						<td><?php echo $appEntityLanguage->getDescription();?></td>
 						<td>
 							<textarea class="form-control" name="description" id="description" spellcheck="false"><?php echo $album->getDescription();?></textarea>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getProducerId();?></td>
+						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
@@ -531,51 +531,51 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
+						<td><?php echo $appEntityLanguage->getReleaseDate();?></td>
 						<td>
 							<input class="form-control" type="date" name="release_date" id="release_date" value="<?php echo $album->getReleaseDate();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
+						<td><?php echo $appEntityLanguage->getNumberOfSong();?></td>
 						<td>
 							<input class="form-control" type="number" name="number_of_song" id="number_of_song" value="<?php echo $album->getNumberOfSong();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDuration();?></td>
+						<td><?php echo $appEntityLanguage->getDuration();?></td>
 						<td>
 							<input class="form-control" type="text" name="duration" id="duration" value="<?php echo $album->getDuration();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getImagePath();?></td>
+						<td><?php echo $appEntityLanguage->getImagePath();?></td>
 						<td>
 							<input class="form-control" type="text" name="image_path" id="image_path" value="<?php echo $album->getImagePath();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getSortOrder();?></td>
+						<td><?php echo $appEntityLanguage->getSortOrder();?></td>
 						<td>
 							<input class="form-control" type="number" name="sort_order" id="sort_order" value="<?php echo $album->getSortOrder();?>" autocomplete="off"/>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getLocked();?></td>
+						<td><?php echo $appEntityLanguage->getLocked();?></td>
 						<td>
-							<label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> <?php echo $appEntityLabel->getLocked();?></label>
+							<label><input class="form-check-input" type="checkbox" name="locked" id="locked" value="1" <?php echo $album->createCheckedLocked();?>/> <?php echo $appEntityLanguage->getLocked();?></label>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAsDraft();?></td>
+						<td><?php echo $appEntityLanguage->getAsDraft();?></td>
 						<td>
-							<label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> <?php echo $appEntityLabel->getAsDraft();?></label>
+							<label><input class="form-check-input" type="checkbox" name="as_draft" id="as_draft" value="1" <?php echo $album->createCheckedAsDraft();?>/> <?php echo $appEntityLanguage->getAsDraft();?></label>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getActive();?></td>
+						<td><?php echo $appEntityLanguage->getActive();?></td>
 						<td>
-							<label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> <?php echo $appEntityLabel->getActive();?></label>
+							<label><input class="form-check-input" type="checkbox" name="active" id="active" value="1" <?php echo $album->createCheckedActive();?>/> <?php echo $appEntityLanguage->getActive();?></label>
 						</td>
 					</tr>
 				</tbody>
@@ -636,7 +636,7 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
 					// do something here
 				}
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
-$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+$appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
 <div class="page page-detail">
 	<div class="row">
@@ -668,7 +668,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
-						<td><?php echo $appEntityLabel->getAlbumId();?></td>
+						<td><?php echo $appEntityLanguage->getAlbumId();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAlbumId($albumApv->getAlbumId()));?>"><?php echo $album->getAlbumId();?></span>
 						</td>
@@ -677,7 +677,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getName();?></td>
+						<td><?php echo $appEntityLanguage->getName();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsName($albumApv->getName()));?>"><?php echo $album->getName();?></span>
 						</td>
@@ -686,7 +686,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTitle();?></td>
+						<td><?php echo $appEntityLanguage->getTitle();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTitle($albumApv->getTitle()));?>"><?php echo $album->getTitle();?></span>
 						</td>
@@ -695,7 +695,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDescription();?></td>
+						<td><?php echo $appEntityLanguage->getDescription();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDescription($albumApv->getDescription()));?>"><?php echo $album->getDescription();?></span>
 						</td>
@@ -704,7 +704,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getProducerId();?></td>
+						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsProducerId($albumApv->getProducerId()));?>"><?php echo $album->getProducerId();?></span>
 						</td>
@@ -713,7 +713,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
+						<td><?php echo $appEntityLanguage->getReleaseDate();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsReleaseDate($albumApv->getReleaseDate()));?>"><?php echo $album->getReleaseDate();?></span>
 						</td>
@@ -722,7 +722,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
+						<td><?php echo $appEntityLanguage->getNumberOfSong();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsNumberOfSong($albumApv->getNumberOfSong()));?>"><?php echo $album->getNumberOfSong();?></span>
 						</td>
@@ -731,7 +731,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDuration();?></td>
+						<td><?php echo $appEntityLanguage->getDuration();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsDuration($albumApv->getDuration()));?>"><?php echo $album->getDuration();?></span>
 						</td>
@@ -740,7 +740,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getImagePath();?></td>
+						<td><?php echo $appEntityLanguage->getImagePath();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsImagePath($albumApv->getImagePath()));?>"><?php echo $album->getImagePath();?></span>
 						</td>
@@ -749,7 +749,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getSortOrder();?></td>
+						<td><?php echo $appEntityLanguage->getSortOrder();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsSortOrder($albumApv->getSortOrder()));?>"><?php echo $album->getSortOrder();?></span>
 						</td>
@@ -758,7 +758,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
+						<td><?php echo $appEntityLanguage->getTimeCreate();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeCreate($albumApv->getTimeCreate()));?>"><?php echo $album->getTimeCreate();?></span>
 						</td>
@@ -767,7 +767,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
+						<td><?php echo $appEntityLanguage->getTimeEdit();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsTimeEdit($albumApv->getTimeEdit()));?>"><?php echo $album->getTimeEdit();?></span>
 						</td>
@@ -776,7 +776,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
+						<td><?php echo $appEntityLanguage->getAdminCreate();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminCreate($albumApv->getAdminCreate()));?>"><?php echo $album->getAdminCreate();?></span>
 						</td>
@@ -785,7 +785,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
+						<td><?php echo $appEntityLanguage->getAdminEdit();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAdminEdit($albumApv->getAdminEdit()));?>"><?php echo $album->getAdminEdit();?></span>
 						</td>
@@ -794,7 +794,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getIpCreate();?></td>
+						<td><?php echo $appEntityLanguage->getIpCreate();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpCreate($albumApv->getIpCreate()));?>"><?php echo $album->getIpCreate();?></span>
 						</td>
@@ -803,7 +803,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getIpEdit();?></td>
+						<td><?php echo $appEntityLanguage->getIpEdit();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsIpEdit($albumApv->getIpEdit()));?>"><?php echo $album->getIpEdit();?></span>
 						</td>
@@ -812,7 +812,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getLocked();?></td>
+						<td><?php echo $appEntityLanguage->getLocked();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsLocked($albumApv->getLocked()));?>"><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
@@ -821,7 +821,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAsDraft();?></td>
+						<td><?php echo $appEntityLanguage->getAsDraft();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsAsDraft($albumApv->getAsDraft()));?>"><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
@@ -830,7 +830,7 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getActive();?></td>
+						<td><?php echo $appEntityLanguage->getActive();?></td>
 						<td>
 							<span class="<?php echo PicoTestUtil::classCompareData($album->notEqualsActive($albumApv->getActive()));?>"><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></span>
 						</td>
@@ -878,7 +878,7 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 			else
 			{
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
-$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+$appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
 <div class="page page-detail">
 	<div class="row">
@@ -886,79 +886,79 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
 					<tr>
-						<td><?php echo $appEntityLabel->getAlbumId();?></td>
+						<td><?php echo $appEntityLanguage->getAlbumId();?></td>
 						<td><?php echo $album->getAlbumId();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getName();?></td>
+						<td><?php echo $appEntityLanguage->getName();?></td>
 						<td><?php echo $album->getName();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTitle();?></td>
+						<td><?php echo $appEntityLanguage->getTitle();?></td>
 						<td><?php echo $album->getTitle();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDescription();?></td>
+						<td><?php echo $appEntityLanguage->getDescription();?></td>
 						<td><?php echo $album->getDescription();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getProducerId();?></td>
+						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td><?php echo $album->getProducerId();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getReleaseDate();?></td>
+						<td><?php echo $appEntityLanguage->getReleaseDate();?></td>
 						<td><?php echo $album->getReleaseDate();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getNumberOfSong();?></td>
+						<td><?php echo $appEntityLanguage->getNumberOfSong();?></td>
 						<td><?php echo $album->getNumberOfSong();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getDuration();?></td>
+						<td><?php echo $appEntityLanguage->getDuration();?></td>
 						<td><?php echo $album->getDuration();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getImagePath();?></td>
+						<td><?php echo $appEntityLanguage->getImagePath();?></td>
 						<td><?php echo $album->getImagePath();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getSortOrder();?></td>
+						<td><?php echo $appEntityLanguage->getSortOrder();?></td>
 						<td><?php echo $album->getSortOrder();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTimeCreate();?></td>
+						<td><?php echo $appEntityLanguage->getTimeCreate();?></td>
 						<td><?php echo $album->getTimeCreate();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getTimeEdit();?></td>
+						<td><?php echo $appEntityLanguage->getTimeEdit();?></td>
 						<td><?php echo $album->getTimeEdit();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAdminCreate();?></td>
+						<td><?php echo $appEntityLanguage->getAdminCreate();?></td>
 						<td><?php echo $album->getAdminCreate();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAdminEdit();?></td>
+						<td><?php echo $appEntityLanguage->getAdminEdit();?></td>
 						<td><?php echo $album->getAdminEdit();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getIpCreate();?></td>
+						<td><?php echo $appEntityLanguage->getIpCreate();?></td>
 						<td><?php echo $album->getIpCreate();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getIpEdit();?></td>
+						<td><?php echo $appEntityLanguage->getIpEdit();?></td>
 						<td><?php echo $album->getIpEdit();?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getLocked();?></td>
+						<td><?php echo $appEntityLanguage->getLocked();?></td>
 						<td><?php echo $album->optionLocked($appLanguage->getYes(), $appLanguage->getNo());?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getAsDraft();?></td>
+						<td><?php echo $appEntityLanguage->getAsDraft();?></td>
 						<td><?php echo $album->optionAsDraft($appLanguage->getYes(), $appLanguage->getNo());?></td>
 					</tr>
 					<tr>
-						<td><?php echo $appEntityLabel->getActive();?></td>
+						<td><?php echo $appEntityLanguage->getActive();?></td>
 						<td><?php echo $album->optionActive($appLanguage->getYes(), $appLanguage->getNo());?></td>
 					</tr>
 				</tbody>
@@ -1004,28 +1004,28 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 else 
 {
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
-$appEntityLabel = new EntityLabel(new Album(), $appConfig);
+$appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
 <div class="page page-list">
 	<div class="row">
 		<div class="filter-section">
 			<form action="" method="get" class="filter-form">
 				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLabel->getName();?></span>
+					<span class="filter-label"><?php echo $appEntityLanguage->getName();?></span>
 					<span class="filter-control">
 						<input type="text" name="name" class="form-control" value="<?php echo $inputGet->getName();?>" autocomplete="off"/>
 					</span>
 				</span>
 				
 				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLabel->getTitle();?></span>
+					<span class="filter-label"><?php echo $appEntityLanguage->getTitle();?></span>
 					<span class="filter-control">
 						<input type="text" name="title" class="form-control" value="<?php echo $inputGet->getTitle();?>" autocomplete="off"/>
 					</span>
 				</span>
 				
 				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLabel->getProducerId();?></span>
+					<span class="filter-label"><?php echo $appEntityLanguage->getProducerId();?></span>
 					<span class="filter-control">
 							<select name="producer_id" class="form-control">
 								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
@@ -1041,21 +1041,21 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 				</span>
 				
 				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLabel->getReleaseDate();?></span>
+					<span class="filter-label"><?php echo $appEntityLanguage->getReleaseDate();?></span>
 					<span class="filter-control">
 						<input type="text" name="release_date" class="form-control" value="<?php echo $inputGet->getReleaseDate();?>" autocomplete="off"/>
 					</span>
 				</span>
 				
 				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLabel->getDuration();?></span>
+					<span class="filter-label"><?php echo $appEntityLanguage->getDuration();?></span>
 					<span class="filter-control">
 						<input type="text" name="duration" class="form-control" value="<?php echo $inputGet->getDuration();?>" autocomplete="off"/>
 					</span>
 				</span>
 				
 				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLabel->getActive();?></span>
+					<span class="filter-label"><?php echo $appEntityLanguage->getActive();?></span>
 					<span class="filter-control">
 							<select name="active" class="form-control" data-value="<?php echo $inputGet->getActive();?>">
 								<option value="" <?php echo AttrUtil::selected($inputGet->getActive(), '');?>><?php echo $appLanguage->getOptionLabelSelectOne();?></option>
@@ -1140,25 +1140,25 @@ $appEntityLabel = new EntityLabel(new Album(), $appConfig);
 								<td>
 									<span class="fa fa-folder"></span>
 								</td>
-								<td data-field="album_id"><?php echo $appEntityLabel->getAlbumId();?></td>
-								<td data-field="name"><?php echo $appEntityLabel->getName();?></td>
-								<td data-field="title"><?php echo $appEntityLabel->getTitle();?></td>
-								<td data-field="description"><?php echo $appEntityLabel->getDescription();?></td>
-								<td data-field="producer_id"><?php echo $appEntityLabel->getProducerId();?></td>
-								<td data-field="release_date"><?php echo $appEntityLabel->getReleaseDate();?></td>
-								<td data-field="number_of_song"><?php echo $appEntityLabel->getNumberOfSong();?></td>
-								<td data-field="duration"><?php echo $appEntityLabel->getDuration();?></td>
-								<td data-field="image_path"><?php echo $appEntityLabel->getImagePath();?></td>
-								<td data-field="sort_order"><?php echo $appEntityLabel->getSortOrder();?></td>
-								<td data-field="time_create"><?php echo $appEntityLabel->getTimeCreate();?></td>
-								<td data-field="time_edit"><?php echo $appEntityLabel->getTimeEdit();?></td>
-								<td data-field="admin_create"><?php echo $appEntityLabel->getAdminCreate();?></td>
-								<td data-field="admin_edit"><?php echo $appEntityLabel->getAdminEdit();?></td>
-								<td data-field="ip_create"><?php echo $appEntityLabel->getIpCreate();?></td>
-								<td data-field="ip_edit"><?php echo $appEntityLabel->getIpEdit();?></td>
-								<td data-field="locked"><?php echo $appEntityLabel->getLocked();?></td>
-								<td data-field="as_draft"><?php echo $appEntityLabel->getAsDraft();?></td>
-								<td data-field="active"><?php echo $appEntityLabel->getActive();?></td>
+								<td data-field="album_id"><?php echo $appEntityLanguage->getAlbumId();?></td>
+								<td data-field="name"><?php echo $appEntityLanguage->getName();?></td>
+								<td data-field="title"><?php echo $appEntityLanguage->getTitle();?></td>
+								<td data-field="description"><?php echo $appEntityLanguage->getDescription();?></td>
+								<td data-field="producer_id"><?php echo $appEntityLanguage->getProducerId();?></td>
+								<td data-field="release_date"><?php echo $appEntityLanguage->getReleaseDate();?></td>
+								<td data-field="number_of_song"><?php echo $appEntityLanguage->getNumberOfSong();?></td>
+								<td data-field="duration"><?php echo $appEntityLanguage->getDuration();?></td>
+								<td data-field="image_path"><?php echo $appEntityLanguage->getImagePath();?></td>
+								<td data-field="sort_order"><?php echo $appEntityLanguage->getSortOrder();?></td>
+								<td data-field="time_create"><?php echo $appEntityLanguage->getTimeCreate();?></td>
+								<td data-field="time_edit"><?php echo $appEntityLanguage->getTimeEdit();?></td>
+								<td data-field="admin_create"><?php echo $appEntityLanguage->getAdminCreate();?></td>
+								<td data-field="admin_edit"><?php echo $appEntityLanguage->getAdminEdit();?></td>
+								<td data-field="ip_create"><?php echo $appEntityLanguage->getIpCreate();?></td>
+								<td data-field="ip_edit"><?php echo $appEntityLanguage->getIpEdit();?></td>
+								<td data-field="locked"><?php echo $appEntityLanguage->getLocked();?></td>
+								<td data-field="as_draft"><?php echo $appEntityLanguage->getAsDraft();?></td>
+								<td data-field="active"><?php echo $appEntityLanguage->getActive();?></td>
 							</tr>
 						</thead>
 					
