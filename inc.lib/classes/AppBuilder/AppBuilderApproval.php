@@ -333,7 +333,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."if(".parent::VAR.$objectName."->isset".$upperPrimaryKeyName."())";
         $lines[] = parent::TAB1.parent::TAB1."{";
 
-        $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName);
+        $lines[] = $this->constructApproval($objectName, $entityInfoName, $entityApvInfoName, $trashRequired, $trashEntity);
         $lines[] = "";
         
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approvalCallback = new SetterGetter();";
@@ -479,7 +479,6 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE //NOSONAR
         .parent::TAB1.parent::TAB1.parent::TAB1."}); ".parent::NEW_LINE; //NOSONAR
 
-
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->reject(new $entityApprovalName(),".parent::NEW_LINE
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentUser.",  ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentTime.",  ".parent::NEW_LINE 
@@ -494,9 +493,9 @@ class AppBuilderApproval extends AppBuilderBase
         return implode(parent::NEW_LINE, $lines);
     }
 
-    protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName)
+    protected function constructApproval($objectName, $entityInfoName, $entityApvInfoName, $trashRequired = false, $trashEntity = null)
     {
-        return parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::NEW_LINE 
+        $result = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval = new PicoApproval(".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.", ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$entityInfoName.", ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$entityApvInfoName.", ".parent::NEW_LINE 
@@ -506,7 +505,18 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// e.g. return ".parent::VAR."param1->notEquals".PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit())."(".parent::VAR."userId);".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1.");"; 
+        .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE;
+
+        if($trashRequired)
+        {
+            $entityTrashName = $trashEntity->getEntityName();
+            
+            $result .= parent::TAB1.parent::TAB1.parent::TAB1."true, ".parent::NEW_LINE 
+            .parent::TAB1.parent::TAB1.parent::TAB1."new $entityTrashName() ".parent::NEW_LINE;
+            
+        }
+
+        $result .= parent::TAB1.parent::TAB1.parent::TAB1.");"; 
+        return $result;
     }
 }
