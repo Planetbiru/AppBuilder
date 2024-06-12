@@ -17,12 +17,15 @@ class PicoRequestBase extends stdClass //NOSONAR
      * @var array
      */
     private $classParams = array();
+    protected $forceScalar = false;
 
     /**
      * Constructor
+     * @param boolean $forceScalar
      */
-    public function __construct()
+    public function __construct($forceScalar = false)
     {
+        $this->forceScalar = $forceScalar;
         $jsonAnnot = new PicoAnnotationParser(get_class($this));
         $params = $jsonAnnot->getParameters();
         foreach($params as $paramName=>$paramValue)
@@ -39,11 +42,16 @@ class PicoRequestBase extends stdClass //NOSONAR
     /**
      * Load data to object
      * @param mixed $data
+     * @param boolean $tolower
      */
-    public function loadData($data)
+    public function loadData($data, $tolower = false)
     {
         if (is_array($data) || is_object($data)) {
             foreach ($data as $key => $value) {
+                if($tolower)
+                {
+                    $key = strtolower($key);
+                }
                 $key2 = PicoStringUtil::camelize(str_replace("-", "_", $key));
                 $this->{$key2} = $value;
             }
@@ -78,7 +86,20 @@ class PicoRequestBase extends stdClass //NOSONAR
         if(isset($params) && !empty($params))
         {
             $filter = $params[0];
-            return $this->filterValue($value, $filter);
+            if(!isset($params[1]))
+            {
+                $params[1] = false;
+            }
+            if(!isset($params[2]))
+            {
+                $params[2] = false;
+            }
+            if(!isset($params[3]))
+            {
+                $params[3] = false;
+            }
+
+            return $this->filterValue($value, $filter, $params[1], $params[2], $params[3]);
         }
         else
         {
@@ -193,11 +214,18 @@ class PicoRequestBase extends stdClass //NOSONAR
      * @param integer $filter
      * @param boolean $escapeSQL
      * @param boolean $nullIfEmpty
+     * @param boolean $requireScalar
      * @return mixed|null
      */
-    public function filterValue($val, $filter = PicoFilterConstant::FILTER_DEFAULT, $escapeSQL = false, $nullIfEmpty = false)
+    public function filterValue($val, $filter = PicoFilterConstant::FILTER_DEFAULT, $escapeSQL = false, $nullIfEmpty = false, $requireScalar = false)
     {
         $ret = null;
+        if(($requireScalar || $this->forceScalar) && !is_scalar($val))
+        {
+            // If application require scalar but user give non-scalar, MagicObject will return null
+            // It mean that application will not process invalid input type
+            return null;
+        }
         if(is_scalar($val))
         {
             return $this->filterValueSingle($val, $filter, $escapeSQL, $nullIfEmpty);

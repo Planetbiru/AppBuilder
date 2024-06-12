@@ -2,6 +2,7 @@
 
 namespace MagicObject\Database;
 
+use MagicObject\Request\PicoRequestBase;
 use MagicObject\Util\Database\PicoDatabaseUtil;
 
 class PicoSpecification
@@ -200,6 +201,7 @@ class PicoSpecification
      */
     private function getWhere($specifications)
     {
+        $arr = array();
         foreach($specifications as $spec)
         {
             if($spec instanceof PicoPredicate)
@@ -256,7 +258,7 @@ class PicoSpecification
     }
     
     /**
-     * This method is for debug purpose only.
+     * Magic method to debug object. This method is for debug purpose only.
      *
      * @return string
      */

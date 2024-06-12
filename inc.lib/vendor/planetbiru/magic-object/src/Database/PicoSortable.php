@@ -2,6 +2,8 @@
 
 namespace MagicObject\Database;
 
+use MagicObject\Request\PicoRequestBase;
+
 class PicoSortable
 {
     /**
@@ -115,7 +117,7 @@ class PicoSortable
     /**
      * Create sort by
      *
-     * @param PicoTableInfo $tableInfo
+     * @param PicoTableInfo $tableInfo Table information
      * @return string
      */
     public function createOrderBy($tableInfo = null)
@@ -166,7 +168,7 @@ class PicoSortable
     /**
      * Create sort with mapping
      *
-     * @param PicoTableInfo $tableInfo
+     * @param PicoTableInfo $tableInfo Table information
      * @return string
      */
     private function createWithMapping($tableInfo)
@@ -223,7 +225,7 @@ class PicoSortable
     }
     
     /**
-     * This method is for debug purpose only.
+     * Magic method to debug object. This method is for debug purpose only.
      *
      * @return string
      */
