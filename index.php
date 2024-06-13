@@ -604,8 +604,46 @@ require_once __DIR__ . "/inc.app/navs.php";
         </div>
         <div class="modal-body">
           <form action="">
-            <label for="ref-entity"><input type="radio" id="ref-entity"> Entity</label>
+            <label for="reference_type_entity"><input type="radio" class="reference_type" name="reference_type" id="reference_type_entity"> Entity</label>
+            <label for="reference_type_enum"><input type="radio" class="reference_type" name="reference_type" id="reference_type_enum"> Enum</label>
             <div class="entity-section">
+              <h4>Entity</h4>
+              <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td>Entity Name</td>
+                    <td><input class="form-control" type="text" class="rd-entity-name"></td>
+                  </tr>
+                  <tr>
+                    <td>Table Name</td>
+                    <td><input class="form-control" type="text" class="rd-table-name"></td>
+                  </tr>
+                  <tr>
+                    <td>Primary Key</td>
+                    <td><input class="form-control" type="text" class="rd-primary-key"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <h4>Specfification</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td>Column</td>
+                    <td>Value</td>
+                  </tr>
+                </thead>
+              </table>
+              <h4>Sortable</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td>Sort By</td>
+                    <td>Sort Type</td>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="enum-section">
               <h4>Entity</h4>
               <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
