@@ -42,11 +42,11 @@ class PicoJoinMap
     /**
      * Constructor
      *
-     * @param string $propertyName Property name
-     * @param string $columnName Column name
-     * @param string $entity Entity name
-     * @param string $joinTable Join table name
-     * @param string $joinTableAlias Join table alias
+     * @param string $propertyName
+     * @param string $columnName
+     * @param string $entity
+     * @param string $joinTable
+     * @param string $joinTableAlias
      */
     public function __construct($propertyName, $columnName, $entity, $joinTable, $joinTableAlias)
     {

@@ -98,8 +98,8 @@ class PicoPageable
     /**
      * Add sortable
      *
-     * @param string $sortBy Sort by
-     * @param string $sortType Sort type
+     * @param string $sortBy
+     * @param string $sortType
      * @return self
      */
     public function addSortable($sortBy, $sortType)
@@ -115,7 +115,7 @@ class PicoPageable
     /**
      * Create sort by
      *
-     * @param PicoTableInfo $tableInfo Table information
+     * @param PicoTableInfo $tableInfo
      * @return string|null
      */
     public function createOrderBy($tableInfo)

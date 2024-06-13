@@ -27,7 +27,7 @@ class PicoDatabaseUtilMySql
     /**
      * Dump database structure
      *
-     * @param PicoTableInfo $tableInfo Table information
+     * @param PicoTableInfo $tableInfo
      * @param string $picoTableName
      * @return string
      */

@@ -117,7 +117,7 @@ class PicoSortable
     /**
      * Create sort by
      *
-     * @param PicoTableInfo $tableInfo Table information
+     * @param PicoTableInfo $tableInfo
      * @return string
      */
     public function createOrderBy($tableInfo = null)
@@ -168,7 +168,7 @@ class PicoSortable
     /**
      * Create sort with mapping
      *
-     * @param PicoTableInfo $tableInfo Table information
+     * @param PicoTableInfo $tableInfo
      * @return string
      */
     private function createWithMapping($tableInfo)
