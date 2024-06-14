@@ -103,36 +103,37 @@
                     "entityName": "Producer",
                     "tableName": "producer",
                     "primaryKey": "producer_id",
-                    "value": "name"
-                },
-                "specification": [
-                    {
-                        "column": "draft",
-                        "value": false
-                    },
-                    {
-                        "column": "active",
-                        "value": true
-                    }
-                ],
-                "sortable": [
-                    {
-                        "sortBy": "sort_order",
-                        "sortType": "PicoSort::ORDER_TYPE_ASC"
-                    },
-                    {
-                        "sortBy": "producer_id",
-                        "sortType": "PicoSort::ORDER_TYPE_ASC"
-                    }
-                ],
-                "additionalOutput": [
-                    {
-                        "column": "number_of_song"
-                    },
-                    {
-                        "column": "release_date"
-                    }
-                ]
+                    "value": "name",
+                    "specification": [
+                        {
+                            "column": "draft",
+                            "value": false
+                        },
+                        {
+                            "column": "active",
+                            "value": true
+                        }
+                    ],
+                    "sortable": [
+                        {
+                            "sortBy": "sort_order",
+                            "sortType": "PicoSort::ORDER_TYPE_ASC"
+                        },
+                        {
+                            "sortBy": "producer_id",
+                            "sortType": "PicoSort::ORDER_TYPE_ASC"
+                        }
+                    ],
+                    "additionalOutput": [
+                        {
+                            "column": "number_of_song"
+                        },
+                        {
+                            "column": "release_date"
+                        }
+                    ]
+                }
+                
             },
             "referenceFilter": {
                 "type": "entity",
@@ -140,36 +141,37 @@
                     "entityName": "Producer",
                     "tableName": "producer",
                     "primaryKey": "producer_id",
-                    "value": "name"
-                },
-                "specification": [
-                    {
-                        "column": "draft",
-                        "value": false
-                    },
-                    {
-                        "column": "active",
-                        "value": true
-                    }
-                ],
-                "sortable": [
-                    {
-                        "sortBy": "sort_order",
-                        "sortType": "PicoSort::ORDER_TYPE_ASC"
-                    },
-                    {
-                        "sortBy": "producer_id",
-                        "sortType": "PicoSort::ORDER_TYPE_ASC"
-                    }
-                ],
-                "additionalOutput": [
-                    {
-                        "column": "number_of_song"
-                    },
-                    {
-                        "column": "release_date"
-                    }
-                ]
+                    "value": "name",
+                    "specification": [
+                        {
+                            "column": "draft",
+                            "value": false
+                        },
+                        {
+                            "column": "active",
+                            "value": true
+                        }
+                    ],
+                    "sortable": [
+                        {
+                            "sortBy": "sort_order",
+                            "sortType": "PicoSort::ORDER_TYPE_ASC"
+                        },
+                        {
+                            "sortBy": "producer_id",
+                            "sortType": "PicoSort::ORDER_TYPE_ASC"
+                        }
+                    ],
+                    "additionalOutput": [
+                        {
+                            "column": "number_of_song"
+                        },
+                        {
+                            "column": "release_date"
+                        }
+                    ]
+                }
+                
             }         
         },
         {
@@ -335,10 +337,33 @@
             "includeList": "true",
             "isKey": "false",
             "isInputRequired": "false",
-            "elementType": "checkbox",
-            "filterElementType": "",
+            "elementType": "select",
+            "filterElementType": "select",
             "dataType": "int",
-            "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
+            "inputFilter": "FILTER_SANITIZE_NUMBER_INT",
+            "referenceFilter": {
+                "type": "map",
+                "map": {
+                    "option": [
+                        {
+                            "value": true,
+                            "text": "Yes"
+                        },
+                        {
+                            "value": false,
+                            "text": "No"
+                        }
+                    ],
+                    "additionalOutput": [
+                        {
+                            "column": "number_of_song"
+                        },
+                        {
+                            "column": "release_date"
+                        }
+                    ]
+                }
+            }   
         },
         {
             "fieldName": "as_draft",

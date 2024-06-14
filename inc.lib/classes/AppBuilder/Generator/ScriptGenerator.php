@@ -350,6 +350,7 @@ class ScriptGenerator
 
         $path = $baseDir."/".$moduleFile;
         file_put_contents($path, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
+        exec("code \"$path\"");
 
         
         $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
