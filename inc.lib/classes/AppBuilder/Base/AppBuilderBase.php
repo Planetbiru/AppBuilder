@@ -2054,9 +2054,10 @@ $resultSet = $pageData->getResult();
             {      
                 
                 $entity = $referenceData->getEntity();
-                $specification = $referenceData->getSpecification();
-                $sortable = $referenceData->getSortable();
-                $additionalOutput = $referenceData->getAdditionalOutput();
+                
+                $specification = $entity->getSpecification();
+                $sortable = $entity->getSortable();
+                $additionalOutput = $entity->getAdditionalOutput();
                 
                 if(isset($entity) && $entity->getEntityName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
                 {
