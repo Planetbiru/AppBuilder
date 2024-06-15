@@ -154,24 +154,24 @@
             <div class="reference-container">
               <div class="reference-section entity-section">
                 <h4>Entity</h4>
-                <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <table data-name="entity" class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tbody>
                     <tr>
                       <td>Entity Name</td>
-                      <td><input class="form-control" type="text" class="rd-entity-name"></td>
+                      <td><input class="form-control rd-entity-name" type="text"></td>
                     </tr>
                     <tr>
                       <td>Table Name</td>
-                      <td><input class="form-control" type="text" class="rd-table-name"></td>
+                      <td><input class="form-control rd-table-name" type="text"></td>
                     </tr>
                     <tr>
                       <td>Primary Key</td>
-                      <td><input class="form-control" type="text" class="rd-primary-key"></td>
+                      <td><input class="form-control rd-primary-key" type="text"></td>
                     </tr>
                   </tbody>
                 </table>
                 <h4>Specfification</h4>
-                <table class="table table-reference" data-offset="1">
+                <table data-name="specification" class="table table-reference" data-offset="1">
                   <thead>
                     <tr>
                       <td>Value</td>
@@ -181,8 +181,8 @@
                   </thead>
                       <tbody>
                       <tr>
-                        <td><input class="form-control" type="text" value=""></td>
-                        <td><input class="form-control" type="text" value=""></td>
+                        <td><input class="form-control rd-column-name" type="text" value=""></td>
+                        <td><input class="form-control rd-value" type="text" value=""></td>
                         <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
                       </tr>
                     </tbody>
@@ -195,7 +195,7 @@
                     </tfoot>
                 </table>
                 <h4>Sortable</h4>
-                <table class="table table-reference">
+                <table data-name="sortable" class="table table-reference">
                   <thead>
                     <tr>
                       <td width="65%">Column</td>
@@ -205,8 +205,8 @@
                   </thead>
                       <tbody>
                       <tr>
-                        <td><input class="form-control" type="text" value=""></td>
-                        <td><select class="form-control">
+                        <td><input class="form-control rd-column-name" type="text" value=""></td>
+                        <td><select class="form-control rd-order-type">
                           <option value="PicoSort::ORDER_TYPE_ASC">ASC</option>
                           <option value="PicoSort::ORDER_TYPE_DESC">DESC</option>
                         </select></td>
@@ -220,7 +220,7 @@
                     </tfoot>
                 </table>
                 <h4>Additional Output</h4>
-                <table class="table table-reference" data-empty-on-remove="true">
+                <table data-name="additional-output" class="table table-reference" data-empty-on-remove="true">
                   <thead>
                     <tr>
                       <td>Column</td>
@@ -229,7 +229,7 @@
                   </thead>
                       <tbody>
                       <tr>
-                        <td><input class="form-control" type="text" value=""></td>
+                        <td><input class="form-control rd-column-name" type="text" value=""></td>
                         <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
                       </tr>
                     </tbody>
@@ -239,11 +239,10 @@
                       </tr>
                     </tfoot>
                 </table>
-                
               </div>
               <div class="reference-section map-section">
                 <h4>Map</h4>
-                <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <table data-name="map" class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tbody>
                     <tr>
                       <td>Entity Name</td>
@@ -261,7 +260,7 @@
                 </table>
                 <h4>Data</h4>
 
-                <table class="table table-reference" data-offset="2">
+                <table data-name="data" class="table table-reference" data-offset="2">
                   <thead>
                     <tr>
                       <td>Value</td>
