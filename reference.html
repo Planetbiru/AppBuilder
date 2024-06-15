@@ -27,21 +27,85 @@
     $(document).ready(function(){
         $('.reference_type').on('click', function(e2){
            let value = $(this).val();
-           console.log(value) 
+           $('.reference-section').css({'display':'none'});
+           if(value == 'entity')
+           {
+            $('.entity-section').css({'display':'block'});
+           }
+           else if(value == 'map')
+           {
+            $('.map-section').css({'display':'block'});
+           }
+        });
+        $('.btn-add-column').on('click', function(e2){
+          let table = $(this).closest('table');
+          let ncol = table.find('thead').find('tr').find('td').length;
+          let nrow = table.find('tbody').find('tr').length;
+          let pos = ncol - parseInt(table.attr('data-offset')) - 1;
+          let inputHeader = '<td><input class="form-control" type="text" value=""></td>';
+          let inputBody = '<td><input class="form-control" type="text" value=""></td>';
+          table.find('thead').find('tr').find('td:nth('+pos+')').after(inputHeader);
+          table.find('tbody').find('tr').each(function(e3){
+            $(this).find('td:nth('+pos+')').after(inputHeader);
+          });
+          table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+        });
+
+        $('.btn-remove-last-column').on('click', function(e2){
+          let table = $(this).closest('table');
+          let ncol = table.find('thead').find('tr').find('td').length;
+          let nrow = table.find('tbody').find('tr').length;
+          let offset = parseInt(table.attr('data-offset'));
+          let pos = ncol - offset - 1;
+          if(ncol > (offset + 2))
+          {
+            table.find('thead').find('tr').find('td:nth('+pos+')').remove();
+            table.find('tbody').find('tr').each(function(e3){
+              $(this).find('td:nth('+pos+')').remove();
+            });
+            table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+          }
+        });
+        $('.btn-add-row').on('click', function(e2){
+          let table = $(this).closest('table');
+          let nrow = table.find('tbody').find('tr').length;
+          let lastRow = table.find('tbody').find('tr:last-child').prop('outerHTML');
+          table.find('tbody').append(lastRow);
+        });
+        $(document).on('click', '.btn-remove-row', function(e2){
+          let nrow = $(this).closest('tbody').find('tr').length;
+          if(nrow > 1)
+          {
+            $(this).closest('tr').remove();
+          }
         });
     })
   </script>
+  <style>
+    table.table.table-reference td{
+      padding: 5px 4px;
+    }
+    table.table.table-reference tr > td:first-child{
+      padding: 5px 2px 5px 0;
+    }
+    table.table.table-reference tr > td:last-child{
+      padding: 5px 0px 5px 2px;
+    }
+    .map-section{
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
     
 
-  <div class="modal fade" id="modal-create-reference-data" tabindex="-1" aria-labelledby="reference_data_modal_label" aria-hidden="false" style="display: block; opacity: 1;">
+  <div class="modal modal-dialog-scrollable fade" id="modal-create-reference-data" tabindex="-1" aria-labelledby="reference_data_modal_label" aria-hidden="false" style="display: block; opacity: 1;">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Create Data Reference</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -50,7 +114,7 @@
             <label for="reference_type_entity"><input type="radio" class="reference_type" name="reference_type" id="reference_type_entity" value="entity" checked> Entity</label>
             <label for="reference_type_enum"><input type="radio" class="reference_type" name="reference_type" id="reference_type_enum" value="map"> Map</label>
             <label for="reference_type_enum"><input type="radio" class="reference_type" name="reference_type" id="reference_type_enum" value="boolean"> Boolean</label>
-            <div class="entity-section">
+            <div class="reference-section entity-section">
               <h4>Entity</h4>
               <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
@@ -69,58 +133,59 @@
                 </tbody>
               </table>
               <h4>Specfification</h4>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <td width="40%">Column</td>
-                    <td>Value</td>
-                    <td>Remove</td>
-                  </tr>
-                </thead>
-                    <tbody>
-                    <tr>
-                      <td><input class="form-control" type="text" name="name[0]" value=""></td>
-                      <td><input class="form-control" type="text" name="value[0]" value=""></td>
-                      <td><button class="btn btn-danger">Rem</button></td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="3"><button class="btn btn-primary">Add Row</button></td>
-                    </tr>
-                  </tfoot>
-              </table>
-              <h4>Sortable</h4>
-              <table class="table">
+              <table class="table table-reference" data-offset="1">
                 <thead>
                   <tr>
                     <td>Value</td>
                     <td>Text</td>
-                    <td><input class="form-control" type="text" name="value[0]" value=""></td>
-                    <td>Sel</td>
-                    <td>Rem</td>
+                    <td width="62">Rem</td>
                   </tr>
                 </thead>
                     <tbody>
                     <tr>
-                      <td><input class="form-control" type="text" name="name[0]" value=""></td>
-                      <td><input class="form-control" type="text" name="value[0]" value=""></td>
-                      <td><input class="form-control" type="text" name="attr1[0]" value=""></td>
-                      <td><input type="checkbox" name="" id=""></td>
-                      <td><button class="btn btn-danger">Rem</button></td>
+                      <td><input class="form-control" type="text" value=""></td>
+                      <td><input class="form-control" type="text" value=""></td>
+                      <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="5">
-                        <button class="btn btn-primary">Add Row</button>
-                        <button class="btn btn-primary">Add Column</button>
+                      <td colspan="3">
+                        <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
+                        <button type="button" class="btn btn-primary btn-add-column">Add Column</button>
+                        <button type="button" class="btn btn-primary btn-remove-last-column">Remove Last Column</button>
                       </td>
                     </tr>
                   </tfoot>
               </table>
+              <h4>Sortable</h4>
+              <table class="table table-reference">
+                <thead>
+                  <tr>
+                    <td width="40%">Column</td>
+                    <td>Value</td>
+                    <td width="62">Rem</td>
+                  </tr>
+                </thead>
+                    <tbody>
+                    <tr>
+                      <td width="60%"><input class="form-control" type="text" value=""></td>
+                      <td><select class="form-control">
+                        <option value="PicoSort::ORDER_TYPE_ASC">ASC</option>
+                        <option value="PicoSort::ORDER_TYPE_DESC">DESC</option>
+                      </select></td>
+                      <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
+                    </tr>
+                  </tfoot>
+              </table>
+              
             </div>
-            <div class="enum-section">
+            <div class="reference-section map-section">
               <h4>Map</h4>
               <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
@@ -140,30 +205,31 @@
               </table>
               <h4>Data</h4>
 
-              <table class="table">
+              <table class="table table-reference" data-offset="2">
                 <thead>
                   <tr>
                     <td>Value</td>
                     <td>Text</td>
-                    <td><input class="form-control" type="text" name="value[0]" value=""></td>
+                    <td><input class="form-control" type="text" value=""></td>
                     <td>Sel</td>
                     <td>Rem</td>
                   </tr>
                 </thead>
                     <tbody>
                     <tr>
-                      <td><input class="form-control" type="text" name="name[0]" value=""></td>
-                      <td><input class="form-control" type="text" name="value[0]" value=""></td>
-                      <td><input class="form-control" type="text" name="attr1[0]" value=""></td>
+                      <td><input class="form-control" type="text" value=""></td>
+                      <td><input class="form-control" type="text" value=""></td>
+                      <td><input class="form-control" type="text" value=""></td>
                       <td><input type="checkbox" name="" id=""></td>
-                      <td><button class="btn btn-danger">Rem</button></td>
+                      <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
                       <td colspan="5">
-                        <button class="btn btn-primary">Add Row</button>
-                        <button class="btn btn-primary">Add Column</button>
+                        <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
+                        <button type="button" class="btn btn-primary btn-add-column">Add Column</button>
+                        <button type="button" class="btn btn-primary btn-remove-last-column">Remove Last Column</button>
                       </td>
                     </tr>
                   </tfoot>
@@ -172,8 +238,8 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Save Changes</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" type="button" class="btn btn-primary">Save Changes</button>
+          <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
