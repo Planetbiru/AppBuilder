@@ -26,51 +26,20 @@
   <script>
     $(document).ready(function(){
         $('.reference_type').on('click', function(e2){
-           let value = $(this).val();
-           $('.reference-section').css({'display':'none'});
-           if(value == 'entity')
-           {
-            $('.entity-section').css({'display':'block'});
-           }
-           else if(value == 'map')
-           {
-            $('.map-section').css({'display':'block'});
-           }
+           let referenceType = $(this).val();
+           selectReferenceType(referenceType);
         });
         $('.btn-add-column').on('click', function(e2){
           let table = $(this).closest('table');
-          let ncol = table.find('thead').find('tr').find('td').length;
-          let nrow = table.find('tbody').find('tr').length;
-          let pos = ncol - parseInt(table.attr('data-offset')) - 1;
-          let inputHeader = '<td><input class="form-control" type="text" value=""></td>';
-          let inputBody = '<td><input class="form-control" type="text" value=""></td>';
-          table.find('thead').find('tr').find('td:nth('+pos+')').after(inputHeader);
-          table.find('tbody').find('tr').each(function(e3){
-            $(this).find('td:nth('+pos+')').after(inputHeader);
-          });
-          table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+          addColumn(table);
         });
-
         $('.btn-remove-last-column').on('click', function(e2){
           let table = $(this).closest('table');
-          let ncol = table.find('thead').find('tr').find('td').length;
-          let nrow = table.find('tbody').find('tr').length;
-          let offset = parseInt(table.attr('data-offset'));
-          let pos = ncol - offset - 1;
-          if(ncol > (offset + 2))
-          {
-            table.find('thead').find('tr').find('td:nth('+pos+')').remove();
-            table.find('tbody').find('tr').each(function(e3){
-              $(this).find('td:nth('+pos+')').remove();
-            });
-            table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
-          }
+          removeLastColumn(table);
         });
         $('.btn-add-row').on('click', function(e2){
           let table = $(this).closest('table');
-          let nrow = table.find('tbody').find('tr').length;
-          let lastRow = table.find('tbody').find('tr:last-child').prop('outerHTML');
-          table.find('tbody').append(lastRow);
+          addRow(table);
         });
         $(document).on('click', '.btn-remove-row', function(e2){
           let nrow = $(this).closest('tbody').find('tr').length;
@@ -78,8 +47,74 @@
           {
             $(this).closest('tr').remove();
           }
+          else if(nrow == 1 && $(this).closest('table').attr('data-empty-on-remove') == 'true')
+          {
+            $(this).closest('tr').find(':input').each(function(e3){
+              $(this).val('');
+            });
+          }
         });
-    })
+        $(document).on('change', 'input[type="checkbox"]', function(e){
+          if($(this)[0].checked)
+          {
+            $(this).closest('tr').siblings().each(function(){
+              $(this).find('input[type="checkbox"]')[0].checked = false;
+            });
+          }
+        });
+        $('.reference_type').each(function(e2){
+          if($(this)[0].checked)
+          {
+            selectReferenceType($(this).val());
+          }
+        });
+    });
+    function addRow(table)
+    {
+      let nrow = table.find('tbody').find('tr').length;
+      let lastRow = table.find('tbody').find('tr:last-child').prop('outerHTML');
+      table.find('tbody').append(lastRow);
+    }
+    function addColumn(table)
+    {
+      let ncol = table.find('thead').find('tr').find('td').length;
+      let nrow = table.find('tbody').find('tr').length;
+      let pos = ncol - parseInt(table.attr('data-offset')) - 1;
+      let inputHeader = '<td><input class="form-control" type="text" value=""></td>';
+      let inputBody = '<td><input class="form-control" type="text" value=""></td>';
+      table.find('thead').find('tr').find('td:nth('+pos+')').after(inputHeader);
+      table.find('tbody').find('tr').each(function(e3){
+        $(this).find('td:nth('+pos+')').after(inputHeader);
+      });
+      table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+    }
+    function removeLastColumn(table)
+    {
+      let ncol = table.find('thead').find('tr').find('td').length;
+      let nrow = table.find('tbody').find('tr').length;
+      let offset = parseInt(table.attr('data-offset'));
+      let pos = ncol - offset - 1;
+      if(ncol > (offset + 2))
+      {
+        table.find('thead').find('tr').find('td:nth('+pos+')').remove();
+        table.find('tbody').find('tr').each(function(e3){
+          $(this).find('td:nth('+pos+')').remove();
+        });
+        table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+      }
+    }
+    function selectReferenceType(referenceType)
+    {
+      $('.reference-section').css({'display':'none'});
+      if(referenceType == 'entity')
+      {
+      $('.entity-section').css({'display':'block'});
+      }
+      else if(referenceType == 'map')
+      {
+      $('.map-section').css({'display':'block'});
+      }
+    }
   </script>
   <style>
     table.table.table-reference td{
@@ -112,134 +147,156 @@
         <div class="modal-body">
           <form action="">
             <label for="reference_type_entity"><input type="radio" class="reference_type" name="reference_type" id="reference_type_entity" value="entity" checked> Entity</label>
-            <label for="reference_type_enum"><input type="radio" class="reference_type" name="reference_type" id="reference_type_enum" value="map"> Map</label>
-            <label for="reference_type_enum"><input type="radio" class="reference_type" name="reference_type" id="reference_type_enum" value="boolean"> Boolean</label>
-            <div class="reference-section entity-section">
-              <h4>Entity</h4>
-              <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tbody>
-                  <tr>
-                    <td>Entity Name</td>
-                    <td><input class="form-control" type="text" class="rd-entity-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Table Name</td>
-                    <td><input class="form-control" type="text" class="rd-table-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Primary Key</td>
-                    <td><input class="form-control" type="text" class="rd-primary-key"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <h4>Specfification</h4>
-              <table class="table table-reference" data-offset="1">
-                <thead>
-                  <tr>
-                    <td>Value</td>
-                    <td>Text</td>
-                    <td width="62">Rem</td>
-                  </tr>
-                </thead>
-                    <tbody>
+            <label for="reference_type_map"><input type="radio" class="reference_type" name="reference_type" id="reference_type_map" value="map"> Map</label>
+            <label for="reference_type_yesno"><input type="radio" class="reference_type" name="reference_type" id="reference_type_yesno" value="yesno"> Yes/No</label>
+            <label for="reference_type_truefalse"><input type="radio" class="reference_type" name="reference_type" id="reference_type_truefalse" value="truefalse"> True/False</label>
+            <label for="reference_type_onezero"><input type="radio" class="reference_type" name="reference_type" id="reference_type_onezero" value="onezero"> 1/0</label>
+            <div class="reference-container">
+              <div class="reference-section entity-section">
+                <h4>Entity</h4>
+                <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
                     <tr>
-                      <td><input class="form-control" type="text" value=""></td>
-                      <td><input class="form-control" type="text" value=""></td>
-                      <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      <td>Entity Name</td>
+                      <td><input class="form-control" type="text" class="rd-entity-name"></td>
+                    </tr>
+                    <tr>
+                      <td>Table Name</td>
+                      <td><input class="form-control" type="text" class="rd-table-name"></td>
+                    </tr>
+                    <tr>
+                      <td>Primary Key</td>
+                      <td><input class="form-control" type="text" class="rd-primary-key"></td>
                     </tr>
                   </tbody>
-                  <tfoot>
+                </table>
+                <h4>Specfification</h4>
+                <table class="table table-reference" data-offset="1">
+                  <thead>
                     <tr>
-                      <td colspan="3">
-                        <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
-                        <button type="button" class="btn btn-primary btn-add-column">Add Column</button>
-                        <button type="button" class="btn btn-primary btn-remove-last-column">Remove Last Column</button>
-                      </td>
+                      <td>Value</td>
+                      <td>Text</td>
+                      <td width="62">Rem</td>
                     </tr>
-                  </tfoot>
-              </table>
-              <h4>Sortable</h4>
-              <table class="table table-reference">
-                <thead>
-                  <tr>
-                    <td width="40%">Column</td>
-                    <td>Value</td>
-                    <td width="62">Rem</td>
-                  </tr>
-                </thead>
-                    <tbody>
+                  </thead>
+                      <tbody>
+                      <tr>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="3">
+                          <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
+                        </td>
+                      </tr>
+                    </tfoot>
+                </table>
+                <h4>Sortable</h4>
+                <table class="table table-reference">
+                  <thead>
                     <tr>
-                      <td width="60%"><input class="form-control" type="text" value=""></td>
-                      <td><select class="form-control">
-                        <option value="PicoSort::ORDER_TYPE_ASC">ASC</option>
-                        <option value="PicoSort::ORDER_TYPE_DESC">DESC</option>
-                      </select></td>
-                      <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      <td width="65%">Column</td>
+                      <td>Value</td>
+                      <td width="62">Rem</td>
+                    </tr>
+                  </thead>
+                      <tbody>
+                      <tr>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><select class="form-control">
+                          <option value="PicoSort::ORDER_TYPE_ASC">ASC</option>
+                          <option value="PicoSort::ORDER_TYPE_DESC">DESC</option>
+                        </select></td>
+                        <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
+                      </tr>
+                    </tfoot>
+                </table>
+                <h4>Additional Output</h4>
+                <table class="table table-reference" data-empty-on-remove="true">
+                  <thead>
+                    <tr>
+                      <td>Column</td>
+                      <td width="62">Rem</td>
+                    </tr>
+                  </thead>
+                      <tbody>
+                      <tr>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
+                      </tr>
+                    </tfoot>
+                </table>
+                
+              </div>
+              <div class="reference-section map-section">
+                <h4>Map</h4>
+                <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                    <tr>
+                      <td>Entity Name</td>
+                      <td><input class="form-control" type="text" class="rd-entity-name"></td>
+                    </tr>
+                    <tr>
+                      <td>Table Name</td>
+                      <td><input class="form-control" type="text" class="rd-table-name"></td>
+                    </tr>
+                    <tr>
+                      <td>Primary Key</td>
+                      <td><input class="form-control" type="text" class="rd-primary-key"></td>
                     </tr>
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
-                    </tr>
-                  </tfoot>
-              </table>
-              
-            </div>
-            <div class="reference-section map-section">
-              <h4>Map</h4>
-              <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tbody>
-                  <tr>
-                    <td>Entity Name</td>
-                    <td><input class="form-control" type="text" class="rd-entity-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Table Name</td>
-                    <td><input class="form-control" type="text" class="rd-table-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Primary Key</td>
-                    <td><input class="form-control" type="text" class="rd-primary-key"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <h4>Data</h4>
+                </table>
+                <h4>Data</h4>
 
-              <table class="table table-reference" data-offset="2">
-                <thead>
-                  <tr>
-                    <td>Value</td>
-                    <td>Text</td>
-                    <td><input class="form-control" type="text" value=""></td>
-                    <td>Sel</td>
-                    <td>Rem</td>
-                  </tr>
-                </thead>
-                    <tbody>
+                <table class="table table-reference" data-offset="2">
+                  <thead>
                     <tr>
+                      <td>Value</td>
+                      <td>Text</td>
                       <td><input class="form-control" type="text" value=""></td>
-                      <td><input class="form-control" type="text" value=""></td>
-                      <td><input class="form-control" type="text" value=""></td>
-                      <td><input type="checkbox" name="" id=""></td>
-                      <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      <td>Def</td>
+                      <td>Rem</td>
                     </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="5">
-                        <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
-                        <button type="button" class="btn btn-primary btn-add-column">Add Column</button>
-                        <button type="button" class="btn btn-primary btn-remove-last-column">Remove Last Column</button>
-                      </td>
-                    </tr>
-                  </tfoot>
-              </table>
+                  </thead>
+                      <tbody>
+                      <tr>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><input class="form-control" type="text" value=""></td>
+                        <td><input type="checkbox"></td>
+                        <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="5">
+                          <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
+                          <button type="button" class="btn btn-primary btn-add-column">Add Column</button>
+                          <button type="button" class="btn btn-primary btn-remove-last-column">Remove Last Column</button>
+                        </td>
+                      </tr>
+                    </tfoot>
+                </table>
+              </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" type="button" class="btn btn-primary">Save Changes</button>
-          <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" type="button" class="btn btn-primary">Apply</button>
+          <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
