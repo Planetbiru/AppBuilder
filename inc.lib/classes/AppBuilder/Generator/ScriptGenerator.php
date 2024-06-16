@@ -62,7 +62,7 @@ class ScriptGenerator
     /**
      * Chek if field has reference data
      *
-     * @param MagicObject $value
+     * @param AppField $value
      * @return boolean
      */
     public function hasReferenceData($value)

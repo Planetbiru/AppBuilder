@@ -347,19 +347,13 @@
                     "option": [
                         {
                             "value": true,
-                            "text": "Yes"
+                            "label": "Yes",
+                            "default": false
                         },
                         {
                             "value": false,
-                            "text": "No"
-                        }
-                    ],
-                    "additionalOutput": [
-                        {
-                            "column": "number_of_song"
-                        },
-                        {
-                            "column": "release_date"
+                            "label": "No",
+                            "default": false
                         }
                     ]
                 }
@@ -393,7 +387,7 @@
             "dataType": "int",
             "inputFilter": "FILTER_SANITIZE_NUMBER_INT",
             "referenceFilter": {
-                "type": "boolean"
+                "type": "yesno"
             }    
         }
     ]

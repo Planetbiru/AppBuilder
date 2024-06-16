@@ -505,13 +505,13 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."// e.g. return ".parent::VAR."param1->notEquals".PicoStringUtil::upperCamelize($this->entityInfo->getAdminAskEdit())."(".parent::VAR."userId);".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::TAB1."return true;".parent::NEW_LINE 
-        .parent::TAB1.parent::TAB1.parent::TAB1."} ".parent::NEW_LINE;
+        .parent::TAB1.parent::TAB1.parent::TAB1."}".parent::NEW_LINE;
 
         if($trashRequired)
         {
             $entityTrashName = $trashEntity->getEntityName();
             
-            $result .= parent::TAB1.parent::TAB1.parent::TAB1."true, ".parent::NEW_LINE 
+            $result .= ", ".parent::NEW_LINE.parent::TAB1.parent::TAB1.parent::TAB1."true, ".parent::NEW_LINE 
             .parent::TAB1.parent::TAB1.parent::TAB1."new $entityTrashName() ".parent::NEW_LINE;
             
         }

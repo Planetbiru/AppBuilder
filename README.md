@@ -396,8 +396,8 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
-							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
-								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
+							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
+								<?php echo FormBuilder::getInstance()->createSelectOption(new Producer(null, $database), 
 								PicoSpecification::getInstance()
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
@@ -518,8 +518,8 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
-							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLangauge->getSelectOne();?></option>
-								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
+							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
+								<?php echo FormBuilder::getInstance()->createSelectOption(new Producer(null, $database), 
 								PicoSpecification::getInstance()
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
@@ -1028,7 +1028,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 					<span class="filter-label"><?php echo $appEntityLanguage->getProducerId();?></span>
 					<span class="filter-control">
 							<select name="producer_id" class="form-control">
-								<?php echo FormBuilder::getInstance()->showList(new Producer(null, $database), 
+								<?php echo FormBuilder::getInstance()->createSelectOption(new Producer(null, $database), 
 								PicoSpecification::getInstance()
 									->addAnd(PicoPredicate::getInstance()->setDraft(false))
 									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
@@ -1070,7 +1070,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 				</span>
 		
 				<span class="filter-group">
-					<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonAdd();?>" onlick="window.location='<?php echo $currentModule->getRedirectUrl(UserAction::CREATE);?>'"/>
+					<input type="button" class="btn btn-primary" value="<?php echo $appLanguage->getButtonAdd();?>" onclick="window.location='<?php echo $currentModule->getRedirectUrl(UserAction::CREATE);?>'"/>
 				</span>
 			</form>
 		</div>
@@ -1110,7 +1110,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 			$sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
 			$pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 			$dataLoader = new Album(null, $database);
-			$pageData = $dataLoader->findAll($specification, $pagable, $sortable);
+			$pageData = $dataLoader->findAll($specification, $pageable, $sortable);
 			$resultSet = $pageData->getResult();
 			
 			if($pageData->getTotalResult() > 0)

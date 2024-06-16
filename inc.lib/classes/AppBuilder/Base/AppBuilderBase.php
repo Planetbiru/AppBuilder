@@ -1065,7 +1065,7 @@ $sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
 
 $pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 $dataLoader = new '.$entityMain->getEntityName().'(null, $database);
-$pageData = $dataLoader->findAll($specification, $pagable, $sortable);
+$pageData = $dataLoader->findAll($specification, $pageable, $sortable);
 $resultSet = $pageData->getResult();
 ';
 
@@ -1288,7 +1288,7 @@ $resultSet = $pageData->getResult();
         // edit begin
         $edit = $dom->createElement('a');
         $edit->setAttribute('class', 'edit-control');
-        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', $objectName->get'.$upperPkName.');?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.');?>';
         $edit->setAttribute('href', $href);
         $spanEdit = $dom->createElement('span');
         $spanEdit->setAttribute('class', 'fa fa-edit');
@@ -1308,7 +1308,7 @@ $resultSet = $pageData->getResult();
         // detail begin
         $detail = $dom->createElement('a');
         $detail->setAttribute('class', 'detail-control field-master');
-        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', $objectName->get'.$upperPkName.');?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.');?>';
         $detail->setAttribute('href', $href);
         $spanDetail = $dom->createElement('span');
         $spanDetail->setAttribute('class', 'fa fa-folder');
@@ -1401,7 +1401,7 @@ $resultSet = $pageData->getResult();
         $buttonSearch->setAttribute('type', 'button');
         $buttonSearch->setAttribute('class', 'btn btn-primary');
         $buttonSearch->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage".self::CALL_GET."ButtonAdd();".self::PHP_CLOSE_TAG);
-        $buttonSearch->setAttribute('onlick', "window.location='".self::PHP_OPEN_TAG.self::ECHO.self::VAR."currentModule".self::CALL_GET."RedirectUrl(UserAction::CREATE);".self::PHP_CLOSE_TAG."'");
+        $buttonSearch->setAttribute('onclick', "window.location='".self::PHP_OPEN_TAG.self::ECHO.self::VAR."currentModule".self::CALL_GET."RedirectUrl(UserAction::CREATE);".self::PHP_CLOSE_TAG."'");
         $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
         
         
@@ -1890,7 +1890,7 @@ $resultSet = $pageData->getResult();
             $input->setAttribute('name', $insertField->getFieldName());
             $input = $this->addAttributeId($input, $id);  
             $value = $dom->createElement('option');
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLangauge->getSelectOne();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
@@ -1979,7 +1979,7 @@ $resultSet = $pageData->getResult();
             $input = $this->addAttributeId($input, $id);
 
             $value = $dom->createElement('option');
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLangauge->getSelectOne();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
@@ -2032,6 +2032,17 @@ $resultSet = $pageData->getResult();
         return $element;
     }
     
+    /**
+     * Append &lt;option&gt; to element &lt;select&gt;
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $input
+     * @param string $objectName
+     * @param AppField $insertField
+     * @param MagicObject $referenceData
+     * @param string $selected
+     * @return DOMElement
+     */
     private function appendOption($dom, $input, $objectName, $insertField, $referenceData, $selected = null)
     {
         if($referenceData != null)
@@ -2041,13 +2052,31 @@ $resultSet = $pageData->getResult();
                 $map = $referenceData->getMap();
                 $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
-            else if($referenceData->getType() == 'boolean')
+            else if($referenceData->getType() == 'truefalse')
             {
-                $map = array(
-                    (new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'),
-                    (new MagicObject())->setValue('true')->setLabel('<?php echo $appLanguage->getOptionLabelYes();?>'),
-                    (new MagicObject())->setValue('false')->setLabel('<?php echo $appLanguage->getOptionLabelNo();?>')
-                );
+                $map = (new MagicObject())
+                ->setValue1((new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'))
+                ->setValue2((new MagicObject())->setValue('true')->setLabel('<?php echo $appLanguage->getOptionLabelTrue();?>'))
+                ->setValue3((new MagicObject())->setValue('false')->setLabel('<?php echo $appLanguage->getOptionLabelFalse();?>'));
+                
+                $input = $this->appendOptionList($dom, $input, $map, $selected);
+            }
+            else if($referenceData->getType() == 'yesno')
+            {
+                $map = (new MagicObject())
+                ->setValue1((new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'))
+                ->setValue2((new MagicObject())->setValue('yes')->setLabel('<?php echo $appLanguage->getOptionLabelYes();?>'))
+                ->setValue3((new MagicObject())->setValue('no')->setLabel('<?php echo $appLanguage->getOptionLabelNo();?>'));
+                
+                $input = $this->appendOptionList($dom, $input, $map, $selected);
+            }
+            else if($referenceData->getType() == 'onezero')
+            {
+                $map = (new MagicObject())
+                ->setValue1((new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'))
+                ->setValue2((new MagicObject())->setValue('1')->setLabel('1'))
+                ->setValue3((new MagicObject())->setValue('0')->setLabel('0'));
+
                 $input = $this->appendOptionList($dom, $input, $map, $selected);
             }
             else if($referenceData->getType() == 'entity')
@@ -2146,7 +2175,7 @@ $resultSet = $pageData->getResult();
             
             $option = $dom->createTextNode(self::NEW_LINE_N.self::TAB3.self::TAB3
             .self::PHP_OPEN_TAG.self::ECHO.'FormBuilder::getInstance()'
-            .'->showList(new '.$entity->getEntityName().'(null, '.self::VAR.$this->appConfig->getGlobalVariableDatabase().'), '
+            .'->createSelectOption(new '.$entity->getEntityName().'(null, '.self::VAR.$this->appConfig->getGlobalVariableDatabase().'), '
             .self::NEW_LINE_N.self::TAB3.self::TAB3
             .$specStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3
             .$sortStr.', '.self::NEW_LINE_N.self::TAB3.self::TAB3

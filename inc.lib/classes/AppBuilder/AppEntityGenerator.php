@@ -124,14 +124,17 @@ class '.$className.' extends MagicObject
                 $tmp[] = $row;
             }
         }
-        foreach($rows as $row)
+        if(isset($rows) && is_array($rows))
         {
-            if($removePk)
+            foreach($rows as $row)
             {
-                $row['Key'] = "";
-                $row['Extra'] = "";
+                if($removePk)
+                {
+                    $row['Key'] = "";
+                    $row['Extra'] = "";
+                }
+                $tmp[] = $row;
             }
-            $tmp[] = $row;
         }
         if($successor && is_array($successor))
         {
@@ -154,9 +157,12 @@ class '.$className.' extends MagicObject
     public function removeDuplicated($additional, $rows)
     {
         $existing = array();
-        foreach($rows as $row)
+        if(isset($rows) && is_array($rows))
         {
-            $existing[] = $row['Field'];
+            foreach($rows as $row)
+            {
+                $existing[] = $row['Field'];
+            }
         }
         $result = array();
         foreach($additional as $row)

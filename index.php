@@ -417,10 +417,10 @@ require_once __DIR__ . "/inc.app/navs.php";
                     <td align="center" width="32" title="Textarea">TA</td>
                     <td align="center" width="32" title="Checkbox">CB</td>
                     <td align="center" width="32" title="Select">SE</td>
-                    <td align="center" width="82" title="Select">Source</td>
+                    <td align="center" width="70" title="Select">Source</td>
                     <td align="center" width="30">TE</td>
                     <td align="center" width="30">SE</td>
-                    <td align="center" width="82" title="Select">Source</td>
+                    <td align="center" width="70" title="Select">Source</td>
                   </tr>
                 </thead>
 
@@ -603,87 +603,10 @@ require_once __DIR__ . "/inc.app/navs.php";
           </button>
         </div>
         <div class="modal-body">
-          <form action="">
-            <label for="reference_type_entity"><input type="radio" class="reference_type" name="reference_type" id="reference_type_entity"> Entity</label>
-            <label for="reference_type_enum"><input type="radio" class="reference_type" name="reference_type" id="reference_type_enum"> Enum</label>
-            <div class="entity-section">
-              <h4>Entity</h4>
-              <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tbody>
-                  <tr>
-                    <td>Entity Name</td>
-                    <td><input class="form-control" type="text" class="rd-entity-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Table Name</td>
-                    <td><input class="form-control" type="text" class="rd-table-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Primary Key</td>
-                    <td><input class="form-control" type="text" class="rd-primary-key"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <h4>Specfification</h4>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <td>Column</td>
-                    <td>Value</td>
-                  </tr>
-                </thead>
-              </table>
-              <h4>Sortable</h4>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <td>Sort By</td>
-                    <td>Sort Type</td>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-            <div class="enum-section">
-              <h4>Entity</h4>
-              <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tbody>
-                  <tr>
-                    <td>Entity Name</td>
-                    <td><input class="form-control" type="text" class="rd-entity-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Table Name</td>
-                    <td><input class="form-control" type="text" class="rd-table-name"></td>
-                  </tr>
-                  <tr>
-                    <td>Primary Key</td>
-                    <td><input class="form-control" type="text" class="rd-primary-key"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <h4>Specfification</h4>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <td>Column</td>
-                    <td>Value</td>
-                  </tr>
-                </thead>
-              </table>
-              <h4>Sortable</h4>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <td>Sort By</td>
-                    <td>Sort Type</td>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </form>
+          
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-primary" id="apply-reference">Save Changes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>

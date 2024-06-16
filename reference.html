@@ -24,6 +24,8 @@
   <script src="lib.assets/js/script.js"></script>
   
   <script>
+    let varName = 'reference';
+    
     $(document).ready(function(){
         $('.reference_type').on('click', function(e2){
            let referenceType = $(this).val();
@@ -62,32 +64,63 @@
             });
           }
         });
-        $('.reference_type').each(function(e2){
+    });
+
+    function serializeForm()
+    {
+      let type = null;
+      $('.reference_type').each(function(e2){
           if($(this)[0].checked)
           {
-            selectReferenceType($(this).val());
+            type = $(this).val();
           }
-        });
-    });
+      });
+      let entity = getEntityData();
+      let map = getMapData();
+      let yesno = null;
+      let truefalse = null;
+      let onezero = null;
+      let all = {
+        type: type,
+        entity: entity,
+        map: map,
+        yesno: yesno,
+        truefalse: truefalse,
+        onezero: onezero
+      };
+
+      return all
+
+    }
+
+    function derializeForm(data)
+    {
+      selectReferenceType(data.type);
+      setEntityData(data);
+      setMapData(data)
+    }
+
     function addRow(table)
     {
       let nrow = table.find('tbody').find('tr').length;
       let lastRow = table.find('tbody').find('tr:last-child').prop('outerHTML');
       table.find('tbody').append(lastRow);
     }
+
     function addColumn(table)
     {
       let ncol = table.find('thead').find('tr').find('td').length;
       let nrow = table.find('tbody').find('tr').length;
       let pos = ncol - parseInt(table.attr('data-offset')) - 1;
-      let inputHeader = '<td><input class="form-control" type="text" value=""></td>';
-      let inputBody = '<td><input class="form-control" type="text" value=""></td>';
+      let inputHeader = '<td><input class="form-control map-key" type="text" value="" placeholder="Additional attribute name"></td>';
+      let inputBody = '<td><input class="form-control map-value" type="text" value="" placeholder="Additional attribute value"></td>';
       table.find('thead').find('tr').find('td:nth('+pos+')').after(inputHeader);
       table.find('tbody').find('tr').each(function(e3){
-        $(this).find('td:nth('+pos+')').after(inputHeader);
+        $(this).find('td:nth('+pos+')').after(inputBody);
       });
       table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
     }
+
     function removeLastColumn(table)
     {
       let ncol = table.find('thead').find('tr').find('td').length;
@@ -103,17 +136,314 @@
         table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
       }
     }
+
     function selectReferenceType(referenceType)
     {
+      $('.reference_type[value="'+referenceType+'"]')[0].checked = true;
       $('.reference-section').css({'display':'none'});
       if(referenceType == 'entity')
       {
-      $('.entity-section').css({'display':'block'});
+        $('.entity-section').css({'display':'block'});
       }
       else if(referenceType == 'map')
       {
-      $('.map-section').css({'display':'block'});
+        $('.map-section').css({'display':'block'});
       }
+    }
+
+    
+
+    function setEntityData(data)
+    {
+      let selector = '[data-name="entity"]';
+      $(selector).find('.rd-entity-name').val(data.entity.entityName);
+      $(selector).find('.rd-table-name').val(data.entity.tableName);
+      $(selector).find('.rd-primary-key').val(data.entity.primaryKey);
+      $(selector).find('.rd-value-column').val(data.entity.value);
+      setSpecificationData(data);
+      setSortableData(data);
+      setAdditionalOutputData(data)
+    }
+
+    function getEntityData()
+    {
+      let selector = '[data-name="entity"]';
+      let entity = {
+        entityName: $(selector).find('.rd-entity-name').val().trim(),
+        tableName: $(selector).find('.rd-table-name').val().trim(),
+        primaryKey: $(selector).find('.rd-primary-key').val().trim(),
+        value: $(selector).find('.rd-value-column').val().trim(),
+        specification: getSpecificationData(),
+        sortable: getSortableData(),
+        additionalOutput: getAdditionalOutputData()
+      };
+      return entity;
+    }
+
+    function setSpecificationData(data)
+    {
+      let result = [];
+      let selector = '[data-name="specification"]';
+      let table = $(selector);
+      let specification = data.entity.specification;
+      if(typeof specification != 'undefined' && specification != null && specification.length > 0)
+      {
+        for(let i in specification)
+        {
+          if(i > 0)
+          {
+            addRow(table);
+          }
+          let tr = table.find('tr:last-child');
+          let row = specification[i];
+          tr.find('.rd-column-name').val(row.column);
+          tr.find('.rd-value').val(row.value);
+        }
+      }
+    }
+
+    function getSpecificationData()
+    {
+      let result = [];
+      let selector = '[data-name="specification"]';
+      $(selector).find('tbody').find('tr').each(function(e){
+        let tr = $(this);
+        let column = tr.find('.rd-column-name').val().trim();
+        let value = tr.find('.rd-value').val().trim();
+        if(column.length > 0)
+        {
+          result.push({
+            column: column,
+            value: fixValue(value)
+        });
+        }
+      });
+      return result;
+    }
+
+    function setSortableData(data)
+    {
+      let result = [];
+      let selector = '[data-name="sortable"]';
+      let table = $(selector);
+      let sortable = data.entity.sortable;
+      if(typeof sortable != 'undefined' && sortable != null && sortable.length > 0)
+      {
+        for(let i in sortable)
+        {
+          if(i > 0)
+          {
+            addRow(table);
+          }
+          let tr = table.find('tr:last-child');
+          let row = sortable[i];
+          tr.find('.rd-column-name').val(row.sortBy);
+          tr.find('.rd-order-type').val(row.sortType);
+        }
+      }
+    }
+
+    function getSortableData()
+    {
+      let result = [];
+      let selector = '[data-name="sortable"]';
+      $(selector).find('tbody').find('tr').each(function(e){
+        let tr = $(this);
+        let sortBy = tr.find('.rd-column-name').val().trim();
+        let sortType = tr.find('.rd-order-type').val().trim();
+        if(sortBy.length > 0)
+        {
+          result.push({
+            sortBy: sortBy,
+            sortType: sortType
+        });
+        }
+      });
+      return result;
+    }
+
+    function setAdditionalOutputData(data)
+    {
+      let result = [];
+      let selector = '[data-name="additional-output"]';
+      let table = $(selector);
+      let additional = data.entity.additionalOutput;
+      if(typeof additional != 'undefined' && additional != null && additional.length > 0)
+      {
+        for(let i in additional)
+        {
+          if(i > 0)
+          {
+            addRow(table);
+          }
+          let tr = table.find('tr:last-child');
+          let row = additional[i];
+          tr.find('.rd-column-name').val(row.column);
+        }
+      }
+    }
+
+    function getAdditionalOutputData()
+    {
+      let result = [];
+      let selector = '[data-name="additional-output"]';
+      $(selector).find('tbody').find('tr').each(function(e){
+        let tr = $(this);
+        let column = tr.find('.rd-column-name').val().trim();
+        if(column.length > 0)
+        {
+          result.push({
+            column: column
+        });
+        }
+      });
+      return result;
+    }
+
+    function setMapData(data)
+    {
+      let result = [];
+      let selector = '[data-name="map"]';
+      let table = $(selector);
+      let keys = [];
+      let map = data.map;
+      if(typeof map != 'undifined' && map != 'null' && map.length > 0)
+      {
+        let map0 = map[0];
+        let objLength = 0;
+        for(let i in map0)
+        {
+          if(map0.hasOwnProperty(i))
+          {
+            objLength++;
+            if(objLength > 4)
+            {
+              addColumn(table);
+            }
+            if(i != 'value' && i != 'label' && i != 'default')
+            {
+              keys.push(i)
+            }
+          }
+        }
+        for(let i in keys)
+        {
+
+        }
+        for(let i in keys)
+        {
+          let j = parseInt(i) + 1;
+          table.find('thead').find('tr').find('.map-key:nth-child('+j+')').val(keys[i]);
+        }
+        if($(selector).find('thead').find('tr').find('.map-key').length > 0)
+        {
+          $(selector).find('thead').find('tr').find('.map-key').each(function(e){
+            keys.push($(this).val().trim());
+          });
+        }
+
+        for(let i in map)
+        {
+          if(i > 0)
+          {
+            addRow(table);
+          }
+          let tr = table.find('tr:last-child');
+          let row = map[i];
+          tr.find('.rd-value').val(row.value);
+          tr.find('.rd-label').val(row.label);
+          if(map[i]['default'])
+          {
+            tr.find('.rd-selected')[0].checked = true;
+          }
+
+          for(let k in keys)
+          {
+            let j = parseInt(k) + 1;
+            tr.find('.map-value:nth-child('+j+')').val(map[i][keys[k]]);
+          }
+        }
+      }
+    }
+
+    function getMapData()
+    {
+      let result = [];
+      let selector = '[data-name="map"]';
+      let keys = [];
+      if($(selector).find('thead').find('tr').find('.map-key').length > 0)
+      {
+        $(selector).find('thead').find('tr').find('.map-key').each(function(e){
+          keys.push($(this).val().trim());
+        });
+      }
+      $(selector).find('tbody').find('tr').each(function(e){
+        let tr = $(this);
+        let value = tr.find('.rd-value').val().trim();
+        let label = tr.find('.rd-label').val().trim();
+        let selected = tr.find('.rd-selected')[0].checked;
+        let opt = {
+          value: value,
+          label: label,
+          default: selected
+        };
+        if(keys.length > 0)
+        {
+          let idx = 0;
+          tr.find('.map-value').each(function(e){
+            let attrVal = $(this).val();
+            if(keys[idx].length > 0)
+            {
+              opt[keys[idx]] = attrVal;
+            }
+            idx++;
+          });
+        }
+        result.push(opt);
+      });
+      return result;
+    }
+
+    function fixValue(value)
+    {
+      if(value == 'true')
+      {
+        return true;
+      }
+      else if(value == 'false')
+      {
+        return false;
+      }
+      else if(value == 'null')
+      {
+        return null;
+      }
+      else if(isNumeric(value))
+      {
+        return parseNumber(value);
+      }
+      else
+      {
+        return value;
+      }
+    }
+
+    function parseNumber(str)
+    {
+      if(str.indexOf('.') !== -1)
+      {
+        return parseFloat(str);
+      }
+      else
+      {
+        return parseInt(str);
+      }
+    }
+
+    function isNumeric(str) {
+      if (typeof str != "string") return false 
+      return !isNaN(str) &&
+            !isNaN(parseFloat(str))
     }
   </script>
   <style>
@@ -168,14 +498,19 @@
                       <td>Primary Key</td>
                       <td><input class="form-control rd-primary-key" type="text"></td>
                     </tr>
+                    <tr>
+                      <td>Value Column</td>
+                      <td><input class="form-control rd-value-column" type="text"></td>
+                    </tr>
                   </tbody>
                 </table>
                 <h4>Specfification</h4>
-                <table data-name="specification" class="table table-reference" data-offset="1">
+                <p>Just leave it blank if it doesn't exist. Click Rem button to remove value.</p>
+                <table data-name="specification" class="table table-reference" data-empty-on-remove="true">
                   <thead>
                     <tr>
+                      <td width="45%">Column Name</td>
                       <td>Value</td>
-                      <td>Text</td>
                       <td width="62">Rem</td>
                     </tr>
                   </thead>
@@ -195,6 +530,7 @@
                     </tfoot>
                 </table>
                 <h4>Sortable</h4>
+                <p>Use at least one column to sort.</p>
                 <table data-name="sortable" class="table table-reference">
                   <thead>
                     <tr>
@@ -220,6 +556,7 @@
                     </tfoot>
                 </table>
                 <h4>Additional Output</h4>
+                <p>Just leave it blank if it doesn't exist. Click Rem button to remove value.</p>
                 <table data-name="additional-output" class="table table-reference" data-empty-on-remove="true">
                   <thead>
                     <tr>
@@ -242,40 +579,22 @@
               </div>
               <div class="reference-section map-section">
                 <h4>Map</h4>
-                <table data-name="map" class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tbody>
-                    <tr>
-                      <td>Entity Name</td>
-                      <td><input class="form-control" type="text" class="rd-entity-name"></td>
-                    </tr>
-                    <tr>
-                      <td>Table Name</td>
-                      <td><input class="form-control" type="text" class="rd-table-name"></td>
-                    </tr>
-                    <tr>
-                      <td>Primary Key</td>
-                      <td><input class="form-control" type="text" class="rd-primary-key"></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <h4>Data</h4>
-
-                <table data-name="data" class="table table-reference" data-offset="2">
+                <table data-name="map" class="table table-reference" data-offset="2">
                   <thead>
                     <tr>
                       <td>Value</td>
-                      <td>Text</td>
-                      <td><input class="form-control" type="text" value=""></td>
+                      <td>Label</td>
+                      <td><input class="form-control map-key" type="text" value="" placeholder="Additional attribute name"></td>
                       <td>Def</td>
                       <td>Rem</td>
                     </tr>
                   </thead>
                       <tbody>
                       <tr>
-                        <td><input class="form-control" type="text" value=""></td>
-                        <td><input class="form-control" type="text" value=""></td>
-                        <td><input class="form-control" type="text" value=""></td>
-                        <td><input type="checkbox"></td>
+                        <td><input class="form-control rd-value" type="text" value=""></td>
+                        <td><input class="form-control rd-label" type="text" value=""></td>
+                        <td><input class="form-control map-value" type="text" value="" placeholder="Additional attribute value"></td>
+                        <td><input type="checkbox" class="rd-selected"></td>
                         <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
                       </tr>
                     </tbody>
@@ -294,7 +613,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" type="button" class="btn btn-primary">Apply</button>
+          <button type="button" type="button" class="btn btn-primary" onclick="serializeForm()">Apply</button>
           <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>

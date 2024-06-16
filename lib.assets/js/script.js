@@ -2,6 +2,7 @@ var initielized = false;
 var editorPHP = null;
 var editorJSP = null;
 var editorSQL = null;
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
@@ -114,6 +115,148 @@ function loadState(defdata, frm1, frm2)
 	}
 }
 
+function getReferenceResource()
+{
+	return `
+	<form action="">
+	<label for="reference_type_entity"><input type="radio" class="reference_type" name="reference_type" id="reference_type_entity" value="entity" checked> Entity</label>
+	<label for="reference_type_map"><input type="radio" class="reference_type" name="reference_type" id="reference_type_map" value="map"> Map</label>
+	<label for="reference_type_yesno"><input type="radio" class="reference_type" name="reference_type" id="reference_type_yesno" value="yesno"> Yes/No</label>
+	<label for="reference_type_truefalse"><input type="radio" class="reference_type" name="reference_type" id="reference_type_truefalse" value="truefalse"> True/False</label>
+	<label for="reference_type_onezero"><input type="radio" class="reference_type" name="reference_type" id="reference_type_onezero" value="onezero"> 1/0</label>
+	<div class="reference-container">
+	  <div class="reference-section entity-section">
+		<h4>Entity</h4>
+		<table data-name="entity" class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+		  <tbody>
+			<tr>
+			  <td>Entity Name</td>
+			  <td><input class="form-control rd-entity-name" type="text"></td>
+			</tr>
+			<tr>
+			  <td>Table Name</td>
+			  <td><input class="form-control rd-table-name" type="text"></td>
+			</tr>
+			<tr>
+			  <td>Primary Key</td>
+			  <td><input class="form-control rd-primary-key" type="text"></td>
+			</tr>
+			<tr>
+			  <td>Value Column</td>
+			  <td><input class="form-control rd-value-column" type="text"></td>
+			</tr>
+		  </tbody>
+		</table>
+		<h4>Specfification</h4>
+		<p>Just leave it blank if it doesn't exist. Click Rem button to remove value.</p>
+		<table data-name="specification" class="table table-reference" data-empty-on-remove="true">
+		  <thead>
+			<tr>
+			  <td width="45%">Column Name</td>
+			  <td>Value</td>
+			  <td width="62">Rem</td>
+			</tr>
+		  </thead>
+			  <tbody>
+			  <tr>
+				<td><input class="form-control rd-column-name" type="text" value=""></td>
+				<td><input class="form-control rd-value" type="text" value=""></td>
+				<td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+			  </tr>
+			</tbody>
+			<tfoot>
+			  <tr>
+				<td colspan="3">
+				  <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
+				</td>
+			  </tr>
+			</tfoot>
+		</table>
+		<h4>Sortable</h4>
+		<p>Use at least one column to sort.</p>
+		<table data-name="sortable" class="table table-reference">
+		  <thead>
+			<tr>
+			  <td width="65%">Column</td>
+			  <td>Value</td>
+			  <td width="62">Rem</td>
+			</tr>
+		  </thead>
+			  <tbody>
+			  <tr>
+				<td><input class="form-control rd-column-name" type="text" value=""></td>
+				<td><select class="form-control rd-order-type">
+				  <option value="PicoSort::ORDER_TYPE_ASC">ASC</option>
+				  <option value="PicoSort::ORDER_TYPE_DESC">DESC</option>
+				</select></td>
+				<td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+			  </tr>
+			</tbody>
+			<tfoot>
+			  <tr>
+				<td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
+			  </tr>
+			</tfoot>
+		</table>
+		<h4>Additional Output</h4>
+		<p>Just leave it blank if it doesn't exist. Click Rem button to remove value.</p>
+		<table data-name="additional-output" class="table table-reference" data-empty-on-remove="true">
+		  <thead>
+			<tr>
+			  <td>Column</td>
+			  <td width="62">Rem</td>
+			</tr>
+		  </thead>
+			  <tbody>
+			  <tr>
+				<td><input class="form-control rd-column-name" type="text" value=""></td>
+				<td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+			  </tr>
+			</tbody>
+			<tfoot>
+			  <tr>
+				<td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
+			  </tr>
+			</tfoot>
+		</table>
+	  </div>
+	  <div class="reference-section map-section">
+		<h4>Map</h4>
+		<table data-name="map" class="table table-reference" data-offset="2">
+		  <thead>
+			<tr>
+			  <td>Value</td>
+			  <td>Label</td>
+			  <td><input class="form-control map-key" type="text" value="" placeholder="Additional attribute name"></td>
+			  <td>Def</td>
+			  <td>Rem</td>
+			</tr>
+		  </thead>
+			  <tbody>
+			  <tr>
+				<td><input class="form-control rd-value" type="text" value=""></td>
+				<td><input class="form-control rd-label" type="text" value=""></td>
+				<td><input class="form-control map-value" type="text" value="" placeholder="Additional attribute value"></td>
+				<td><input type="checkbox" class="rd-selected"></td>
+				<td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+			  </tr>
+			</tbody>
+			<tfoot>
+			  <tr>
+				<td colspan="5">
+				  <button type="button" class="btn btn-primary btn-add-row">Add Row</button>
+				  <button type="button" class="btn btn-primary btn-add-column">Add Column</button>
+				  <button type="button" class="btn btn-primary btn-remove-last-column">Remove Last Column</button>
+				</td>
+			  </tr>
+			</tfoot>
+		</table>
+	  </div>
+	</div>
+  </form>
+  `;
+}
+
 
 $(document).ready(function(){
 	$(document).on('click', '#load_table', function(e2){
@@ -214,21 +357,124 @@ $(document).ready(function(){
 	});
 
 	$(document).on('click', '.reference-button-data', function(e2){
+		$('#modal-create-reference-data').find('.modal-title').text('Create Data Reference');
 		let parentTd = $(this).closest('td'); 
 		let parentTr = $(this).closest('tr'); 
 		let fieldName = parentTr.attr('data-field-name');
-		loadReference(fieldName);
+		let key = $(this).siblings('input').attr('name');		
+
+		$('#modal-create-reference-data').attr('data-input-name', key);
+		
+		$('#modal-create-reference-data').find('.modal-body').empty();
+		$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
+		
+		loadReferenceFilter(fieldName, key);
+
+		let value = $('[name="'+key+'"]').val();
+		if(value != '')
+		{
+			let obj = JSON.parse(value);
+			deserializeForm(obj);
+		}
+
 		$('#modal-create-reference-data').modal('show');
-	})
+	});
+
+	$(document).on('click', '.reference-button-filter', function(e2){
+		$('#modal-create-reference-data').find('.modal-title').text('Create Filter Reference');
+
+		let parentTd = $(this).closest('td'); 
+		let parentTr = $(this).closest('tr'); 
+		let fieldName = parentTr.attr('data-field-name');
+		let key = $(this).siblings('input').attr('name');
+		
+
+		$('#modal-create-reference-data').attr('data-input-name', key);
+		
+		$('#modal-create-reference-data').find('.modal-body').empty();
+		$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
+		
+		loadReferenceFilter(fieldName, key);
+
+		let value = $('[name="'+key+'"]').val();
+		if(value != '')
+		{
+			let obj = JSON.parse(value);
+			deserializeForm(obj);
+		}
+
+		$('#modal-create-reference-data').modal('show');
+	});
+
+	$(document).on('click', '#apply-reference', function(e2){
+		let key = $('#modal-create-reference-data').attr('data-input-name');
+		let value = JSON.stringify(serializeForm());
+		$('[name="'+key+'"]').val(value);
+		$('#modal-create-reference-data').modal('hide');
+	 });
+
+	$(document).on('click', '.reference_type', function(e2){
+	   let referenceType = $(this).val();
+	   selectReferenceType({type:referenceType});
+	});
+
+	$(document).on('click', '.btn-add-column', function(e2){
+	  let table = $(this).closest('table');
+	  addColumn(table);
+	});
+
+	$(document).on('click', '.btn-remove-last-column', function(e2){
+	  let table = $(this).closest('table');
+	  removeLastColumn(table);
+	});
+
+	$(document).on('click', '.btn-add-row', function(e2){
+	  let table = $(this).closest('table');
+	  addRow(table);
+	});
+
+	$(document).on('click', '.btn-remove-row', function(e2){
+	  let nrow = $(this).closest('tbody').find('tr').length;
+	  if(nrow > 1)
+	  {
+		$(this).closest('tr').remove();
+	  }
+	  else if(nrow == 1 && $(this).closest('table').attr('data-empty-on-remove') == 'true')
+	  {
+		$(this).closest('tr').find(':input').each(function(e3){
+		  $(this).val('');
+		});
+	  }
+	});
+
+	$(document).on('change', 'input[type="checkbox"]', function(e){
+	  if($(this)[0].checked)
+	  {
+		$(this).closest('tr').siblings().each(function(){
+		  $(this).find('input[type="checkbox"]')[0].checked = false;
+		});
+	  }
+	});
 
 	loadTable();
 });
-
-function loadReference(fieldName)
+function loadReferenceData(fieldName)
 {
 	$.ajax({
 		type:'GET',
-		url:'lib.ajax/reference.php',
+		url:'lib.ajax/reference-data.php',
+		data:{fieldName:fieldName},
+		dataType:'json',
+		success: function(data){
+			console.log(data)
+		}
+	})
+}
+function loadReferenceFilter(fieldName)
+{
+	$.ajax({
+		type:'GET',
+		url:'lib.ajax/reference-filter.php',
 		data:{fieldName:fieldName},
 		dataType:'json',
 		success: function(data){
@@ -239,7 +485,6 @@ function loadReference(fieldName)
 function prepareReferenceData(checkedValue, ctrl)
 {
 	let tr = ctrl.closest('tr');
-
 	if(checkedValue == 'select')
 	{
 		tr.find('.reference-button-data').css('display', 'inline');
@@ -252,7 +497,6 @@ function prepareReferenceData(checkedValue, ctrl)
 function prepareReferenceFilter(checkedValue, ctrl)
 {
 	let tr = ctrl.closest('tr');
-
 	if(checkedValue == 'select')
 	{
 		tr.find('.reference-button-filter').css('display', 'inline');
@@ -717,10 +961,10 @@ function generateRow(field, args, skipedOnInsertEdit)
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="textarea"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="checkbox"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="select"></td>\r\n'+
-	'  <td align="center"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-data">Source</button></td>\r\n'+
+	'  <td align="center"><input type="hidden" name="reference_data'+field+'" value="{}"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-data">Source</button></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="text" class="input-field-filter"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="select" class="input-field-filter"></td>\r\n'+
-	'  <td align="center"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-filter">Source</button></td>\r\n'+
+	'  <td align="center"><input type="hidden" name="reference_filter'+field+'" value="{}"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-filter">Source</button></td>\r\n'+
 	'  <td>\r\n'+
 	generateSelectType(field, args)+
 	'  </td>\r\n'+
@@ -729,4 +973,397 @@ function generateRow(field, args, skipedOnInsertEdit)
 	'  </td>\r\n'+
 	'</tr>\r\n';
 	return rowHTML;
+}
+
+
+
+function serializeForm()
+{
+  let type = null;
+  $('.reference_type').each(function(e2){
+	  if($(this)[0].checked)
+	  {
+		type = $(this).val();
+	  }
+  });
+  let entity = getEntityData();
+  let map = getMapData();
+  let yesno = null;
+  let truefalse = null;
+  let onezero = null;
+  let all = {
+	type: type,
+	entity: entity,
+	map: map,
+	yesno: yesno,
+	truefalse: truefalse,
+	onezero: onezero
+  };
+
+  return all
+
+}
+
+function deserializeForm(data)
+{
+  selectReferenceType(data);
+  setEntityData(data);
+  setMapData(data)
+}
+
+function addRow(table)
+{
+  let nrow = table.find('tbody').find('tr').length;
+  let lastRow = table.find('tbody').find('tr:last-child').prop('outerHTML');
+  table.find('tbody').append(lastRow);
+}
+
+function addColumn(table)
+{
+  let ncol = table.find('thead').find('tr').find('td').length;
+  let nrow = table.find('tbody').find('tr').length;
+  let pos = ncol - parseInt(table.attr('data-offset')) - 1;
+  let inputHeader = '<td><input class="form-control map-key" type="text" value="" placeholder="Additional attribute name"></td>';
+  let inputBody = '<td><input class="form-control map-value" type="text" value="" placeholder="Additional attribute value"></td>';
+  table.find('thead').find('tr').find('td:nth('+pos+')').after(inputHeader);
+  table.find('tbody').find('tr').each(function(e3){
+	$(this).find('td:nth('+pos+')').after(inputBody);
+  });
+  table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+}
+
+function removeLastColumn(table)
+{
+  let ncol = table.find('thead').find('tr').find('td').length;
+  let nrow = table.find('tbody').find('tr').length;
+  let offset = parseInt(table.attr('data-offset'));
+  let pos = ncol - offset - 1;
+  if(ncol > (offset + 2))
+  {
+	table.find('thead').find('tr').find('td:nth('+pos+')').remove();
+	table.find('tbody').find('tr').each(function(e3){
+	  $(this).find('td:nth('+pos+')').remove();
+	});
+	table.find('tfoot').find('tr').find('td').attr('colspan', table.find('thead').find('tr').find('td').length);
+  }
+}
+
+function selectReferenceType(data)
+{
+	let referenceType = data.type ? data.type : 'entity';
+	if($('.reference_type[value="'+referenceType+'"]').length > 0)
+	{
+		$('.reference_type[value="'+referenceType+'"]')[0].checked = true;
+	}
+	$('.reference-section').css({'display':'none'});
+	if(referenceType == 'entity')
+	{
+		$('.entity-section').css({'display':'block'});
+	}
+	else if(referenceType == 'map')
+	{
+		$('.map-section').css({'display':'block'});
+	}
+}
+
+
+
+function setEntityData(data)
+{
+	data.entity = (data && data.entity) ? data.entity : {}; 
+	let entity = data.entity;
+	entity.entityName = entity.entityName ? entity.entityName : '';
+	entity.tableName = entity.tableName ? entity.tableName : '';
+	entity.primaryKey = entity.primaryKey ? entity.primaryKey : '';
+	entity.value = entity.value ? entity.value : '';
+	let selector = '[data-name="entity"]';
+	$(selector).find('.rd-entity-name').val(entity.entityName);
+	$(selector).find('.rd-table-name').val(entity.tableName);
+	$(selector).find('.rd-primary-key').val(entity.primaryKey);
+	$(selector).find('.rd-value-column').val(entity.value);
+	setSpecificationData(data);
+	setSortableData(data);
+	setAdditionalOutputData(data)
+}
+
+function getEntityData()
+{
+  let selector = '[data-name="entity"]';
+  let entity = {
+	entityName: $(selector).find('.rd-entity-name').val().trim(),
+	tableName: $(selector).find('.rd-table-name').val().trim(),
+	primaryKey: $(selector).find('.rd-primary-key').val().trim(),
+	value: $(selector).find('.rd-value-column').val().trim(),
+	specification: getSpecificationData(),
+	sortable: getSortableData(),
+	additionalOutput: getAdditionalOutputData()
+  };
+  return entity;
+}
+
+function setSpecificationData(data)
+{
+  let result = [];
+  let selector = '[data-name="specification"]';
+  let table = $(selector);
+  let specification = data.entity.specification;
+  if(typeof specification != 'undefined' && specification != null && specification.length > 0)
+  {
+	for(let i in specification)
+	{
+	  if(i > 0)
+	  {
+		addRow(table);
+	  }
+	  let tr = table.find('tr:last-child');
+	  let row = specification[i];
+	  tr.find('.rd-column-name').val(row.column);
+	  tr.find('.rd-value').val(row.value);
+	}
+  }
+}
+
+function getSpecificationData()
+{
+  let result = [];
+  let selector = '[data-name="specification"]';
+  $(selector).find('tbody').find('tr').each(function(e){
+	let tr = $(this);
+	let column = tr.find('.rd-column-name').val().trim();
+	let value = tr.find('.rd-value').val().trim();
+	if(column.length > 0)
+	{
+	  result.push({
+		column: column,
+		value: fixValue(value)
+	});
+	}
+  });
+  return result;
+}
+
+function setSortableData(data)
+{
+  let result = [];
+  let selector = '[data-name="sortable"]';
+  let table = $(selector);
+  let sortable = data.entity.sortable;
+  if(typeof sortable != 'undefined' && sortable != null && sortable.length > 0)
+  {
+	for(let i in sortable)
+	{
+	  if(i > 0)
+	  {
+		addRow(table);
+	  }
+	  let tr = table.find('tr:last-child');
+	  let row = sortable[i];
+	  tr.find('.rd-column-name').val(row.sortBy);
+	  tr.find('.rd-order-type').val(row.sortType);
+	}
+  }
+}
+
+function getSortableData()
+{
+  let result = [];
+  let selector = '[data-name="sortable"]';
+  $(selector).find('tbody').find('tr').each(function(e){
+	let tr = $(this);
+	let sortBy = tr.find('.rd-column-name').val().trim();
+	let sortType = tr.find('.rd-order-type').val().trim();
+	if(sortBy.length > 0)
+	{
+	  result.push({
+		sortBy: sortBy,
+		sortType: sortType
+	});
+	}
+  });
+  return result;
+}
+
+function setAdditionalOutputData(data)
+{
+  let result = [];
+  let selector = '[data-name="additional-output"]';
+  let table = $(selector);
+  let additional = data.entity.additionalOutput;
+  if(typeof additional != 'undefined' && additional != null && additional.length > 0)
+  {
+	for(let i in additional)
+	{
+	  if(i > 0)
+	  {
+		addRow(table);
+	  }
+	  let tr = table.find('tr:last-child');
+	  let row = additional[i];
+	  tr.find('.rd-column-name').val(row.column);
+	}
+  }
+}
+
+function getAdditionalOutputData()
+{
+  let result = [];
+  let selector = '[data-name="additional-output"]';
+  $(selector).find('tbody').find('tr').each(function(e){
+	let tr = $(this);
+	let column = tr.find('.rd-column-name').val().trim();
+	if(column.length > 0)
+	{
+	  result.push({
+		column: column
+	});
+	}
+  });
+  return result;
+}
+
+function setMapData(data)
+{
+  let result = [];
+  let selector = '[data-name="map"]';
+  let table = $(selector);
+  let keys = [];
+  data.map = data.map ? data.map : [];
+  let map = data.map;
+  if(map.length > 0)
+  {
+	let map0 = map[0];
+	let objLength = 0;
+	for(let i in map0)
+	{
+	  if(map0.hasOwnProperty(i))
+	  {
+		objLength++;
+		if(objLength > 4)
+		{
+		  addColumn(table);
+		}
+		if(i != 'value' && i != 'label' && i != 'default')
+		{
+		  keys.push(i)
+		}
+	  }
+	}
+	for(let i in keys)
+	{
+
+	}
+	for(let i in keys)
+	{
+	  let j = parseInt(i) + 1;
+	  table.find('thead').find('tr').find('.map-key:nth-child('+j+')').val(keys[i]);
+	}
+	if($(selector).find('thead').find('tr').find('.map-key').length > 0)
+	{
+	  $(selector).find('thead').find('tr').find('.map-key').each(function(e){
+		keys.push($(this).val().trim());
+	  });
+	}
+
+	for(let i in map)
+	{
+	  if(i > 0)
+	  {
+		addRow(table);
+	  }
+	  let tr = table.find('tr:last-child');
+	  let row = map[i];
+	  tr.find('.rd-value').val(row.value);
+	  tr.find('.rd-label').val(row.label);
+	  if(map[i]['default'])
+	  {
+		tr.find('.rd-selected')[0].checked = true;
+	  }
+
+	  for(let k in keys)
+	  {
+		let j = parseInt(k) + 1;
+		tr.find('.map-value:nth-child('+j+')').val(map[i][keys[k]]);
+	  }
+	}
+  }
+}
+
+function getMapData()
+{
+  let result = [];
+  let selector = '[data-name="map"]';
+  let keys = [];
+  if($(selector).find('thead').find('tr').find('.map-key').length > 0)
+  {
+	$(selector).find('thead').find('tr').find('.map-key').each(function(e){
+	  keys.push($(this).val().trim());
+	});
+  }
+  $(selector).find('tbody').find('tr').each(function(e){
+	let tr = $(this);
+	let value = tr.find('.rd-value').val().trim();
+	let label = tr.find('.rd-label').val().trim();
+	let selected = tr.find('.rd-selected')[0].checked;
+	let opt = {
+	  value: value,
+	  label: label,
+	  default: selected
+	};
+	if(keys.length > 0)
+	{
+	  let idx = 0;
+	  tr.find('.map-value').each(function(e){
+		let attrVal = $(this).val();
+		if(keys[idx].length > 0)
+		{
+		  opt[keys[idx]] = attrVal;
+		}
+		idx++;
+	  });
+	}
+	result.push(opt);
+  });
+  return result;
+}
+
+function fixValue(value)
+{
+  if(value == 'true')
+  {
+	return true;
+  }
+  else if(value == 'false')
+  {
+	return false;
+  }
+  else if(value == 'null')
+  {
+	return null;
+  }
+  else if(isNumeric(value))
+  {
+	return parseNumber(value);
+  }
+  else
+  {
+	return value;
+  }
+}
+
+function parseNumber(str)
+{
+  if(str.indexOf('.') !== -1)
+  {
+	return parseFloat(str);
+  }
+  else
+  {
+	return parseInt(str);
+  }
+}
+
+function isNumeric(str) {
+  if (typeof str != "string") return false 
+  return !isNaN(str) &&
+		!isNaN(parseFloat(str))
 }

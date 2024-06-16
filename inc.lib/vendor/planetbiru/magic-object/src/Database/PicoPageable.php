@@ -28,7 +28,7 @@ class PicoPageable
     private $offsetLimit = null;
     
     /**
-     * Constructor of pagable
+     * Constructor of pageable
      * Example: 
      * 1. $pageable = new Pagable(array(0, 100), array('userName', 'asc', 'email', 'desc', 'phone', 'asc'));
      * 2. $pageable = new Pagable(new PicoPage(0, 100), array('userName', 'asc', 'email', 'desc', 'phone', 'asc'));

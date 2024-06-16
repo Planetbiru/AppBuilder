@@ -29,7 +29,7 @@ class PicoDatabaseUtil
     }
 
     /**
-     * Get pagable from parameters
+     * Get pageable from parameters
      * @param array $params
      * @return PicoPageable|null
      */
@@ -69,7 +69,7 @@ class PicoDatabaseUtil
     }
 
     /**
-     * Get pagable from parameters
+     * Get pageable from parameters
      * @param array $params
      * @return array
      */

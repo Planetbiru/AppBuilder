@@ -1894,7 +1894,7 @@ class PicoDatabasePersistence // NOSONAR
     }
 
     /**
-     * Add pagable to query builder
+     * Add pageable to query builder
      *
      * @param PicoDatabaseQueryBuilder $sqlQuery Query builder
      * @param PicoPageable $pageable Pagable
