@@ -270,34 +270,9 @@ $(document).ready(function(){
 	$(document).on('change', 'select[name="source_table"]', function(e2){
 		let masterTableName = $(this).val();
 		let moduleFileName = masterTableName+'.php';
-		let moduleName = masterTableName;
-		
-		moduleFileName = moduleFileName.replaceAll('_', '-');
-		moduleName = moduleName.replaceAll('_', '-');
-		
-		let masterEntityName = upperCamelize(masterTableName);
-		let approvalEntityName = masterEntityName+'Apv';
-		let trashEntityName = masterEntityName+'Trash';
-		
-		let approvalTableName = masterTableName + '_apv';
-		let approvalPrimaryKeyName = approvalTableName + '_id';
-		let trashTableName = masterTableName + '_trash';
-		let trashPrimaryKeyName = trashTableName + '_id';
-		$(this).attr('data-value', masterTableName);
-
+		let moduleName = masterTableName;		
 		let masterPrimaryKeyName = $(this).find('option:selected').attr('data-primary-key') || '';
-		
-		$('[name="primary_key_master"]').val(masterPrimaryKeyName);
-		$('[name="entity_master_name"]').val(masterEntityName);
-		$('[name="entity_approval_name"]').val(approvalEntityName);
-		$('[name="entity_trash_name"]').val(trashEntityName);
-		$('[name="table_approval_name"]').val(approvalTableName);
-		$('[name="primary_key_approval"]').val(approvalPrimaryKeyName);
-		$('[name="table_trash_name"]').val(trashTableName);
-		$('[name="primary_key_trash"]').val(trashPrimaryKeyName);
-		$('[name="module_file"]').val(moduleFileName);
-		$('[name="module_name"]').val(moduleName);
-		
+		updateTableName(moduleFileName, moduleName, masterTableName, masterPrimaryKeyName)	
 	});
 	$(document).on('click', '#save_application_config', function(e2){
 		let frm = $(this).closest('form');
@@ -364,12 +339,10 @@ $(document).ready(function(){
 		let key = $(this).siblings('input').attr('name');		
 
 		$('#modal-create-reference-data').attr('data-input-name', key);
-		
+		$('#modal-create-reference-data').attr('data-field-name', fieldName);		
 		$('#modal-create-reference-data').find('.modal-body').empty();
 		$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
 		
-		loadReferenceFilter(fieldName, key);
-
 		let value = $('[name="'+key+'"]').val();
 		if(value != '')
 		{
@@ -390,13 +363,22 @@ $(document).ready(function(){
 		
 
 		$('#modal-create-reference-data').attr('data-input-name', key);
-		
+		$('#modal-create-reference-data').attr('data-field-name', fieldName);		
 		$('#modal-create-reference-data').find('.modal-body').empty();
 		$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
 		
-		loadReferenceFilter(fieldName, key);
+		
 
-		let value = $('[name="'+key+'"]').val();
+		let value = $('[name="'+key+'"]').val().trim();
+		if(value == '')
+		{
+			loadReference(fieldName, key, function(obj){
+				if(obj != null)
+				{
+					deserializeForm(obj);
+				}
+			});
+		}
 		if(value != '')
 		{
 			let obj = JSON.parse(value);
@@ -411,7 +393,15 @@ $(document).ready(function(){
 		let value = JSON.stringify(serializeForm());
 		$('[name="'+key+'"]').val(value);
 		$('#modal-create-reference-data').modal('hide');
-	 });
+	});
+	$(document).on('click', '#save-to-cache', function(e2){
+		let fieldName = $('#modal-create-reference-data').attr('data-field-name');
+		let key = $('#modal-create-reference-data').attr('data-input-name');
+		let value = JSON.stringify(serializeForm());	
+		saveReference(fieldName, key, value);
+	});
+
+	 
 
 	$(document).on('click', '.reference_type', function(e2){
 	   let referenceType = $(this).val();
@@ -458,30 +448,61 @@ $(document).ready(function(){
 
 	loadTable();
 });
-function loadReferenceData(fieldName)
+
+function saveReference(fieldName, key, value)
 {
 	$.ajax({
-		type:'GET',
-		url:'lib.ajax/reference-data.php',
-		data:{fieldName:fieldName},
+		type:'POST',
+		url:'lib.ajax/save-reference.php',
+		data:{fieldName:fieldName, key:key, value:value},
 		dataType:'json',
 		success: function(data){
 			console.log(data)
 		}
 	})
 }
-function loadReferenceFilter(fieldName)
+function loadReference(fieldName, key, clbk)
 {
 	$.ajax({
-		type:'GET',
-		url:'lib.ajax/reference-filter.php',
-		data:{fieldName:fieldName},
+		type:'POST',
+		url:'lib.ajax/load-reference.php',
+		data:{fieldName:fieldName, key:key},
 		dataType:'json',
 		success: function(data){
-			console.log(data)
+			clbk(data)
 		}
 	})
 }
+
+function updateTableName(moduleFileName, moduleName, masterTableName, masterPrimaryKeyName)
+{
+	moduleFileName = moduleFileName.replaceAll('_', '-');
+	moduleName = moduleName.replaceAll('_', '-');
+	
+	let masterEntityName = upperCamelize(masterTableName);
+	let approvalEntityName = masterEntityName+'Apv';
+	let trashEntityName = masterEntityName+'Trash';
+	
+	let approvalTableName = masterTableName + '_apv';
+	let approvalPrimaryKeyName = approvalTableName + '_id';
+	let trashTableName = masterTableName + '_trash';
+	let trashPrimaryKeyName = trashTableName + '_id';
+	$(this).attr('data-value', masterTableName);
+
+	
+	$('[name="primary_key_master"]').val(masterPrimaryKeyName);
+	$('[name="entity_master_name"]').val(masterEntityName);
+	$('[name="entity_approval_name"]').val(approvalEntityName);
+	$('[name="entity_trash_name"]').val(trashEntityName);
+	$('[name="table_approval_name"]').val(approvalTableName);
+	$('[name="primary_key_approval"]').val(approvalPrimaryKeyName);
+	$('[name="table_trash_name"]').val(trashTableName);
+	$('[name="primary_key_trash"]').val(trashPrimaryKeyName);
+	$('[name="module_file"]').val(moduleFileName);
+	$('[name="module_name"]').val(moduleName);
+}
+
+
 function prepareReferenceData(checkedValue, ctrl)
 {
 	let tr = ctrl.closest('tr');

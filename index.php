@@ -417,10 +417,10 @@ require_once __DIR__ . "/inc.app/navs.php";
                     <td align="center" width="32" title="Textarea">TA</td>
                     <td align="center" width="32" title="Checkbox">CB</td>
                     <td align="center" width="32" title="Select">SE</td>
-                    <td align="center" width="70" title="Select">Source</td>
+                    <td align="center" width="74" title="Select">Source</td>
                     <td align="center" width="30">TE</td>
                     <td align="center" width="30">SE</td>
-                    <td align="center" width="70" title="Select">Source</td>
+                    <td align="center" width="74" title="Select">Source</td>
                   </tr>
                 </thead>
 
@@ -606,8 +606,11 @@ require_once __DIR__ . "/inc.app/navs.php";
           
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="apply-reference">Save Changes</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="copy-from-other">Copy From Filter</button>
+          <button type="button" class="btn btn-primary" id="load-from-cache">Load</button>      
+          <button type="button" class="btn btn-primary" id="save-to-cache">Save</button>
+          <button type="button" class="btn btn-success" id="apply-reference">OK</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>

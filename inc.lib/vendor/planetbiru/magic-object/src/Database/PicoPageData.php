@@ -8,7 +8,7 @@ use stdClass;
 class PicoPageData
 {
     const RESULT = 'result';
-    const PAGABLE = 'pageable';
+    const PAGABLE = 'pagable';
 
     /**
      * Result
@@ -232,7 +232,7 @@ class PicoPageData
     }
 
     /**
-     * Get pageable
+     * Get pagable
      *
      * @return PicoPageable
      */ 
