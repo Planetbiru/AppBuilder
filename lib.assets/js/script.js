@@ -344,12 +344,21 @@ $(document).ready(function(){
 		$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
 		
 		let value = $('[name="'+key+'"]').val();
+		if(value.length < 60)
+		{
+			console.log('load file')
+			loadReference(fieldName, key, function(obj){
+				if(obj != null)
+				{
+					deserializeForm(obj);
+				}
+			});
+		}
 		if(value != '')
 		{
 			let obj = JSON.parse(value);
 			deserializeForm(obj);
 		}
-
 		$('#modal-create-reference-data').modal('show');
 	});
 
@@ -361,16 +370,13 @@ $(document).ready(function(){
 		let fieldName = parentTr.attr('data-field-name');
 		let key = $(this).siblings('input').attr('name');
 		
-
 		$('#modal-create-reference-data').attr('data-input-name', key);
 		$('#modal-create-reference-data').attr('data-field-name', fieldName);		
 		$('#modal-create-reference-data').find('.modal-body').empty();
 		$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
 		
-		
-
 		let value = $('[name="'+key+'"]').val().trim();
-		if(value == '')
+		if(value.length < 60)
 		{
 			loadReference(fieldName, key, function(obj){
 				if(obj != null)
@@ -401,7 +407,16 @@ $(document).ready(function(){
 		saveReference(fieldName, key, value);
 	});
 
-	 
+	$(document).on('click', '#load-from-cache', function(e2){
+		let fieldName = $('#modal-create-reference-data').attr('data-field-name');
+		let key = $('#modal-create-reference-data').attr('data-input-name');
+		loadReference(fieldName, key, function(obj){
+			if(obj != null)
+			{
+				deserializeForm(obj);
+			}
+		});
+	});
 
 	$(document).on('click', '.reference_type', function(e2){
 	   let referenceType = $(this).val();
@@ -1027,9 +1042,11 @@ function serializeForm()
 
 function deserializeForm(data)
 {
-  selectReferenceType(data);
-  setEntityData(data);
-  setMapData(data)
+	$('#modal-create-reference-data').find('.modal-body').empty();
+	$('#modal-create-reference-data').find('.modal-body').append(getReferenceResource());
+	selectReferenceType(data);
+	setEntityData(data);
+	setMapData(data)
 }
 
 function addRow(table)
