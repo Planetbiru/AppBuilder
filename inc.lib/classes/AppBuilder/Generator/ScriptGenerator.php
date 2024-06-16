@@ -350,12 +350,16 @@ class ScriptGenerator
 
         $path = $baseDir."/".$moduleFile;
         file_put_contents($path, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
-        exec("code \"$path\"");
-
         
         $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
-        $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
-        $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
+        if($request->getFeatures() && ($request->getFeatures()->getApprovalRequired() === true || $request->getFeatures()->getApprovalRequired() === 'true'))
+        {
+            $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
+        }
+        if($request->getFeatures() && ($request->getFeatures()->getTrashRequired() === true || $request->getFeatures()->getTrashRequired() === 'true'))
+        {
+            $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
+        }
     }
 
     public function prepareApplication($appConf, $baseDir)

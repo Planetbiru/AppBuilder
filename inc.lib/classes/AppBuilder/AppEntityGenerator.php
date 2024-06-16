@@ -57,6 +57,7 @@ class AppEntityGenerator extends PicoEntityGenerator
         {
             $rows = $this->updateField($rows, $predecessorField, $successorField, $removePk);
         }
+        
 
         $attrs = array();
         if(is_array($rows))
@@ -72,7 +73,7 @@ class AppEntityGenerator extends PicoEntityGenerator
                 $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra);
                 $attrs[] = $prop;
             }
-        }      
+        }    
         $prettify = $this->prettify ? 'true' : 'false';
         if($realTableName != null)
         {

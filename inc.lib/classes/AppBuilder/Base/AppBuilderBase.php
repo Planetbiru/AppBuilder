@@ -1008,7 +1008,7 @@ else
 '<div class="pagination '.$className.'">
     <div class="pagination-number">
     <?php
-    foreach($rowData->getPagination() as $pg)
+    foreach($pageData->getPagination() as $pg)
     {
         ?><span class="page-selector<?php echo $pg'."['selected'] ? ' page-selected':'';?>".'" data-page-number="<?php echo $pg'."['page'];?>".'"><a href="<?php echo PicoPagination::getPageUrl($pg'."['page']".');?>"><?php echo $pg'."['page']".';?></a></span><?php
     }
