@@ -452,7 +452,8 @@ $(document).ready(function(){
 	  }
 	});
 
-	$(document).on('change', 'input[type="checkbox"]', function(e){
+	
+	$(document).on('change', '.map-section input[type="checkbox"]', function(e){
 	  if($(this)[0].checked)
 	  {
 		$(this).closest('tr').siblings().each(function(){
