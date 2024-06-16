@@ -260,11 +260,11 @@ require_once __DIR__ . "/inc.app/navs.php";
             <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tbody>
                 <?php
-                $entityContsnt = new SecretObject($appConfig->getEntityInfo());
-                if (empty($entityContsnt->valueArray())) {
-                  $entityContsnt = new SecretObject($builderConfig->getEntityInfo());
+                $entityConstant = new SecretObject($appConfig->getEntityInfo());
+                if (empty($entityConstant->valueArray())) {
+                  $entityConstant = new SecretObject($builderConfig->getEntityInfo());
                 }
-                $arr = $entityContsnt->valueArray(true);
+                $arr = $entityConstant->valueArray(true);
 
                 if (!empty($arr)) {
                   foreach ($arr as $key => $value) {

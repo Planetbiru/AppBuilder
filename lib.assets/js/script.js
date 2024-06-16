@@ -565,21 +565,27 @@ function generateScript(selector)
 		let dataType = $(this).find('select.input-field-data-type').val();
 		let inputFilter = $(this).find('select.input-data-filter').val();
 
+		let referenceData = parseJsonData($(this).find('input.reference-data').val());
+		let referenceFilter = parseJsonData($(this).find('input.reference-filter').val());
+
 		let field = {
-			fieldName:fieldName,
-			fieldLabel:fieldLabel,
-			includeInsert:includeInsert,
-			includeEdit:includeEdit,
-			includeDetail:includeDetail,
-			includeList:includeList,
-			isKey:isKey,
-			isInputRequired:isInputRequired,
-			elementType:elementType,
-			filterElementType:filterElementType,
-			dataType:dataType,
-			inputFilter:inputFilter			
+			fieldName: fieldName,
+			fieldLabel: fieldLabel,
+			includeInsert: includeInsert,
+			includeEdit: includeEdit,
+			includeDetail: includeDetail,
+			includeList: includeList,
+			isKey: isKey,
+			isInputRequired: isInputRequired,
+			elementType: elementType,
+			filterElementType: filterElementType,
+			dataType: dataType,
+			inputFilter: inputFilter,
+
+			referenceData: referenceData,
+			referenceFilter: referenceFilter
 		};
-		fields.push(field);
+    	fields.push(field);
 	});
 
 	let requireApproval = $('#with_approval')[0].checked && true;
@@ -621,7 +627,6 @@ function generateScript(selector)
 		approvalRequired: requireApproval,
 		approvalNote: withApprovalNote,
 		trashRequired: withTrash
-		
 	};
 
 	let dataToPost = {
@@ -632,6 +637,24 @@ function generateScript(selector)
 		module_file: $('[name="module_file"]').val()
 	};
 	generateAllCode(dataToPost);
+}
+
+function parseJsonData(text)
+{
+	if (typeof text !== "string") {
+		return null;
+	}
+	try {
+		var json = JSON.parse(text);
+		if(typeof json === 'object')
+		{
+			return json;
+		}
+	}
+	catch (error) {
+		// do nothing
+	}
+	return null;
 }
 
 function generateAllCode(dataToPost)
@@ -997,10 +1020,10 @@ function generateRow(field, args, skipedOnInsertEdit)
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="textarea"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="checkbox"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="select"></td>\r\n'+
-	'  <td align="center"><input type="hidden" name="reference_data'+field+'" value="{}"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-data">Source</button></td>\r\n'+
+	'  <td align="center"><input type="hidden" class="reference-data" name="reference_data_'+field+'" value="{}"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-data">Source</button></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="text" class="input-field-filter"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" name="list_filter_'+field+'" value="select" class="input-field-filter"></td>\r\n'+
-	'  <td align="center"><input type="hidden" name="reference_filter'+field+'" value="{}"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-filter">Source</button></td>\r\n'+
+	'  <td align="center"><input type="hidden" class="reference-filter" name="reference_filter_'+field+'" value="{}"><button type="button" class="btn btn-sm btn-primary reference-button reference-button-filter">Source</button></td>\r\n'+
 	'  <td>\r\n'+
 	generateSelectType(field, args)+
 	'  </td>\r\n'+
