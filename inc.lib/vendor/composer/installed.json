@@ -1,6 +1,48 @@
 {
     "packages": [
         {
+            "name": "planetbiru/magic-app",
+            "version": "dev-feature/0.1",
+            "version_normalized": "dev-feature/0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Planetbiru/MagicApp.git",
+                "reference": "8ff145fa801c6f2f3bf4eb21269885282520ae54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Planetbiru/MagicApp/zipball/8ff145fa801c6f2f3bf4eb21269885282520ae54",
+                "reference": "8ff145fa801c6f2f3bf4eb21269885282520ae54",
+                "shasum": ""
+            },
+            "require": {
+                "planetbiru/magic-object": "^1.8"
+            },
+            "time": "2024-06-17T22:57:38+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "MagicApp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Kamshory"
+                }
+            ],
+            "description": "Magic App",
+            "support": {
+                "issues": "https://github.com/Planetbiru/MagicApp/issues",
+                "source": "https://github.com/Planetbiru/MagicApp/tree/feature/0.1"
+            },
+            "install-path": "../planetbiru/magic-app"
+        },
+        {
             "name": "planetbiru/magic-object",
             "version": "1.8.8",
             "version_normalized": "1.8.8.0",

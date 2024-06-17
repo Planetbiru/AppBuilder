@@ -4,8 +4,47 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "828b467b9ec03a2a3e9b8ab3efac0c88",
+    "content-hash": "d14c3bdb46c983f9a0dc19db831600ba",
     "packages": [
+        {
+            "name": "planetbiru/magic-app",
+            "version": "dev-feature/0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Planetbiru/MagicApp.git",
+                "reference": "8ff145fa801c6f2f3bf4eb21269885282520ae54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Planetbiru/MagicApp/zipball/8ff145fa801c6f2f3bf4eb21269885282520ae54",
+                "reference": "8ff145fa801c6f2f3bf4eb21269885282520ae54",
+                "shasum": ""
+            },
+            "require": {
+                "planetbiru/magic-object": "^1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MagicApp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Kamshory"
+                }
+            ],
+            "description": "Magic App",
+            "support": {
+                "issues": "https://github.com/Planetbiru/MagicApp/issues",
+                "source": "https://github.com/Planetbiru/MagicApp/tree/feature/0.1"
+            },
+            "time": "2024-06-17T22:57:38+00:00"
+        },
         {
             "name": "planetbiru/magic-object",
             "version": "1.8.8",
@@ -199,7 +238,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "planetbiru/magic-app": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

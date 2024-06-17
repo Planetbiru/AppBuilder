@@ -921,6 +921,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_OPEN)); 
+        //$dataSection->appendChild($dom->createTextNode("\n\t".self::VAR."dataOffset = (\$pageData->getPageNumber() - 1) * \$pageData->getPageSize();")); 
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
         
         $pagination1 = $dom->createTextNode($this->createPagination("pagination-top"));
@@ -1211,6 +1212,15 @@ $resultSet = $pageData->getResult();
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td2);
         // detail end
+
+        // no begin
+        $td2 = $dom->createElement('td');
+        $td2->setAttribute('class', 'data-controll data-number');
+        $td2->appendChild($dom->createTextNode('<?php echo $appLanguage->getNumero();?>')); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td2);
+        // no end
         
         
         foreach($listFields as $field)
@@ -1322,6 +1332,15 @@ $resultSet = $pageData->getResult();
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td2);
         // detail end
+
+        // no begin
+        $td2 = $dom->createElement('td');
+        $td2->setAttribute('class', 'data-number');
+        $td2->appendChild($dom->createTextNode('<?php echo $pageData->getDataOffset() + $dataIndex + 1;?>')); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td2);
+        // no end
         
         foreach($listFields as $field)
         {
@@ -1506,7 +1525,7 @@ $resultSet = $pageData->getResult();
                 
 
                 $value = $dom->createElement('option');
-                $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getSelectOne();".self::PHP_CLOSE_TAG;
+                $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
                 $textLabel = $dom->createTextNode($caption);
                 $value->appendChild($textLabel);
                 $value->setAttribute('value', '');
@@ -1894,7 +1913,7 @@ $resultSet = $pageData->getResult();
             $input->setAttribute('name', $insertField->getFieldName());
             $input = $this->addAttributeId($input, $id);  
             $value = $dom->createElement('option');
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getSelectOne();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
@@ -1983,7 +2002,7 @@ $resultSet = $pageData->getResult();
             $input = $this->addAttributeId($input, $id);
 
             $value = $dom->createElement('option');
-            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getSelectOne();".self::PHP_CLOSE_TAG;
+            $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
@@ -2268,7 +2287,7 @@ $resultSet = $pageData->getResult();
         {
             $value = ($value === true) ? 'true' : 'false';
         }
-        else if(is_string($value))
+        if(is_string($value) && $value != 'true' && $value != 'false' && $value != 'null')
         {
             $value = "'".$value."'";
         }

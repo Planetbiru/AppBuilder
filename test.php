@@ -352,7 +352,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
-							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
+							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLanguage->getLabelOptionSelectOne();?></option>
 								<option value="apa">apa</option>
 							</select>
 						</td>
@@ -467,7 +467,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
-							<select class="form-control" name="producer_id" id="producer_id" data-value="<?php echo $album->getProducerId();?>"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
+							<select class="form-control" name="producer_id" id="producer_id" data-value="<?php echo $album->getProducerId();?>"><option value=""><?php echo $appLanguage->getLabelOptionSelectOne();?></option>
 								<option value="apa" <?php echo AttrUtil::selected($album->getProducerId(), 'apa');?>>apa</option>
 							</select>
 						</td>
