@@ -12,6 +12,7 @@ use AppBuilder\Base\AppBuilderBase;
 use AppBuilder\EntityApvInfo;
 use AppBuilder\EntityInfo;
 use MagicObject\Database\PicoDatabase;
+use MagicObject\Generator\PicoEntityGenerator;
 use MagicObject\MagicObject;
 use MagicObject\Request\InputPost;
 use stdClass;
@@ -74,6 +75,20 @@ class ScriptGenerator
     }
 
     /**
+     * Chek if field has reference filter
+     *
+     * @param AppField $value
+     * @return boolean
+     */
+    public function hasReferenceFilter($value)
+    {
+        return $value->getReferenceFilter() != null 
+        && $value->getReferenceFilter()->getType() == 'entity' 
+        && $value->getReferenceFilter()->getEntity() != null 
+        && $value->getReferenceFilter()->getEntity()->getEntityName() != null;
+    }
+
+    /**
      * Add use from approval
      *
      * @param string[] $uses
@@ -121,9 +136,16 @@ class ScriptGenerator
      * @param AppSecretObject $appConf
      * @return string[]
      */
-    public function addUseFromReferenceData($uses, $appConf, $referenceEntity)
+    public function addUseFromReference($uses, $appConf, $referenceEntity)
     {
-        foreach($referenceEntity as $ref) 
+        $entityName = array();
+        foreach($referenceEntity as $entity) 
+        {
+            $entityName[] = $entity->getEntityName();
+        }
+        $entityName = array_unique($entityName);
+
+        foreach($entityName as $ref) 
         {
             $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$ref;";
         }
@@ -186,7 +208,7 @@ class ScriptGenerator
         $detailFields = array();
         $listFields = array();
         $filterFields = array();
-        $referenceEntity = array();
+        $referenceEntities = array();
         $allField = array();
         foreach($request->getFields() as $value) {
             $field = new AppField($value);
@@ -207,7 +229,10 @@ class ScriptGenerator
                 $filterFields[$field->getFieldName()] = $field;
             }
             if($this->hasReferenceData($field)){
-                $referenceEntity[] = $field->getReferenceData()->getEntity()->getEntityName();
+                $referenceEntities[] = $field->getReferenceData()->getEntity();
+            }
+            if($this->hasReferenceFilter($field)){
+                $referenceEntities[] = $field->getReferenceData()->getEntity();
             }
         }
         
@@ -231,7 +256,6 @@ class ScriptGenerator
         $uses[] = "// This script is generated automatically by AppBuilder";
         $uses[] = "// Visit https://github.com/Planetbiru/AppBuilder";
         $uses[] = "";
-        $uses[] = "use MagicObject\\SetterGetter;";
         $uses[] = "use MagicObject\\Database\\PicoPage;";
         $uses[] = "use MagicObject\\Database\\PicoPageable;";
         $uses[] = "use MagicObject\\Database\\PicoPredicate;";
@@ -244,19 +268,22 @@ class ScriptGenerator
         $uses[] = "use MagicObject\\Request\\InputPost;";
         $uses[] = "use MagicObject\\Util\\AttrUtil;";
         $uses[] = "use AppBuilder\\Field;";
-        $uses[] = "use AppBuilder\\PicoApproval;";
         $uses[] = "use AppBuilder\\UserAction;";
         $uses[] = "use AppBuilder\\AppInclude;";
         $uses[] = "use AppBuilder\\AppModule;";
         $uses[] = "use AppBuilder\\AppEntityLanguage;";
-        $uses[] = "use AppBuilder\\WaitingFor;";
-        $uses[] = "use AppBuilder\\PicoTestUtil;";
+        if($approvalRequired)
+        {
+            $uses[] = "use MagicObject\\SetterGetter;";
+            $uses[] = "use AppBuilder\\PicoApproval;";
+            $uses[] = "use AppBuilder\\WaitingFor;";
+            $uses[] = "use AppBuilder\\PicoTestUtil;";
+        }
         $uses[] = "use AppBuilder\\FormBuilder;";
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
-
         $uses = $this->addUseFromApproval($uses, $appConf, $approvalRequired, $entity);
-        $uses = $this->addUseFromTrash($uses, $appConf, $approvalRequired, $entity);
-        $uses = $this->addUseFromReferenceData($uses, $appConf, $referenceEntity);
+        $uses = $this->addUseFromTrash($uses, $appConf, $trashRequired, $entity);
+        $uses = $this->addUseFromReference($uses, $appConf, $referenceEntities);
         
         
         $uses[] = "";
@@ -277,7 +304,7 @@ class ScriptGenerator
         $appFeatures = $request->getFeatures();
 
         // prepare CRUD section begin
-        if($appFeatures->isApprovalRequired())
+        if($approvalRequired)
         {
             $appBuilder = new AppBuilderApproval($builderConfig, $appConfig, $appFeatures, $entityInfo, $entityApvInfo, $allField);
 
@@ -352,13 +379,46 @@ class ScriptGenerator
         file_put_contents($path, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
         
         $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
-        if($request->getFeatures() && ($request->getFeatures()->getApprovalRequired() === true || $request->getFeatures()->getApprovalRequired() === 'true'))
+        if($approvalRequired)
         {
             $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
         }
-        if($request->getFeatures() && ($request->getFeatures()->getTrashRequired() === true || $request->getFeatures()->getTrashRequired() === 'true'))
+        if($trashRequired)
         {
             $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
+        }
+        $this->generateEntitiesIfNotExists($database, $appConf, $referenceEntities);
+    }
+
+    /**
+     * Generate entity if not exists
+     *
+     * @param PicoDatabase $database
+     * @param AppBuilderBase $appBuilder
+     * @param MagicObject[] $referenceEntities
+     * @return void
+     */
+    private function generateEntitiesIfNotExists($database, $appConf, $referenceEntities)
+    {
+        $checked = array();
+        foreach($referenceEntities as $entity)
+        {
+            $entityName = $entity->getEntityName();
+            if(!in_array($entityName, $checked))
+            {
+                $tableName = $entity->getTableName();
+                $baseDir = $appConf->getEntityBaseDirectory();
+                $baseNamespace = $appConf->getEntityBaseNamespace();
+                $fileName = $baseNamespace."/".$entityName;
+                $path = $baseDir."/".$fileName.".php";
+                $path = str_replace("\\", "/", $path);
+                if(!file_exists($path))
+                {
+                    $gen = new PicoEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
+                    $gen->generate();
+                }
+                $checked[] = $entityName;
+            }
         }
     }
 

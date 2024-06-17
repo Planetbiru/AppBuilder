@@ -1288,7 +1288,7 @@ $resultSet = $pageData->getResult();
         // edit begin
         $edit = $dom->createElement('a');
         $edit->setAttribute('class', 'edit-control');
-        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.');?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.'());?>';
         $edit->setAttribute('href', $href);
         $spanEdit = $dom->createElement('span');
         $spanEdit->setAttribute('class', 'fa fa-edit');
@@ -1308,7 +1308,7 @@ $resultSet = $pageData->getResult();
         // detail begin
         $detail = $dom->createElement('a');
         $detail->setAttribute('class', 'detail-control field-master');
-        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.');?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.'());?>';
         $detail->setAttribute('href', $href);
         $spanDetail = $dom->createElement('span');
         $spanDetail->setAttribute('class', 'fa fa-folder');
@@ -2638,6 +2638,22 @@ $resultSet = $pageData->getResult();
     }
     
     /**
+     * Create single entity function
+     *
+     * @param PicoDatabase $database
+     * @param SecretObject $appConf
+     * @param MagicObject $entityMain
+     * @return void
+     */
+    public function generateEntity($database, $appConf, $entityName, $tableName)
+    {
+        $baseDir = $appConf->getEntityBaseDirectory();
+        $baseNamespace = $appConf->getEntityBaseNamespace();
+        $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
+        $generator->generateCustomEntity($entityName, $tableName, null, null);
+    }
+    
+    /**
      * Create main entity function
      *
      * @param PicoDatabase $database
@@ -2976,8 +2992,8 @@ $resultSet = $pageData->getResult();
         if($wrapper == self::WRAPPER_INSERT)
         {
             $html = 
-            '<div class="page page-insert">'.self::NEW_LINE
-            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            '<div class="page page-jambi page-insert">'.self::NEW_LINE
+            .self::TAB1.'<div class="jambi-wrapper">'.self::NEW_LINE
             .$html
             .self::TAB1.'</div>'.self::NEW_LINE
             .'</div>'.self::NEW_LINE;
@@ -2985,8 +3001,8 @@ $resultSet = $pageData->getResult();
         else if($wrapper == self::WRAPPER_UPDATE)
         {
             $html = 
-            '<div class="page page-update">'.self::NEW_LINE
-            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            '<div class="page page-jambi page-update">'.self::NEW_LINE
+            .self::TAB1.'<div class="jambi-wrapper">'.self::NEW_LINE
             .$html
             .self::TAB1.'</div>'.self::NEW_LINE
             .'</div>'.self::NEW_LINE;
@@ -2994,8 +3010,8 @@ $resultSet = $pageData->getResult();
         else if($wrapper == self::WRAPPER_DETAIL)
         {
             $html = 
-            '<div class="page page-detail">'.self::NEW_LINE
-            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            '<div class="page page-jambi page-detail">'.self::NEW_LINE
+            .self::TAB1.'<div class="jambi-wrapper">'.self::NEW_LINE
             .$html
             .self::TAB1.'</div>'.self::NEW_LINE
             .'</div>'.self::NEW_LINE;
@@ -3003,8 +3019,8 @@ $resultSet = $pageData->getResult();
         else if($wrapper == self::WRAPPER_LIST)
         {
             $html = 
-            '<div class="page page-list">'.self::NEW_LINE
-            .self::TAB1.'<div class="row">'.self::NEW_LINE
+            '<div class="page page-jambi page-list">'.self::NEW_LINE
+            .self::TAB1.'<div class="jambi-wrapper">'.self::NEW_LINE
             .$html
             .self::TAB1.'</div>'.self::NEW_LINE
             .'</div>'.self::NEW_LINE;

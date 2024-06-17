@@ -22,6 +22,31 @@ class AppEntityGenerator extends PicoEntityGenerator
         }
     }
     /**
+     * Check if entity file is exists
+     *
+     * @return boolean
+     */
+    public function isEntityExists($realEntityName = null, $realTableName = null)
+    {
+        $picoTableName = $this->tableName;
+        if($realEntityName != null)
+        {
+            $className = $realEntityName;
+        }
+        else if($this->entityName != null)
+        {
+            $className = $this->entityName;
+        }
+        else
+        {
+            $className = ucfirst(PicoStringUtil::camelize($picoTableName));
+        }
+        $fileName = $this->baseNamespace."/".$className;
+        $path = $this->baseDir."/".$fileName.".php";
+        $path = str_replace("\\", "/", $path); 
+        return file_exists($path);
+    }
+    /**
      * Generate custom entity
      *
      * @return string
