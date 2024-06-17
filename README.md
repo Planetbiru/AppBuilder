@@ -50,7 +50,6 @@ Apart from the features above, the module is also equipped with data filters tha
 // This script is generated automatically by AppBuilder
 // Visit https://github.com/Planetbiru/AppBuilder
 
-use MagicObject\SetterGetter;
 use MagicObject\Database\PicoPage;
 use MagicObject\Database\PicoPageable;
 use MagicObject\Database\PicoPredicate;
@@ -63,11 +62,12 @@ use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 use MagicObject\Util\AttrUtil;
 use AppBuilder\Field;
-use AppBuilder\PicoApproval;
 use AppBuilder\UserAction;
 use AppBuilder\AppInclude;
 use AppBuilder\AppModule;
 use AppBuilder\AppEntityLanguage;
+use MagicObject\SetterGetter;
+use AppBuilder\PicoApproval;
 use AppBuilder\WaitingFor;
 use AppBuilder\PicoTestUtil;
 use AppBuilder\FormBuilder;
@@ -239,7 +239,10 @@ else if($inputPost->getUserAction() == UserAction::APPROVE)
 				
 				// e.g. return $param1->notEqualsAdminAskEdit($userId);
 				return true;
-			} 
+			}
+, 
+			true, 
+			new AlbumTrash() 
 			);
 
 			$approvalCallback = new SetterGetter();
@@ -335,7 +338,7 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 				
 				// e.g. return $param1->notEqualsAdminAskEdit($userId);
 				return true;
-			} 
+			}
 			);
 
 			$approvalCallback->setBeforeReject(function($param1, $param2, $param3) {
@@ -364,8 +367,8 @@ if($inputGet->getUserAction() == UserAction::CREATE)
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
-<div class="page page-insert">
-	<div class="row">
+<div class="page page-jambi page-insert">
+	<div class="jambi-wrapper">
 		<form name="createform" id="createform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
@@ -397,14 +400,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
 							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
-								<?php echo FormBuilder::getInstance()->createSelectOption(new Producer(null, $database), 
-								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setDraft(false))
-									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
-								PicoSortable::getInstance()
-									->add(PicoSort::getInstance()->sortBySortOrder(PicoSort::ORDER_TYPE_ASC))
-									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
-								Field::of()->producerId, Field::of()->name, null, array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
+								<option value="apa">apa</option>
 							</select>
 						</td>
 					</tr>
@@ -486,8 +482,8 @@ else if($inputGet->getUserAction() == UserAction::UPDATE)
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
-<div class="page page-update">
-	<div class="row">
+<div class="page page-jambi page-update">
+	<div class="jambi-wrapper">
 		<form name="updateform" id="updateform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
@@ -518,15 +514,8 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 					<tr>
 						<td><?php echo $appEntityLanguage->getProducerId();?></td>
 						<td>
-							<select class="form-control" name="producer_id" id="producer_id"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
-								<?php echo FormBuilder::getInstance()->createSelectOption(new Producer(null, $database), 
-								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setDraft(false))
-									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
-								PicoSortable::getInstance()
-									->add(PicoSort::getInstance()->sortBySortOrder(PicoSort::ORDER_TYPE_ASC))
-									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
-								Field::of()->producerId, Field::of()->name, $album->getProducerId(), array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
+							<select class="form-control" name="producer_id" id="producer_id" data-value="<?php echo $album->getProducerId();?>"><option value=""><?php echo $appLanguage->getSelectOne();?></option>
+								<option value="apa" <?php echo AttrUtil::selected($album->getProducerId(), 'apa');?>>apa</option>
 							</select>
 						</td>
 					</tr>
@@ -638,8 +627,8 @@ else if($inputGet->getUserAction() == UserAction::DETAIL)
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
-<div class="page page-detail">
-	<div class="row">
+<div class="page page-jambi page-detail">
+	<div class="jambi-wrapper">
 		<form name="detailform" id="detailform" action="" method="post">
 			<div class="alert alert-info">	
 			<?php
@@ -880,8 +869,8 @@ require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
-<div class="page page-detail">
-	<div class="row">
+<div class="page page-jambi page-detail">
+	<div class="jambi-wrapper">
 		<form name="detailform" id="detailform" action="" method="post">
 			<table class="responsive responsive-two-cols" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody>
@@ -1006,61 +995,22 @@ else
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
 $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 ?>
-<div class="page page-list">
-	<div class="row">
+<div class="page page-jambi page-list">
+	<div class="jambi-wrapper">
 		<div class="filter-section">
 			<form action="" method="get" class="filter-form">
-				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLanguage->getName();?></span>
-					<span class="filter-control">
-						<input type="text" name="name" class="form-control" value="<?php echo $inputGet->getName();?>" autocomplete="off"/>
-					</span>
-				</span>
-				
-				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLanguage->getTitle();?></span>
-					<span class="filter-control">
-						<input type="text" name="title" class="form-control" value="<?php echo $inputGet->getTitle();?>" autocomplete="off"/>
-					</span>
-				</span>
-				
 				<span class="filter-group">
 					<span class="filter-label"><?php echo $appEntityLanguage->getProducerId();?></span>
 					<span class="filter-control">
 							<select name="producer_id" class="form-control">
 								<?php echo FormBuilder::getInstance()->createSelectOption(new Producer(null, $database), 
 								PicoSpecification::getInstance()
-									->addAnd(PicoPredicate::getInstance()->setDraft(false))
-									->addAnd(PicoPredicate::getInstance()->setActive(true)), 
+									->addAnd(PicoPredicate::getInstance()->setActive('true'))
+									->addAnd(PicoPredicate::getInstance()->setDraft('true')), 
 								PicoSortable::getInstance()
 									->add(PicoSort::getInstance()->sortBySortOrder(PicoSort::ORDER_TYPE_ASC))
-									->add(PicoSort::getInstance()->sortByProducerId(PicoSort::ORDER_TYPE_ASC)), 
-								Field::of()->producerId, Field::of()->name, $inputGet->getProducerId(), array(Field::of()->numberOfSong, Field::of()->releaseDate)); ?>
-							</select>
-					</span>
-				</span>
-				
-				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLanguage->getReleaseDate();?></span>
-					<span class="filter-control">
-						<input type="text" name="release_date" class="form-control" value="<?php echo $inputGet->getReleaseDate();?>" autocomplete="off"/>
-					</span>
-				</span>
-				
-				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLanguage->getDuration();?></span>
-					<span class="filter-control">
-						<input type="text" name="duration" class="form-control" value="<?php echo $inputGet->getDuration();?>" autocomplete="off"/>
-					</span>
-				</span>
-				
-				<span class="filter-group">
-					<span class="filter-label"><?php echo $appEntityLanguage->getActive();?></span>
-					<span class="filter-control">
-							<select name="active" class="form-control" data-value="<?php echo $inputGet->getActive();?>">
-								<option value="" <?php echo AttrUtil::selected($inputGet->getActive(), '');?>><?php echo $appLanguage->getOptionLabelSelectOne();?></option>
-								<option value="true" <?php echo AttrUtil::selected($inputGet->getActive(), 'true');?>><?php echo $appLanguage->getOptionLabelYes();?></option>
-								<option value="false" <?php echo AttrUtil::selected($inputGet->getActive(), 'false');?>><?php echo $appLanguage->getOptionLabelNo();?></option>
+									->add(PicoSort::getInstance()->sortByName(PicoSort::ORDER_TYPE_ASC)), 
+								Field::of()->producerId, Field::of()->name, $inputGet->getProducerId()); ?>
 							</select>
 					</span>
 				</span>
@@ -1077,12 +1027,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 		<div class="data-section">
 			<?php 	
 			$specMap = array(
-			    "name" => "name",
-				"title" => "title",
-				"producerId" => "producerId",
-				"releaseDate" => "releaseDate",
-				"duration" => "duration",
-				"active" => "active"
+			    "producerId" => "producerId"
 			);
 			$sortOrderMap = array(
 			    "albumId" => "albumId",
@@ -1105,9 +1050,15 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 				"asDraft" => "asDraft",
 				"active" => "active"
 			);
-			            
+			
+			// You can define your own specifications
+			// Pay attention to security issues
 			$specification = PicoSpecification::fromUserInput($inputGet, $specMap);
+			
+			// You can define your own sortable
+			// Pay attention to security issues
 			$sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap);
+			
 			$pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 			$dataLoader = new Album(null, $database);
 			$pageData = $dataLoader->findAll($specification, $pageable, $sortable);
@@ -1119,7 +1070,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 			<div class="pagination pagination-top">
 			    <div class="pagination-number">
 			    <?php
-			    foreach($rowData->getPagination() as $pg)
+			    foreach($pageData->getPagination() as $pg)
 			    {
 			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="<?php echo PicoPagination::getPageUrl($pg['page']);?>"><?php echo $pg['page'];?></a></span><?php
 			    }
@@ -1172,10 +1123,10 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 									<input type="checkbox" class="checkbox check-slave checkbox-album-id" name="checked_row_id[]" value="<?php echo $album->getAlbumId();?>"/>
 								</td>
 								<td>
-									<a class="edit-control" href="<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->album_id, $objectName->getAlbumId);?>"><span class="fa fa-edit"></span></a>
+									<a class="edit-control" href="<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->album_id, $album->getAlbumId());?>"><span class="fa fa-edit"></span></a>
 								</td>
 								<td>
-									<a class="detail-control field-master" href="<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, Field::of()->album_id, $objectName->getAlbumId);?>"><span class="fa fa-folder"></span></a>
+									<a class="detail-control field-master" href="<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, Field::of()->album_id, $album->getAlbumId());?>"><span class="fa fa-folder"></span></a>
 								</td>
 								<td data-field="album_id"><?php echo $album->getAlbumId();?></td>
 								<td data-field="name"><?php echo $album->getName();?></td>
@@ -1207,7 +1158,7 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 			<div class="pagination pagination-bottom">
 			    <div class="pagination-number">
 			    <?php
-			    foreach($rowData->getPagination() as $pg)
+			    foreach($pageData->getPagination() as $pg)
 			    {
 			        ?><span class="page-selector<?php echo $pg['selected'] ? ' page-selected':'';?>" data-page-number="<?php echo $pg['page'];?>"><a href="<?php echo PicoPagination::getPageUrl($pg['page']);?>"><?php echo $pg['page'];?></a></span><?php
 			    }
@@ -1230,6 +1181,8 @@ $appEntityLanguage = new AppEntityLanguage(new Album(), $appConfig);
 <?php 
 require_once AppInclude::mainAppFooter(__DIR__, $appConfig);
 }
+
+
 ```
 
 ### Entity
