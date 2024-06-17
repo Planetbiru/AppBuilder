@@ -920,8 +920,6 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         
         $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
         
-        
-        
         $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_OPEN)); 
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
         
@@ -937,9 +935,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         $dataSection->appendChild($dom->createTextNode("\n")); 
         $dataSection->appendChild($pagination2);
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
-        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
-       
-        
+        $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG));    
 
         $dataSection->appendChild($dom->createTextNode("\n")); 
         
@@ -1167,7 +1163,7 @@ $resultSet = $pageData->getResult();
 
         // checkbox begin
         $td = $dom->createElement('td');
-        $td->setAttribute('class', 'data-selector');
+        $td->setAttribute('class', 'data-controll data-selector');
         $td->setAttribute('data-key', $primaryKey);
         $selector = '.checkbox-'.strtolower(str_replace('_', '-', $primaryKey));
         
@@ -1190,6 +1186,7 @@ $resultSet = $pageData->getResult();
         $spanEdit->appendChild($dom->createTextNode(''));
         
         $td2 = $dom->createElement('td');
+        $td2->setAttribute('class', 'data-controll data-editor');
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
         $td2->appendChild($spanEdit);
@@ -1205,6 +1202,7 @@ $resultSet = $pageData->getResult();
         $spanDetail->appendChild($dom->createTextNode(''));
         
         $td2 = $dom->createElement('td');
+        $td2->setAttribute('class', 'data-controll data-viewer');
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
         $td2->appendChild($spanDetail);
@@ -1343,7 +1341,7 @@ $resultSet = $pageData->getResult();
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         $tbody->appendChild($dom->createTextNode(self::PHP_OPEN_TAG));
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
-        $tbody->appendChild($dom->createTextNode("foreach(\$resultSet as \$dataIndex => \$album)")); 
+        $tbody->appendChild($dom->createTextNode("foreach(\$resultSet as \$dataIndex => \$".$objectName.")")); 
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t".self::CURLY_BRACKET_OPEN)); 
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
 
@@ -1378,9 +1376,7 @@ $resultSet = $pageData->getResult();
         $form->setAttribute('class', 'filter-form');
 
         
-        $form = $this->appendFilter($dom, $form, $filterFields);
-        
-        
+        $form = $this->appendFilter($dom, $form, $filterFields);    
         
         $submitWrapper = $dom->createElement('span');
         $submitWrapper->setAttribute('class', 'filter-group');
@@ -1402,7 +1398,6 @@ $resultSet = $pageData->getResult();
         $buttonSearch->setAttribute('class', 'btn btn-primary');
         $buttonSearch->setAttribute('value', self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage".self::CALL_GET."ButtonAdd();".self::PHP_CLOSE_TAG);
         $buttonSearch->setAttribute('onclick', "window.location='".self::PHP_OPEN_TAG.self::ECHO.self::VAR."currentModule".self::CALL_GET."RedirectUrl(UserAction::CREATE);".self::PHP_CLOSE_TAG."'");
-        $whiteSpace2 = $dom->createTextNode("\n\t\t\t");
         
         
         $addWrapper->appendChild($dom->createTextNode("\n\t\t\t"));
@@ -1509,6 +1504,15 @@ $resultSet = $pageData->getResult();
 
                 $referenceFilter = $field->getReferenceFilter();
                 
+
+                $value = $dom->createElement('option');
+                $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getSelectOne();".self::PHP_CLOSE_TAG;
+                $textLabel = $dom->createTextNode($caption);
+                $value->appendChild($textLabel);
+                $value->setAttribute('value', '');
+                $value->appendChild($textLabel);
+                $select->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
+                $select->appendChild($value);
                 $select = $this->appendOption($dom, $select, $objectName, $field, $referenceFilter, self::VAR."inputGet".self::CALL_GET.$inputGetName."()");
 
                 $filterGroup->appendChild($dom->createTextNode("\n\t\t\t"));
@@ -2055,7 +2059,6 @@ $resultSet = $pageData->getResult();
             else if($referenceData->getType() == 'truefalse')
             {
                 $map = (new MagicObject())
-                ->setValue1((new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'))
                 ->setValue2((new MagicObject())->setValue('true')->setLabel('<?php echo $appLanguage->getOptionLabelTrue();?>'))
                 ->setValue3((new MagicObject())->setValue('false')->setLabel('<?php echo $appLanguage->getOptionLabelFalse();?>'));
                 
@@ -2064,7 +2067,6 @@ $resultSet = $pageData->getResult();
             else if($referenceData->getType() == 'yesno')
             {
                 $map = (new MagicObject())
-                ->setValue1((new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'))
                 ->setValue2((new MagicObject())->setValue('yes')->setLabel('<?php echo $appLanguage->getOptionLabelYes();?>'))
                 ->setValue3((new MagicObject())->setValue('no')->setLabel('<?php echo $appLanguage->getOptionLabelNo();?>'));
                 
@@ -2073,7 +2075,6 @@ $resultSet = $pageData->getResult();
             else if($referenceData->getType() == 'onezero')
             {
                 $map = (new MagicObject())
-                ->setValue1((new MagicObject())->setValue('')->setLabel('<?php echo $appLanguage->getOptionLabelSelectOne();?>'))
                 ->setValue2((new MagicObject())->setValue('1')->setLabel('1'))
                 ->setValue3((new MagicObject())->setValue('0')->setLabel('0'));
 
@@ -2087,7 +2088,7 @@ $resultSet = $pageData->getResult();
                 $specification = $entity->getSpecification();
                 $sortable = $entity->getSortable();
                 $additionalOutput = $entity->getAdditionalOutput();
-                
+
                 if(isset($entity) && $entity->getEntityName() != null && $entity->getPrimaryKey() != null && $entity->getValue())
                 {
                     $input = $this->appendOptionEntity($dom, $input, $entity, $specification, $sortable, $selected, $additionalOutput);

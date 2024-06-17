@@ -23,7 +23,7 @@ class AppBuilder extends AppBuilderBase
         $objectName = lcfirst($entityName);
         $lines = array();
         
-        $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::CREATE)";
+        $lines[] = "if(".parent::VAR."inputPost->getUserAction() == UserAction::CREATE)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         foreach($appFields as $field)
@@ -72,7 +72,7 @@ class AppBuilder extends AppBuilderBase
         $updatePk = false;
         $lines = array();
         
-        $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::UPDATE)";
+        $lines[] = "if(".parent::VAR."inputPost->getUserAction() == UserAction::UPDATE)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
         
@@ -128,7 +128,7 @@ class AppBuilder extends AppBuilderBase
         $lines = array();
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
         
-        $lines[] = "if(".parent::VAR."inputGet->getUserAction() == UserAction::DELETE)";
+        $lines[] = "if(".parent::VAR."inputPost->getUserAction() == UserAction::DELETE)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableDeletionRowIds())";
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_OPEN;

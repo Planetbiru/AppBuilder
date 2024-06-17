@@ -267,19 +267,19 @@ class ScriptGenerator
         $uses[] = "use MagicObject\\Request\\InputGet;";
         $uses[] = "use MagicObject\\Request\\InputPost;";
         $uses[] = "use MagicObject\\Util\\AttrUtil;";
-        $uses[] = "use AppBuilder\\Field;";
-        $uses[] = "use AppBuilder\\UserAction;";
-        $uses[] = "use AppBuilder\\AppInclude;";
-        $uses[] = "use AppBuilder\\AppModule;";
-        $uses[] = "use AppBuilder\\AppEntityLanguage;";
+        $uses[] = "use MagicApp\\Field;";
+        $uses[] = "use MagicApp\\UserAction;";
+        $uses[] = "use MagicApp\\AppInclude;";
+        $uses[] = "use MagicApp\\AppModule;";
+        $uses[] = "use MagicApp\\AppEntityLanguage;";
         if($approvalRequired)
         {
             $uses[] = "use MagicObject\\SetterGetter;";
-            $uses[] = "use AppBuilder\\PicoApproval;";
-            $uses[] = "use AppBuilder\\WaitingFor;";
-            $uses[] = "use AppBuilder\\PicoTestUtil;";
+            $uses[] = "use MagicApp\\PicoApproval;";
+            $uses[] = "use MagicApp\\WaitingFor;";
+            $uses[] = "use MagicApp\\PicoTestUtil;";
         }
-        $uses[] = "use AppBuilder\\FormBuilder;";
+        $uses[] = "use MagicApp\\FormBuilder;";
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
         $uses = $this->addUseFromApproval($uses, $appConf, $approvalRequired, $entity);
         $uses = $this->addUseFromTrash($uses, $appConf, $trashRequired, $entity);
