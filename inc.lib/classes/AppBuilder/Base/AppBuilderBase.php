@@ -1818,7 +1818,7 @@ $resultSet = $pageData->getResult();
             $upperObjName = PicoStringUtil::upperCamelize($objName);
             $upperPropName = PicoStringUtil::upperCamelize($propName);
 
-            $val = '$objectName->hasValue'.$upperObjName.'() ? $objectName->hasValue'.$upperObjName.'()->get'.$upperPropName.'() : ""';
+            $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.'->get'.$upperObjName.'()->get'.$upperPropName.'() : ""';
             $result = self::VAR.$objectName.$val;
         }
         else
@@ -1873,7 +1873,7 @@ $resultSet = $pageData->getResult();
             $upperObjName = PicoStringUtil::upperCamelize($objName);
             $upperPropName = PicoStringUtil::upperCamelize($propName);
 
-            $val = '$objectName->hasValue'.$upperObjName.'() ? $objectName->hasValue'.$upperObjName.'()->get'.$upperPropName.'() : ""';
+            $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.'->get'.$upperObjName.'()->get'.$upperPropName.'() : ""';
             $result = self::VAR.$objectName.$val;
             $result2 = self::VAR.$objectApprovalName.$val;
         }

@@ -353,8 +353,6 @@
                     "tableName": "producer",
                     "primaryKey": "producer_id",
                     "value": "name",
-                    "objectName": "producer",
-                    "propertyName": "name",
                     "specification": [
                         {
                             "column": "active",

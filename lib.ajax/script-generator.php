@@ -11,7 +11,7 @@ $inputGet = new InputGet();
 if(isset($_POST) && !empty($_POST))
 {
     $request = new InputPost(true);
-    file_put_contents("coba.json", $request);
+    file_put_contents("user.json", $request);
 }
 else
 {
