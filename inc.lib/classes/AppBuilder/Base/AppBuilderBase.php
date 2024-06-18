@@ -2721,16 +2721,17 @@ $resultSet = $pageData->getResult();
      * @param SecretObject $appConf
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
+     * @param MagicObject[] $referenceData
      * @return void
      */
-    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo)
+    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $referenceData)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity($entityMain->getEntityName(), $entityMain->getTableName(), null, $this->getSucessorMainColumns());
+        $generator->generateCustomEntity($entityMain->getEntityName(), $entityMain->getTableName(), null, $this->getSucessorMainColumns(), false, $referenceData);
     }
     
     /**
@@ -2742,9 +2743,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityApproval
+     * @param MagicObject[] $referenceData
      * @return void
      */
-    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval)
+    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval, $referenceData)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
@@ -2753,7 +2755,7 @@ $resultSet = $pageData->getResult();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
 
         $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName(), 
-        $this->getPredecessorApprovalColumns($entityApproval), $this->getSucessorApprovalColumns(), true);
+        $this->getPredecessorApprovalColumns($entityApproval), $this->getSucessorApprovalColumns(), true, $referenceData);
     }
     
     /**
@@ -2765,9 +2767,10 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityTrash
+     * @param MagicObject[] $referenceData
      * @return void
      */
-    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash)
+    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();

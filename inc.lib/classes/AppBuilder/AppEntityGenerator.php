@@ -51,7 +51,7 @@ class AppEntityGenerator extends PicoEntityGenerator
      *
      * @return string
      */
-    public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false)
+    public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false, $referenceData = null)
     {
         $typeMap = $this->getTypeMap();
         $picoTableName = $this->tableName;

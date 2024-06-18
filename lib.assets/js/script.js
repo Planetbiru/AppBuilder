@@ -145,6 +145,14 @@ function getReferenceResource()
 			  <td>Value Column</td>
 			  <td><input class="form-control rd-value-column" type="text"></td>
 			</tr>
+			<tr class="display-reference">
+			  <td>Reference Object Name</td>
+			  <td><input class="form-control rd-reference-object-name" type="text"></td>
+			</tr>
+			<tr class="display-reference">
+			  <td>Reference Property Name</td>
+			  <td><input class="form-control rd-reference-property-name" type="text"></td>
+			</tr>
 		  </tbody>
 		</table>
 		<h4>Specfification</h4>
@@ -333,6 +341,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '.reference-button-data', function(e2){
 		$('#modal-create-reference-data').find('.modal-title').text('Create Data Reference');
+		$('#modal-create-reference-data').attr('data-reference-type', 'data');
 		let parentTd = $(this).closest('td'); 
 		let parentTr = $(this).closest('tr'); 
 		let fieldName = parentTr.attr('data-field-name');
@@ -364,6 +373,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '.reference-button-filter', function(e2){
 		$('#modal-create-reference-data').find('.modal-title').text('Create Filter Reference');
+		$('#modal-create-reference-data').attr('data-reference-type', 'filter');
 
 		let parentTd = $(this).closest('td'); 
 		let parentTr = $(this).closest('tr'); 
@@ -996,15 +1006,18 @@ function generateRow(field, args, skipedOnInsertEdit)
 	cls = ' class="'+classes.join(' ')+'"';
 	let insertRow = '';
 	let editRow = '';
+	let listRow = '';
 	if($.inArray(field, skipedOnInsertEdit) != -1)
 	{
 		insertRow = '  <td align="center"><input type="checkbox" class="include_insert" name="include_insert_'+field+'" value="0" disabled="disabled"></td>\r\n';
 		editRow = '  <td align="center"><input type="checkbox" class="include_edit" name="include_edit_'+field+'" value="0" disabled="disabled"></td>\r\n';
+		listRow = '  <td align="center"><input type="checkbox" class="include_list" name="include_list_'+field+'" value="1"></td>\r\n';
 	}
 	else
 	{
 		insertRow = '  <td align="center"><input type="checkbox" class="include_insert" name="include_insert_'+field+'" value="1" checked="checked"></td>\r\n';
 		editRow = '  <td align="center"><input type="checkbox" class="include_edit" name="include_edit_'+field+'" value="1" checked="checked"></td>\r\n';
+		listRow = '  <td align="center"><input type="checkbox" class="include_list" name="include_list_'+field+'" value="1" checked="checked"></td>\r\n';
 	}
 
 	var rowHTML =
@@ -1014,7 +1027,7 @@ function generateRow(field, args, skipedOnInsertEdit)
 	insertRow+
 	editRow+
 	'  <td align="center"><input type="checkbox" class="include_detail" name="include_detail_'+field+'" value="1" checked="checked"></td>\r\n'+
-	'  <td align="center"><input type="checkbox" class="include_list" name="include_list_'+field+'" value="1" checked="checked"></td>\r\n'+
+	listRow+
 	'  <td align="center"><input type="checkbox" class="include_key" name="include_key_'+field+'" value="1"></td>\r\n'+
 	'  <td align="center"><input type="checkbox" class="include_required" name="include_required_'+field+'" value="1"></td>\r\n'+
 	'  <td align="center"><input type="radio" class="input-element-type" name="element_type_'+field+'" value="text" checked="checked"></td>\r\n'+
@@ -1138,11 +1151,17 @@ function setEntityData(data)
 	entity.tableName = entity.tableName ? entity.tableName : '';
 	entity.primaryKey = entity.primaryKey ? entity.primaryKey : '';
 	entity.value = entity.value ? entity.value : '';
+	entity.objectName = entity.objectName ? entity.objectName : '';
+	entity.propertyName = entity.propertyName ? entity.propertyName : '';
+
 	let selector = '[data-name="entity"]';
 	$(selector).find('.rd-entity-name').val(entity.entityName);
 	$(selector).find('.rd-table-name').val(entity.tableName);
 	$(selector).find('.rd-primary-key').val(entity.primaryKey);
 	$(selector).find('.rd-value-column').val(entity.value);
+	$(selector).find('.rd-reference-object-name').val(entity.objectName);
+	$(selector).find('.rd-reference-property-name').val(entity.propertyName);
+
 	setSpecificationData(data);
 	setSortableData(data);
 	setAdditionalOutputData(data)
@@ -1156,6 +1175,8 @@ function getEntityData()
 	tableName: $(selector).find('.rd-table-name').val().trim(),
 	primaryKey: $(selector).find('.rd-primary-key').val().trim(),
 	value: $(selector).find('.rd-value-column').val().trim(),
+	objectName: $(selector).find('.rd-reference-object-name').val().trim(),
+	propertyName: $(selector).find('.rd-reference-property-name').val().trim(),
 	specification: getSpecificationData(),
 	sortable: getSortableData(),
 	additionalOutput: getAdditionalOutputData()

@@ -208,6 +208,7 @@ class ScriptGenerator
         $detailFields = array();
         $listFields = array();
         $filterFields = array();
+        $referenceData = array();
         $referenceEntities = array();
         $allField = array();
         foreach($request->getFields() as $value) {
@@ -229,6 +230,7 @@ class ScriptGenerator
                 $filterFields[$field->getFieldName()] = $field;
             }
             if($this->hasReferenceData($field)){
+                $referenceData[] = $field->getReferenceData();
                 $referenceEntities[] = $field->getReferenceData()->getEntity();
             }
             if($this->hasReferenceFilter($field)){
@@ -378,14 +380,14 @@ class ScriptGenerator
         $path = $baseDir."/".$moduleFile;
         file_put_contents($path, "<"."?php\r\n\r\n".$merged."\r\n\r\n");
         
-        $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo);
+        $appBuilder->generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $referenceData);
         if($approvalRequired)
         {
-            $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval);
+            $appBuilder->generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval, $referenceData);
         }
         if($trashRequired)
         {
-            $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash);
+            $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData);
         }
         $this->generateEntitiesIfNotExists($database, $appConf, $referenceEntities);
     }

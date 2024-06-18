@@ -150,3 +150,10 @@ table.table.table-reference tr>td:last-child {
 .map-section {
 	display: none;
 }
+
+.display-reference{
+	display: none;
+}
+[data-reference-type="data"] .display-reference{
+	display: table-row;
+}
