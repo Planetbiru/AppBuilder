@@ -11,6 +11,7 @@ use AppBuilder\EntityApvInfo;
 use AppBuilder\EntityInfo;
 use DOMDocument;
 use DOMElement;
+use DOMText;
 use MagicObject\Database\PicoDatabase;
 use MagicObject\MagicObject;
 use MagicObject\SecretObject;
@@ -1790,7 +1791,7 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param string $objectName
      * @param AppField $insertField
-     * @return DOMElement
+     * @return DOMElement|DOMText
      */
     private function createDetailValue($dom, $objectName, $field)
     {
@@ -1801,14 +1802,32 @@ $resultSet = $pageData->getResult();
         
         if($field->getElementType() == 'checkbox')
         {
-            $val = "->option".$upperFieldName."(".$yes.", ".$no.");";
+            $val = "->option".$upperFieldName."(".$yes.", ".$no.")";
+            $result = self::VAR.$objectName.$val;
+        }
+        else if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() != 'type'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            )
+        {
+            $objName = $field->getReferenceData()->getEntity()->getObjectName();
+            $propName = $field->getReferenceData()->getEntity()->getPropertyName();
+            $upperObjName = PicoStringUtil::upperCamelize($objName);
+            $upperPropName = PicoStringUtil::upperCamelize($propName);
+
+            $val = '$objectName->hasValue'.$upperObjName.'() ? $objectName->hasValue'.$upperObjName.'()->get'.$upperPropName.'() : ""';
+            $result = self::VAR.$objectName.$val;
         }
         else
         {
-            $val = "".self::CALL_GET.$upperFieldName."();";
+            $val = "".self::CALL_GET.$upperFieldName."()";
+            $result = self::VAR.$objectName.$val;
         }
         
-        return $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
+        return $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.$result.";".self::PHP_CLOSE_TAG);
 
     }
 
@@ -1837,15 +1856,36 @@ $resultSet = $pageData->getResult();
         
         if($field->getElementType() == 'checkbox')
         {
-            $val = "->option".$upperFieldName."(".$yes.", ".$no.");";
+            $val = "->option".$upperFieldName."(".$yes.", ".$no.")";
+            $result = self::VAR.$objectName.$val;
+            $result2 = self::VAR.$objectApprovalName.$val;
+        }
+        else if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() != 'type'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            )
+        {
+            $objName = $field->getReferenceData()->getEntity()->getObjectName();
+            $propName = $field->getReferenceData()->getEntity()->getPropertyName();
+            $upperObjName = PicoStringUtil::upperCamelize($objName);
+            $upperPropName = PicoStringUtil::upperCamelize($propName);
+
+            $val = '$objectName->hasValue'.$upperObjName.'() ? $objectName->hasValue'.$upperObjName.'()->get'.$upperPropName.'() : ""';
+            $result = self::VAR.$objectName.$val;
+            $result2 = self::VAR.$objectApprovalName.$val;
         }
         else
         {
-            $val = "".self::CALL_GET.$upperFieldName."();";
+            $val = "".self::CALL_GET.$upperFieldName."()";
+            $result = self::VAR.$objectName.$val;
+            $result2 = self::VAR.$objectApprovalName.$val;
         }
         
-        $value = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectName.$val.self::PHP_CLOSE_TAG);
-        $value2 = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR.$objectApprovalName.$val.self::PHP_CLOSE_TAG);
+        $value = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.$result.";".self::PHP_CLOSE_TAG);
+        $value2 = $dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.$result2.";".self::PHP_CLOSE_TAG);
 
         $td1->appendChild($label);
         
