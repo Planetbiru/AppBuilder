@@ -133,7 +133,7 @@ class AppEntityGenerator extends PicoEntityGenerator
                 $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra);
                 $attrs[] = $prop;
 
-                if(isset($referenceData) && is_array($referenceData) && isset($referenceData[$columnName]))
+                if(isset($referenceData) && is_array($referenceData) && isset($referenceData[$columnName]) && $referenceData[$columnName]->getType() == 'entity')
                 {
                     $referenceEntity = $referenceData[$columnName]->getEntity();
                     $entityName = $referenceEntity->getEntityName(); // var type

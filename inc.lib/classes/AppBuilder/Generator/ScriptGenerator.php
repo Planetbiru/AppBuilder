@@ -66,12 +66,26 @@ class ScriptGenerator
      * @param AppField $value
      * @return boolean
      */
-    public function hasReferenceData($value)
+    public function hasReferenceData($value, $includeMap = false)
     {
-        return $value->getReferenceData() != null 
-        && $value->getReferenceData()->getType() == 'entity' 
-        && $value->getReferenceData()->getEntity() != null 
-        && $value->getReferenceData()->getEntity()->getEntityName() != null;
+        if($includeMap)
+        {
+            return ($value->getReferenceData() != null 
+            && $value->getReferenceData()->getType() == 'entity' 
+            && $value->getReferenceData()->getEntity() != null 
+            && $value->getReferenceData()->getEntity()->getEntityName() != null)
+            || ($value->getReferenceData() != null 
+            && $value->getReferenceData()->getType() == 'map' 
+            && $value->getReferenceData()->getMap() != null 
+            );
+        }
+        else
+        {
+            return $value->getReferenceData() != null 
+            && $value->getReferenceData()->getType() == 'entity' 
+            && $value->getReferenceData()->getEntity() != null 
+            && $value->getReferenceData()->getEntity()->getEntityName() != null;
+        }
     }
 
     /**
@@ -229,8 +243,10 @@ class ScriptGenerator
             if($field->getFilterElementType() != "") {
                 $filterFields[$field->getFieldName()] = $field;
             }
-            if($this->hasReferenceData($field)){
+            if($this->hasReferenceData($field, true)){
                 $referenceData[$field->getFieldName()] = $field->getReferenceData();
+            }
+            if($this->hasReferenceData($field)){
                 $referenceEntities[] = $field->getReferenceData()->getEntity();
             }
             if($this->hasReferenceFilter($field)){
@@ -245,10 +261,11 @@ class ScriptGenerator
         $entityApproval = $this->getEntityApproval($entity);
         $entityTrash = $this->getEntityTrash($entity);
      
+        $features = $request->getFeatures();
 
         $entityMainName = $entityMain->getEntityName();
-        $approvalRequired = AppBuilderBase::isTrue($entity->getApprovalRequired());
-        $trashRequired = AppBuilderBase::isTrue($entity->getTrashRequired());
+        $approvalRequired = AppBuilderBase::isTrue($features->getApprovalRequired());
+        $trashRequired = AppBuilderBase::isTrue($features->getTrashRequired());
         
         $activationKey = $entityInfo->getActive();
         
@@ -322,8 +339,8 @@ class ScriptGenerator
             // GUI
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
-            $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $approvalRequired, $entityApproval); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval); 
+            $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $referenceData, $approvalRequired, $entityApproval); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval); 
         }
         else
         {
@@ -341,8 +358,8 @@ class ScriptGenerator
             $rejectionSection = "";
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields); 
-            $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval); 
+            $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $referenceData); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval); 
         }
         
         // prepare CRUD section end

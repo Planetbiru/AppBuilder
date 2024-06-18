@@ -614,32 +614,62 @@ class AppBuilderBase //NOSONAR
      *
      * @param MagicObject $mainEntity
      * @param AppField[] $appFields
+     * @param MagicObject[] $referenceData
      * @param boolean $approvalRequired
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiDetail($mainEntity, $appFields, $approvalRequired = false, $approvalEntity = null)
+    public function createGuiDetail($mainEntity, $appFields, $referenceData, $approvalRequired = false, $approvalEntity = null)
     {
         if($approvalRequired)
         {
-            return $this->createGuiDetailWithApproval($mainEntity, $appFields, $approvalRequired, $approvalEntity);
+            return $this->createGuiDetailWithApproval($mainEntity, $appFields, $referenceData, $approvalRequired, $approvalEntity);
         }
         else
         {
-            return $this->createGuiDetailWithoutApproval($mainEntity, $appFields);
+            return $this->createGuiDetailWithoutApproval($mainEntity, $appFields, $referenceData);
         }
     }
+
+    public function defineMap($referenceData)
+    {
+        foreach($referenceData as $fieldName => $field)
+        {
+            if($field->getType() == 'map'
+            && $field->getMap() != null
+            )
+            {
+                $values = $field->getMap()->valueArray();
+                $arr1 = array();
+                foreach($values as $val1)
+                {
+                    $arr2 = array();
+                    foreach($val1 as $key2=>$val2)
+                    {
+                        $arr2[] = '"'.trim($key2).'" => "'.str_replace("\"", "\\\"", $val2).'"';
+                    }
+                    $arr1[] = '"'.trim($val1['value']).'" => array('.implode(', ', $arr2).')';
+                }
+                $upperFieldName = PicoStringUtil::upperCamelize($fieldName);
+                $map[] = '$mapFor'.$upperFieldName." = array(\r\n".self::TAB1.implode(",\r\n".self::TAB1, $arr1)."\r\n".");";
+            }
+        }
+        return implode("\r\n", $map);
+    }
+
     /**
      * Create GUI DETAIL section with approval
      *
      * @param MagicObject $mainEntity
      * @param AppField[] $appFields
+     * @param MagicObject[] $referenceData
      * @param boolean $approvalRequired
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiDetailWithApproval($mainEntity, $appFields, $approvalRequired = false, $approvalEntity = null)
+    public function createGuiDetailWithApproval($mainEntity, $appFields, $referenceData, $approvalRequired = false, $approvalEntity = null)
     {
+        $map = $this->addIndent($this->defineMap($referenceData), 3);
         $entityName = $mainEntity->getEntityName();
         $entityApprovalName = $approvalEntity->getEntityName();
         $objectApprovalName = PicoStringUtil::camelize($entityApprovalName);
@@ -658,6 +688,8 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'// define map here';
+        $getData[] = $map;
 
         $getData[] = self::TAB1.self::TAB1.self::TAB1."if(".self::VAR.$objectName."->notNullApprovalId())";
         $getData[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
@@ -682,6 +714,8 @@ class AppBuilderBase //NOSONAR
 
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
+
+
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
 
@@ -720,10 +754,12 @@ class AppBuilderBase //NOSONAR
      *
      * @param MagicObject $mainEntity
      * @param AppField[] $appFields
+     * @param MagicObject[] $referenceData
      * @return string
      */
-    public function createGuiDetailWithoutApproval($mainEntity, $appFields)
+    public function createGuiDetailWithoutApproval($mainEntity, $appFields, $referenceData)
     {
+        $map = $this->addIndent($this->defineMap($referenceData), 3);
         $entityName = $mainEntity->getEntityName();
         $primaryKeyName =  $mainEntity->getPrimaryKey();
         $upperPkName = PicoStringUtil::upperCamelize($primaryKeyName);
@@ -744,6 +780,9 @@ class AppBuilderBase //NOSONAR
 
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
+        $getData[] = self::TAB1.self::TAB1.self::TAB1.'// define map here';
+        $getData[] = $map;
+
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
         $getData[] = $this->getIncludeFooter();
 
@@ -895,11 +934,12 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
      *
      * @param MagicObject $mainEntity
      * @param AppField[] $appFields
+     * @param MagicObject[] $referenceData
      * @param boolean $approvalRequired
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiList($entityMain, $listFields, $filterFields, $approvalRequired, $entityApproval)
+    public function createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval)
     {
         $entityName = $entityMain->getentityName();
         $primaryKey = $entityMain->getPrimaryKey();
@@ -917,7 +957,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
         
-        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName))); 
+        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName, $referenceData))); 
         
         $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
         
@@ -1027,12 +1067,13 @@ else
      * @param MagicObject $mainEntity
      * @param AppField[] $listFields
      * @param AppField[] $filterFields
-     * @param string $objectName
+     * @param string $referenceData
+     * @param MagicObject[] $objectName
      * @return string
      */
-    public function beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName)
+    public function beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName, $referenceData)
     {
-
+        $map = $this->defineMap($referenceData);
         $arrFilter = array();
         $arrSort = array();
         foreach($filterFields as $field)
@@ -1045,6 +1086,7 @@ else
         }
         $script = 
 '
+'.$map.'
 $specMap = array(
     '.implode(",\n\t", $arrFilter).'
 );
@@ -1806,7 +1848,7 @@ $resultSet = $pageData->getResult();
         }
         else if($field->getElementType() == 'select' 
             && $field->getReferenceData() != null 
-            && $field->getReferenceData()->getType() != 'type'
+            && $field->getReferenceData()->getType() == 'entity'
             && $field->getReferenceData()->getEntity() != null
             && $field->getReferenceData()->getEntity()->getObjectName() != null
             && $field->getReferenceData()->getEntity()->getPropertyName() != null
@@ -1819,6 +1861,19 @@ $resultSet = $pageData->getResult();
 
             $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.'->get'.$upperObjName.'()->get'.$upperPropName.'() : ""';
             $result = self::VAR.$objectName.$val;
+        }
+        else if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'map'
+            && $field->getReferenceData()->getMap() != null
+            )
+        {
+            $v1 = 'isset('.'$mapFor'.$upperFieldName.')';
+            $v2 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()])';
+            $v3 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()]["label"])';
+            $v4 = '$mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()]["label"]';
+            $val = "$v1 && $v2 && $v3 ? $v4 : \"\"";
+            $result = $val;
         }
         else
         {
@@ -1861,7 +1916,7 @@ $resultSet = $pageData->getResult();
         }
         else if($field->getElementType() == 'select' 
             && $field->getReferenceData() != null 
-            && $field->getReferenceData()->getType() != 'type'
+            && $field->getReferenceData()->getType() == 'map'
             && $field->getReferenceData()->getEntity() != null
             && $field->getReferenceData()->getEntity()->getObjectName() != null
             && $field->getReferenceData()->getEntity()->getPropertyName() != null
@@ -1875,6 +1930,26 @@ $resultSet = $pageData->getResult();
             $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.'->get'.$upperObjName.'()->get'.$upperPropName.'() : ""';
             $result = self::VAR.$objectName.$val;
             $result2 = self::VAR.$objectApprovalName.$val;
+        }
+        else if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'map'
+            && $field->getReferenceData()->getMap() != null
+            )
+        {
+            $v1 = 'isset('.'$mapFor'.$upperFieldName.')';
+            $v2 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()])';
+            $v3 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()["label"]])';
+            $v4 = '$mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()]["label"]';
+            $val = "$v1 && $v2 && $v3 ? $v4 : \"\"";
+            $result = $val;
+
+            $v12 = 'isset('.'$mapFor'.$upperFieldName.')';
+            $v22 = 'isset($mapFor'.$upperFieldName.'[$'.$objectApprovalName.'->get'.$upperFieldName.'()])';
+            $v32 = 'isset($mapFor'.$upperFieldName.'[$'.$objectApprovalName.'->get'.$upperFieldName.'()]["label"])';
+            $v42 = '$mapFor'.$upperFieldName.'[$'.$objectApprovalName.'->get'.$upperFieldName.'()]["label"]';
+            $val2 = "$v12 && $v22 && $v32 ? $v42 : \"\"";
+            $result2 = $val2;
         }
         else
         {
