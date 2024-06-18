@@ -4,6 +4,7 @@ namespace AppBuilder;
 
 use MagicObject\Generator\PicoColumnGenerator;
 use MagicObject\Generator\PicoEntityGenerator;
+use MagicObject\MagicObject;
 use MagicObject\Util\PicoStringUtil;
 
 class AppEntityGenerator extends PicoEntityGenerator
@@ -46,10 +47,41 @@ class AppEntityGenerator extends PicoEntityGenerator
         $path = str_replace("\\", "/", $path); 
         return file_exists($path);
     }
+
+    public function createPropertyReference($joinColumn, $entityName, $objectName, $propertyName, $referenceColumnName)
+    {
+        $description = $this->getPropertyName($objectName);
+        $objectName = PicoStringUtil::camelize($objectName);
+
+        $docs = array();
+        $docStart = "\t/**";
+        $docEnd = "\t */";
+
+        $attrs = array();
+        $attrs[] = "name=\"$joinColumn\"";
+        $attrs[] = "referenceColumnName=\"$referenceColumnName\"";
+
+        $docs[] = $docStart;
+        $docs[] = "\t * ".$description;
+        $docs[] = "\t * ";
+        $docs[] = "\t * @JoinColumn(".implode(", ", $attrs).")";
+        $docs[] = "\t * @Label(content=\"$description\")";
+        $docs[] = "\t * @var $entityName";
+        $docs[] = $docEnd;
+        $prop = "\tprotected \$$objectName;";
+        return implode("\r\n", $docs)."\r\n".$prop."\r\n";
+    }
+    
     /**
      * Generate custom entity
      *
-     * @return string
+     * @param string $realEntityName
+     * @param string $realTableName
+     * @param array $predecessorField
+     * @param array $successorField
+     * @param boolean $removePk
+     * @param MagicObject[] $referenceData
+     * @return integer
      */
     public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false, $referenceData = null)
     {
@@ -82,6 +114,9 @@ class AppEntityGenerator extends PicoEntityGenerator
         {
             $rows = $this->updateField($rows, $predecessorField, $successorField, $removePk);
         }
+
+
+        
         
 
         $attrs = array();
@@ -97,6 +132,19 @@ class AppEntityGenerator extends PicoEntityGenerator
                 $columnExtra = $row['Extra'];
                 $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra);
                 $attrs[] = $prop;
+
+                if(isset($referenceData) && is_array($referenceData) && isset($referenceData[$columnName]))
+                {
+                    $referenceEntity = $referenceData[$columnName]->getEntity();
+                    $entityName = $referenceEntity->getEntityName(); // var type
+                    $propertyName = $referenceEntity->getPropertyName(); // object value
+                    $objectName = $referenceEntity->getObjectName(); // var name
+                    $referenceColumnName = $referenceEntity->getPrimaryKey(); // reference column key
+                    $joinColumn = $columnName;
+                    $propRef = $this->createPropertyReference($joinColumn, $entityName, $objectName, $propertyName, $referenceColumnName);
+                    $attrs[] = $propRef;
+                }
+
             }
         }    
         $prettify = $this->prettify ? 'true' : 'false';

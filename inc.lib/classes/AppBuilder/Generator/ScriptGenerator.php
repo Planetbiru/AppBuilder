@@ -230,7 +230,7 @@ class ScriptGenerator
                 $filterFields[$field->getFieldName()] = $field;
             }
             if($this->hasReferenceData($field)){
-                $referenceData[] = $field->getReferenceData();
+                $referenceData[$field->getFieldName()] = $field->getReferenceData();
                 $referenceEntities[] = $field->getReferenceData()->getEntity();
             }
             if($this->hasReferenceFilter($field)){
