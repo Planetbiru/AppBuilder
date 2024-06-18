@@ -922,7 +922,6 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::CURLY_BRACKET_OPEN)); 
-        //$dataSection->appendChild($dom->createTextNode("\n\t".self::VAR."dataOffset = (\$pageData->getPageNumber() - 1) * \$pageData->getPageSize();")); 
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_CLOSE_TAG)); 
         
         $pagination1 = $dom->createTextNode($this->createPagination("pagination-top"));
