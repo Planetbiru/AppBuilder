@@ -240,7 +240,7 @@ class AppBuilderBase //NOSONAR
                 $methodSource = PicoStringUtil::upperCamelize($fieldName);
             }
             $methodTarget = PicoStringUtil::upperCamelize($fieldName);
-            return self::TAB1 . self::VAR . $objectName . self::CALL_SET . $methodTarget . "(" . self::VAR . "inputPost".self::CALL_GET.$methodSource . "(PicoFilterConstant::" . $fieldFilter . "));";
+            return self::TAB1 . self::VAR . $objectName . self::CALL_SET . $methodTarget . "(" . self::VAR . "inputPost".self::CALL_GET.$methodSource . "(PicoFilterConstant::" . $fieldFilter . ", false, false, true));";
         } else {
             return self::TAB1 . self::VAR . $objectName . self::CALL_SET."('" . $fieldName . "', " . self::VAR . "inputPost".self::CALL_GET."('" . $fieldName . "', PicoFilterConstant::" . $fieldFilter . "));";
         }
@@ -2852,7 +2852,7 @@ $resultSet = $pageData->getResult();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
         $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName(),
-        $this->getPredecessorTrashColumns($entityTrash), $this->getSucessorTrashColumns(), true);
+        $this->getPredecessorTrashColumns($entityTrash), $this->getSucessorTrashColumns(), true, $referenceData);
     }
 
     /**
