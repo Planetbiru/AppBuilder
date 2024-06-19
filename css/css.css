@@ -167,7 +167,8 @@ table.table.table-reference tr>td:last-child {
 .entity-query {
 	padding: 20px;
 	font-family: 'Courier New', Courier, monospace;
-	min-height: calc(100vh - 120px);
+	height: calc(100vh - 120px);
 	border: 1px solid #DDD;
 	background-color: #FAFAFA;
+	overflow: auto;
   }

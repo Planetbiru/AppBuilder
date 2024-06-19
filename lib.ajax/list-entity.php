@@ -15,7 +15,7 @@ try
     foreach($list as $idx=>$file)
     {
         $entity = basename($file, '.php');
-        $li[] = '<li class="entity-li"><input type="checkbox" name="entity['.$idx.']" value="'.$entity.'"> <a href="#" data-entity-name="'.$entity.'">'.$entity.'</a></li>';
+        $li[] = '<li class="entity-li"><input type="checkbox" class="entity-checkbox" name="entity['.$idx.']" value="'.$entity.'" checked> <a href="#" data-entity-name="'.$entity.'">'.$entity.'</a></li>';
     }
     echo '<ul class="entity-ul">'."\r\n\t".implode("\r\n\t", $li)."\r\n".'</ul>';
 }

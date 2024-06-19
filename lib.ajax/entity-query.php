@@ -1,13 +1,13 @@
 <?php
 
 use MagicObject\Generator\PicoDatabaseDump;
-use MagicObject\Request\InputGet;
+use MagicObject\Request\InputPost;
 
 require_once dirname(__DIR__) . "/inc.app/app.php";
 require_once dirname(__DIR__) . "/inc.app/sessions.php";
 require_once dirname(__DIR__) . "/inc.app/database.php";
 
-$inputGet = new InputGet();
+$inputPost = new InputPost();
 
 try
 {
@@ -18,17 +18,18 @@ try
     
     $allQueries = array();
 
-    if($inputGet->countableEntity())
+    if($inputPost->getEntity() != null && $inputPost->countableEntity())
     {
-        $inputEntity = $inputGet->getEntity();
+        $inputEntity = $inputPost->getEntity();
         foreach($inputEntity as $entityName)
         {
             $entityName = trim($entityName);
             $path = $baseDir."/".$entityName.".php";
+            $entityQueries = array();
             if(file_exists($path))
             {
                 include_once $path;
-
+                
                 $className = "\\".$baseEntity."\\".$entityName;
                 $entity = new $className(null, $database);
                 $dumper = new PicoDatabaseDump();
@@ -36,7 +37,13 @@ try
                 $quertArr = $dumper->createAlterTableAdd($entity);
                 foreach($quertArr as $sql)
                 {
-                    $allQueries[] = $sql."";
+                    $entityQueries[] = $sql."";
+                }
+                if(!empty($entityQueries))
+                {
+                    $allQueries[] = "-- SQL for $entityName begin";
+                    $allQueries[] = implode("\r\n", $entityQueries);
+                    $allQueries[] = "-- SQL for $entityName end\r\n";
                 }
             }
         }

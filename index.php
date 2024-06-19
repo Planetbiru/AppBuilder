@@ -507,7 +507,7 @@ require_once __DIR__ . "/inc.app/navs.php";
             <div class="col col-10">
               <div class="column-title"><h4>Query</h4></div>
               <div class="column-body">
-                <div class="entity-query"></div>
+                <div class="entity-query" contenteditable="true" spellcheck="false"></div>
               </div>
             </div>
           </div>

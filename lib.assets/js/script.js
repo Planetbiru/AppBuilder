@@ -472,9 +472,39 @@ $(document).ready(function(){
 	  }
 	});
 
+	$(document).on('change', '.entity-checkbox', function(e){
+		let ents = getEntitySelection();
+		getEntityQuery(ents);
+	});
+
 	loadTable();
 	updateEntity();
 });
+
+function getEntitySelection()
+{
+	let ents = [];
+	$('.entity-checkbox').each(function(){
+		if($(this)[0].checked)
+		{
+			ents.push($(this).val());
+		}
+	});
+	return ents;
+}
+
+function getEntityQuery(entity)
+{
+	$.ajax({
+		type:'POST',
+		url:'lib.ajax/entity-query.php',
+		data:{entity:entity},
+		dataType:'html',
+		success: function(data){
+			$('.entity-query').empty().append(data)
+		}
+	})
+}
 
 function updateEntity()
 {
@@ -483,10 +513,14 @@ function updateEntity()
 		url:'lib.ajax/list-entity.php',
 		dataType:'html',
 		success: function(data){
-			$('.entity-list').empty().append(data)
+			$('.entity-list').empty().append(data);
+			let ents = getEntitySelection();
+			getEntityQuery(ents);
 		}
 	})
 }
+
+
 function saveReference(fieldName, key, value)
 {
 	$.ajax({
