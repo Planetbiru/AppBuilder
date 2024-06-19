@@ -473,8 +473,20 @@ $(document).ready(function(){
 	});
 
 	loadTable();
+	updateEntity();
 });
 
+function updateEntity()
+{
+	$.ajax({
+		type:'GET',
+		url:'lib.ajax/list-entity.php',
+		dataType:'html',
+		success: function(data){
+			$('.entity-list').empty().append(data)
+		}
+	})
+}
 function saveReference(fieldName, key, value)
 {
 	$.ajax({
@@ -677,7 +689,7 @@ function generateAllCode(dataToPost)
 		data:dataToPost,
 		success: function(data)
 		{
-			
+			loadTable();
 		}
 	});
 }

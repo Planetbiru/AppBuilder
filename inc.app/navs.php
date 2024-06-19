@@ -11,6 +11,7 @@ $appNavs = (new AppNavs())
     ->add(new AppNav('module', 'Module', true))
     ->add(new AppNav('column', 'Column'))
     ->add(new AppNav('generated-file', 'File'))
+    ->add(new AppNav('generated-entity', 'Entity'))
     ->add(new AppNav('generated-query', 'Query'))
     ->add(new AppNav('docs', 'Docs'))
 ;

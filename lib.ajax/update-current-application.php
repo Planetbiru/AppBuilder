@@ -16,10 +16,9 @@ try
 	$appConfig->setEntityInfo($inputPost->getEntityInfo());
 
 	AppBuilder::updateConfig($appId, $appBaseConfigPath, $appConfig);
-
-
 }
 catch(Exception $e)
 {
-	echo $e->getMessage();
+    error_log($e->getMessage());
+    // do nothing
 }

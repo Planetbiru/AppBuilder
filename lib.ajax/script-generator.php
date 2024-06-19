@@ -27,5 +27,6 @@ if($request->issetFields())
     $scriptGenerator->generate($database, $request, $builderConfig, $appConfig, $entityInfo, $entityApvInfo);
     
 }
-
+header("Content-type: application/json");
+echo "{}";
 

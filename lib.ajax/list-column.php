@@ -9,8 +9,7 @@ require_once dirname(__DIR__) . "/inc.app/sessions.php";
 $inputPost = new InputPost();
 
 try
-{
-    
+{ 
     $databaseName = $databaseConfig->getDatabaseName();
     $tableName = $inputPost->getTableName();
      

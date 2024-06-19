@@ -494,6 +494,26 @@ require_once __DIR__ . "/inc.app/navs.php";
             <textarea class="text-code" class="sql-from-server" spellcheck="false"></textarea>
           </div>
         </div>
+        <div id="generated-entity" class="tab-pane fade" role="tabpanel" aria-labelledby="generated-entity-tab">
+        
+        <div class="generated-entity-container">
+          <div class="row">
+            <div class="col col-2">
+              <div class="column-title"><h4>Entities</h4></div>
+              <div class="column-body">
+                <div class="entity-list"></div>
+              </div>
+            </div>
+            <div class="col col-10">
+              <div class="column-title"><h4>Query</h4></div>
+              <div class="column-body">
+                <div class="entity-query"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        </div>
         <div id="docs" class="tab-pane fade" role="tabpanel" aria-labelledby="docs-tab">
           <div class="desc">
             <h4>Column Description</h4>
