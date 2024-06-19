@@ -723,7 +723,12 @@ function generateAllCode(dataToPost)
 		data:dataToPost,
 		success: function(data)
 		{
-			loadTable();
+			console.log('updateEntity()')
+			updateEntity();
+		},
+		error:function(e1, e2)
+		{
+			console.error(e1, e2)
 		}
 	});
 }
