@@ -45,7 +45,7 @@ class AppFeatures
      */ 
     public function isActiavteDeactivate()
     {
-        return $this->activateDeactivate;
+        return $this->activateDeactivate == 1;
     }
 
     /**
@@ -53,7 +53,7 @@ class AppFeatures
      */ 
     public function isSortOrder()
     {
-        return $this->sortOrder;
+        return $this->sortOrder == 1;
     }
 
     /**
@@ -61,7 +61,7 @@ class AppFeatures
      */ 
     public function isApprovalRequired()
     {
-        return $this->approvalRequired;
+        return $this->approvalRequired == 1;
     }
 
     /**
@@ -69,7 +69,7 @@ class AppFeatures
      */ 
     public function isApprovalNote()
     {
-        return $this->approvalNote;
+        return $this->approvalNote == 1;
     }
 
     /**
@@ -77,6 +77,6 @@ class AppFeatures
      */ 
     public function isTrashRequired()
     {
-        return $this->trashRequired;
+        return $this->trashRequired == 1;
     }
 }

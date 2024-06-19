@@ -85,6 +85,7 @@ class AppEntityGenerator extends PicoEntityGenerator
      */
     public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false, $referenceData = null)
     {
+        print_r($successorField);
         $typeMap = $this->getTypeMap();
         $picoTableName = $this->tableName;
         
@@ -141,8 +142,11 @@ class AppEntityGenerator extends PicoEntityGenerator
                     $objectName = $referenceEntity->getObjectName(); // var name
                     $referenceColumnName = $referenceEntity->getPrimaryKey(); // reference column key
                     $joinColumn = $columnName;
-                    $propRef = $this->createPropertyReference($joinColumn, $entityName, $objectName, $propertyName, $referenceColumnName);
-                    $attrs[] = $propRef;
+                    if(!empty( $objectName) && !empty($propertyName))
+                    {
+                        $propRef = $this->createPropertyReference($joinColumn, $entityName, $objectName, $propertyName, $referenceColumnName);
+                        $attrs[] = $propRef;
+                    }
                 }
 
             }

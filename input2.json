@@ -1,32 +1,22 @@
 {
     "entity": {
         "mainEntity": {
-            "entityName": "User",
-            "tableName": "user",
-            "primaryKey": "user_id"
+            "entityName": "Album",
+            "tableName": "album",
+            "primaryKey": "album_id"
         },
-        "approvalRequired": "true",
-        "trashRequired": "true",
-        "approvalEntity": {
-            "entityName": "UserApv",
-            "tableName": "user_apv",
-            "primaryKey": "user_apv_id"
-        },
-        "trashEntity": {
-            "entityName": "UserTrash",
-            "tableName": "user_trash",
-            "primaryKey": "user_trash_id"
-        }
+        "approvalRequired": "false",
+        "trashRequired": "false"
     },
     "fields": {
         "0": {
-            "fieldName": "user_id",
-            "fieldLabel": "User",
+            "fieldName": "album_id",
+            "fieldLabel": "Album",
             "includeInsert": "false",
             "includeEdit": "false",
             "includeDetail": "false",
             "includeList": "false",
-            "isKey": "true",
+            "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
             "filterElementType": "",
@@ -34,48 +24,6 @@
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
         "1": {
-            "fieldName": "username",
-            "fieldLabel": "Username",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "true",
-            "includeList": "true",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "text",
-            "filterElementType": "text",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
-        },
-        "2": {
-            "fieldName": "password",
-            "fieldLabel": "Password",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "false",
-            "includeList": "false",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "text",
-            "filterElementType": "",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
-        },
-        "3": {
-            "fieldName": "admin",
-            "fieldLabel": "Admin",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "true",
-            "includeList": "true",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "checkbox",
-            "filterElementType": "",
-            "dataType": "int",
-            "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
-        },
-        "4": {
             "fieldName": "name",
             "fieldLabel": "Name",
             "includeInsert": "true",
@@ -85,157 +33,13 @@
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
-            "filterElementType": "text",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
-        },
-        "5": {
-            "fieldName": "birth_day",
-            "fieldLabel": "Birth Day",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "true",
-            "includeList": "false",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "text",
-            "filterElementType": "",
-            "dataType": "date",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
-        },
-        "6": {
-            "fieldName": "gender",
-            "fieldLabel": "Gender",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "true",
-            "includeList": "true",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "select",
-            "filterElementType": "select",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS",
-            "referenceData": {
-                "type": "map",
-                "entity": {
-                    "entityName": "Gender",
-                    "tableName": "gender",
-                    "primaryKey": "gender",
-                    "value": "name",
-                    "specification": [
-                        {
-                            "column": "active",
-                            "value": "true"
-                        },
-                        {
-                            "column": "draft",
-                            "value": "true"
-                        }
-                    ],
-                    "sortable": [
-                        {
-                            "sortBy": "sortOrder",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        },
-                        {
-                            "sortBy": "name",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        }
-                    ]
-                },
-                "map": [
-                    {
-                        "value": "M",
-                        "label": "Laki-Laki",
-                        "default": "false"
-                    },
-                    {
-                        "value": "W",
-                        "label": "Perempuan",
-                        "default": "false"
-                    }
-                ],
-                "yesno": "",
-                "truefalse": "",
-                "onezero": ""
-            },
-            "referenceFilter": {
-                "type": "map",
-                "entity": {
-                    "entityName": "Gender",
-                    "tableName": "gender",
-                    "primaryKey": "gender",
-                    "value": "name",
-                    "specification": [
-                        {
-                            "column": "active",
-                            "value": "true"
-                        },
-                        {
-                            "column": "draft",
-                            "value": "true"
-                        }
-                    ],
-                    "sortable": [
-                        {
-                            "sortBy": "sortOrder",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        },
-                        {
-                            "sortBy": "name",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        }
-                    ]
-                },
-                "map": [
-                    {
-                        "value": "M",
-                        "label": "Laki-Laki",
-                        "default": "false"
-                    },
-                    {
-                        "value": "W",
-                        "label": "Perempuan",
-                        "default": "false"
-                    }
-                ],
-                "yesno": "",
-                "truefalse": "",
-                "onezero": ""
-            }
-        },
-        "7": {
-            "fieldName": "email",
-            "fieldLabel": "Email",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "true",
-            "includeList": "true",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "text",
-            "filterElementType": "",
-            "dataType": "email",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
-        },
-        "8": {
-            "fieldName": "time_zone",
-            "fieldLabel": "Time Zone",
-            "includeInsert": "true",
-            "includeEdit": "true",
-            "includeDetail": "true",
-            "includeList": "false",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "text",
             "filterElementType": "",
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "9": {
-            "fieldName": "user_type_id",
-            "fieldLabel": "User Type",
+        "2": {
+            "fieldName": "title",
+            "fieldLabel": "Title",
             "includeInsert": "true",
             "includeEdit": "true",
             "includeDetail": "true",
@@ -247,95 +51,23 @@
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "10": {
-            "fieldName": "associated_artist",
-            "fieldLabel": "Associated Artist",
+        "3": {
+            "fieldName": "description",
+            "fieldLabel": "Description",
             "includeInsert": "true",
             "includeEdit": "true",
             "includeDetail": "true",
             "includeList": "true",
             "isKey": "false",
             "isInputRequired": "false",
-            "elementType": "select",
-            "filterElementType": "select",
+            "elementType": "textarea",
+            "filterElementType": "",
             "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS",
-            "referenceData": {
-                "type": "entity",
-                "entity": {
-                    "entityName": "Artist",
-                    "tableName": "artist",
-                    "primaryKey": "artist_id",
-                    "value": "name",
-                    "objectName": "artist",
-                    "propertyName": "name",
-                    "specification": [
-                        {
-                            "column": "active",
-                            "value": "true"
-                        },
-                        {
-                            "column": "draft",
-                            "value": "true"
-                        }
-                    ],
-                    "sortable": [
-                        {
-                            "sortBy": "name",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        }
-                    ]
-                },
-                "map": [
-                    {
-                        "value": "",
-                        "label": "",
-                        "default": "false"
-                    }
-                ],
-                "yesno": "",
-                "truefalse": "",
-                "onezero": ""
-            },
-            "referenceFilter": {
-                "type": "entity",
-                "entity": {
-                    "entityName": "Artist",
-                    "tableName": "artist",
-                    "primaryKey": "artist_id",
-                    "value": "name",
-                    "specification": [
-                        {
-                            "column": "active",
-                            "value": "true"
-                        },
-                        {
-                            "column": "draft",
-                            "value": "true"
-                        }
-                    ],
-                    "sortable": [
-                        {
-                            "sortBy": "name",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        }
-                    ]
-                },
-                "map": [
-                    {
-                        "value": "",
-                        "label": "",
-                        "default": "false"
-                    }
-                ],
-                "yesno": "",
-                "truefalse": "",
-                "onezero": ""
-            }
+            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "11": {
-            "fieldName": "associated_producer",
-            "fieldLabel": "Associated Producer",
+        "4": {
+            "fieldName": "producer_id",
+            "fieldLabel": "Producer",
             "includeInsert": "true",
             "includeEdit": "true",
             "includeDetail": "true",
@@ -367,6 +99,10 @@
                     ],
                     "sortable": [
                         {
+                            "sortBy": "sortOrder",
+                            "sortType": "PicoSort::ORDER_TYPE_ASC"
+                        },
+                        {
                             "sortBy": "name",
                             "sortType": "PicoSort::ORDER_TYPE_ASC"
                         }
@@ -374,8 +110,8 @@
                 },
                 "map": [
                     {
-                        "value": "",
-                        "label": "",
+                        "value": "apa",
+                        "label": "apa",
                         "default": "false"
                     }
                 ],
@@ -390,6 +126,8 @@
                     "tableName": "producer",
                     "primaryKey": "producer_id",
                     "value": "name",
+                    "objectName": "",
+                    "propertyName": "",
                     "specification": [
                         {
                             "column": "active",
@@ -401,6 +139,10 @@
                         }
                     ],
                     "sortable": [
+                        {
+                            "sortBy": "sortOrder",
+                            "sortType": "PicoSort::ORDER_TYPE_ASC"
+                        },
                         {
                             "sortBy": "name",
                             "sortType": "PicoSort::ORDER_TYPE_ASC"
@@ -419,121 +161,65 @@
                 "onezero": ""
             }
         },
-        "12": {
-            "fieldName": "current_role",
-            "fieldLabel": "Current Role",
+        "5": {
+            "fieldName": "release_date",
+            "fieldLabel": "Release Date",
             "includeInsert": "true",
             "includeEdit": "true",
             "includeDetail": "true",
             "includeList": "true",
             "isKey": "false",
             "isInputRequired": "false",
-            "elementType": "select",
-            "filterElementType": "select",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS",
-            "referenceData": {
-                "type": "map",
-                "entity": {
-                    "entityName": "CurrentRole",
-                    "tableName": "current_role",
-                    "primaryKey": "current_role",
-                    "value": "name",
-                    "specification": [
-                        {
-                            "column": "active",
-                            "value": "true"
-                        },
-                        {
-                            "column": "draft",
-                            "value": "true"
-                        }
-                    ],
-                    "sortable": [
-                        {
-                            "sortBy": "sortOrder",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        },
-                        {
-                            "sortBy": "name",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        }
-                    ]
-                },
-                "map": [
-                    {
-                        "value": "admin",
-                        "label": "Admin",
-                        "default": "false"
-                    },
-                    {
-                        "value": "producer",
-                        "label": "Producer",
-                        "default": "false"
-                    },
-                    {
-                        "value": "artist",
-                        "label": "Artist",
-                        "default": "false"
-                    }
-                ],
-                "yesno": "",
-                "truefalse": "",
-                "onezero": ""
-            },
-            "referenceFilter": {
-                "type": "map",
-                "entity": {
-                    "entityName": "CurrentRole",
-                    "tableName": "current_role",
-                    "primaryKey": "current_role",
-                    "value": "name",
-                    "specification": [
-                        {
-                            "column": "active",
-                            "value": "true"
-                        },
-                        {
-                            "column": "draft",
-                            "value": "true"
-                        }
-                    ],
-                    "sortable": [
-                        {
-                            "sortBy": "sortOrder",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        },
-                        {
-                            "sortBy": "name",
-                            "sortType": "PicoSort::ORDER_TYPE_ASC"
-                        }
-                    ]
-                },
-                "map": [
-                    {
-                        "value": "admin",
-                        "label": "Admin",
-                        "default": "false"
-                    },
-                    {
-                        "value": "producer",
-                        "label": "Producer",
-                        "default": "false"
-                    },
-                    {
-                        "value": "artist",
-                        "label": "Artist",
-                        "default": "false"
-                    }
-                ],
-                "yesno": "",
-                "truefalse": "",
-                "onezero": ""
-            }
+            "elementType": "text",
+            "filterElementType": "",
+            "dataType": "date",
+            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "13": {
+        "6": {
+            "fieldName": "number_of_song",
+            "fieldLabel": "Number Of Song",
+            "includeInsert": "true",
+            "includeEdit": "true",
+            "includeDetail": "true",
+            "includeList": "true",
+            "isKey": "false",
+            "isInputRequired": "false",
+            "elementType": "text",
+            "filterElementType": "",
+            "dataType": "int",
+            "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
+        },
+        "7": {
+            "fieldName": "duration",
+            "fieldLabel": "Duration",
+            "includeInsert": "true",
+            "includeEdit": "true",
+            "includeDetail": "true",
+            "includeList": "true",
+            "isKey": "false",
+            "isInputRequired": "false",
+            "elementType": "text",
+            "filterElementType": "",
+            "dataType": "text",
+            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
+        },
+        "8": {
             "fieldName": "image_path",
             "fieldLabel": "Image Path",
+            "includeInsert": "true",
+            "includeEdit": "true",
+            "includeDetail": "true",
+            "includeList": "true",
+            "isKey": "false",
+            "isInputRequired": "false",
+            "elementType": "text",
+            "filterElementType": "",
+            "dataType": "text",
+            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
+        },
+        "9": {
+            "fieldName": "sort_order",
+            "fieldLabel": "Sort Order",
             "includeInsert": "true",
             "includeEdit": "true",
             "includeDetail": "true",
@@ -542,10 +228,10 @@
             "isInputRequired": "false",
             "elementType": "text",
             "filterElementType": "",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
+            "dataType": "int",
+            "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
         },
-        "14": {
+        "10": {
             "fieldName": "time_create",
             "fieldLabel": "Time Create",
             "includeInsert": "false",
@@ -559,7 +245,7 @@
             "dataType": "datetime",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "15": {
+        "11": {
             "fieldName": "time_edit",
             "fieldLabel": "Time Edit",
             "includeInsert": "false",
@@ -573,7 +259,7 @@
             "dataType": "datetime",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "16": {
+        "12": {
             "fieldName": "admin_create",
             "fieldLabel": "Admin Create",
             "includeInsert": "false",
@@ -587,7 +273,7 @@
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "17": {
+        "13": {
             "fieldName": "admin_edit",
             "fieldLabel": "Admin Edit",
             "includeInsert": "false",
@@ -601,7 +287,7 @@
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "18": {
+        "14": {
             "fieldName": "ip_create",
             "fieldLabel": "IP Create",
             "includeInsert": "false",
@@ -615,7 +301,7 @@
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "19": {
+        "15": {
             "fieldName": "ip_edit",
             "fieldLabel": "IP Edit",
             "includeInsert": "false",
@@ -629,37 +315,23 @@
             "dataType": "text",
             "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
         },
-        "20": {
-            "fieldName": "reset_password_hash",
-            "fieldLabel": "Reset Password Hash",
-            "includeInsert": "false",
-            "includeEdit": "false",
-            "includeDetail": "false",
-            "includeList": "false",
+        "16": {
+            "fieldName": "locked",
+            "fieldLabel": "Locked",
+            "includeInsert": "true",
+            "includeEdit": "true",
+            "includeDetail": "true",
+            "includeList": "true",
             "isKey": "false",
             "isInputRequired": "false",
             "elementType": "text",
             "filterElementType": "",
-            "dataType": "text",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
+            "dataType": "int",
+            "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
         },
-        "21": {
-            "fieldName": "last_reset_password",
-            "fieldLabel": "Last Reset Password",
-            "includeInsert": "false",
-            "includeEdit": "false",
-            "includeDetail": "false",
-            "includeList": "false",
-            "isKey": "false",
-            "isInputRequired": "false",
-            "elementType": "text",
-            "filterElementType": "",
-            "dataType": "datetime",
-            "inputFilter": "FILTER_SANITIZE_SPECIAL_CHARS"
-        },
-        "22": {
-            "fieldName": "blocked",
-            "fieldLabel": "Blocked",
+        "17": {
+            "fieldName": "as_draft",
+            "fieldLabel": "As Draft",
             "includeInsert": "true",
             "includeEdit": "true",
             "includeDetail": "true",
@@ -671,7 +343,7 @@
             "dataType": "int",
             "inputFilter": "FILTER_SANITIZE_NUMBER_INT"
         },
-        "23": {
+        "18": {
             "fieldName": "active",
             "fieldLabel": "Active",
             "includeInsert": "true",
@@ -687,12 +359,12 @@
         }
     },
     "features": {
-        "activateDeactivate": "true",
+        "actiavteDeactivate": "false",
         "sortOrder": "false",
-        "approvalRequired": "true",
-        "approvalNote": "true",
-        "trashRequired": "true"
+        "approvalRequired": "false",
+        "approvalNote": "false",
+        "trashRequired": "false"
     },
-    "moduleName": "user",
-    "moduleFile": "user.php"
+    "moduleName": "album",
+    "moduleFile": "album.php"
 }

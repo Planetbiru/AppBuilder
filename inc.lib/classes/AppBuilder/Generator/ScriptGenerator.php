@@ -261,11 +261,11 @@ class ScriptGenerator
         $entityApproval = $this->getEntityApproval($entity);
         $entityTrash = $this->getEntityTrash($entity);
      
-        $features = new AppFeatures($request->getFeatures());
+        $appFeatures = new AppFeatures($request->getFeatures());
 
         $entityMainName = $entityMain->getEntityName();
-        $approvalRequired = $features->isApprovalRequired();
-        $trashRequired = $features->isTrashRequired();
+        $approvalRequired = $appFeatures->isApprovalRequired();
+        $trashRequired = $appFeatures->isTrashRequired();
         
         $activationKey = $entityInfo->getActive();
         
@@ -320,8 +320,6 @@ class ScriptGenerator
         
         $declarationSection = implode("\r\n", array(AppBuilderBase::VAR."inputGet = new InputGet();", AppBuilderBase::VAR."inputPost = new InputPost();",""));
         
-        $appFeatures = $request->getFeatures();
-
         // prepare CRUD section begin
         if($approvalRequired)
         {

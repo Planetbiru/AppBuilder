@@ -6,6 +6,7 @@ use MagicObject\Request\InputGet;
 use MagicObject\Request\InputPost;
 
 require_once dirname(__DIR__) . "/inc.app/app.php";
+header("Content-type: application/json");
 
 $inputGet = new InputGet();
 if(isset($_POST) && !empty($_POST))
@@ -27,6 +28,5 @@ if($request->issetFields())
     $scriptGenerator->generate($database, $request, $builderConfig, $appConfig, $entityInfo, $entityApvInfo);
     
 }
-header("Content-type: application/json");
 echo "{}";
 
