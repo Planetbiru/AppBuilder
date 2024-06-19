@@ -44,6 +44,45 @@ The following PHP code was created in less than 5 minute and already has the fol
 
 Apart from the features above, the module is also equipped with data filters that are adjusted to the data type.
 
+### Original Table Structure
+
+```sql
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` varchar(40) NOT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `admin` tinyint(1) DEFAULT '0',
+  `name` varchar(100) DEFAULT NULL,
+  `birth_day` varchar(100) DEFAULT NULL,
+  `gender` varchar(2) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `time_zone` varchar(255) DEFAULT NULL,
+  `user_type_id` varchar(40) DEFAULT NULL,
+  `associated_artist` varchar(40) DEFAULT NULL,
+  `associated_producer` varchar(40) DEFAULT NULL,
+  `current_role` varchar(40) DEFAULT NULL,
+  `image_path` text,
+  `time_create` timestamp NULL DEFAULT NULL,
+  `time_edit` timestamp NULL DEFAULT NULL,
+  `admin_create` varchar(40) DEFAULT NULL,
+  `admin_edit` varchar(40) DEFAULT NULL,
+  `ip_create` varchar(50) DEFAULT NULL,
+  `ip_edit` varchar(50) DEFAULT NULL,
+  `reset_password_hash` varchar(256) DEFAULT NULL,
+  `last_reset_password` timestamp NULL DEFAULT NULL,
+  `blocked` tinyint(1) DEFAULT '0',
+  `active` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+```
+
+### Module
+
 ```php
 <?php
 
