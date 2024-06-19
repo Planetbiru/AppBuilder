@@ -19,6 +19,7 @@ class ComposerStaticInitec57b79da9c49fe88b5ef2780de2f2b6
         'M' => 
         array (
             'MagicObject\\' => 12,
+            'MagicApp\\' => 9,
         ),
     );
 
@@ -35,16 +36,13 @@ class ComposerStaticInitec57b79da9c49fe88b5ef2780de2f2b6
         array (
             0 => __DIR__ . '/..' . '/planetbiru/magic-object/src',
         ),
+        'MagicApp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/planetbiru/magic-app/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
-        'M' => 
-        array (
-            'MagicApp\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/planetbiru/magic-app/src',
-            ),
-        ),
         'A' => 
         array (
             'AppBuilder\\' => 

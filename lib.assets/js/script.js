@@ -475,6 +475,15 @@ $(document).ready(function(){
 		getEntityQuery(ents);
 	});
 
+	$(document).on('change', '#entity-check-controll', function(e){
+		let checked = $(this)[0].checked;
+		$('.entity-checkbox').each(function(){
+			$(this)[0].checked = checked;
+		});
+		let ents = getEntitySelection();
+		getEntityQuery(ents);
+	});
+
 	loadTable();
 	updateEntity();
 });

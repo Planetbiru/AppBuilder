@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "066c5b7f04b589a10e26a10260ffb17f",
+    "content-hash": "265307c7fae1859e825ed8093df17988",
     "packages": [
         {
             "name": "planetbiru/magic-app",
-            "version": "0.1.1",
+            "version": "dev-feature/0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Planetbiru/MagicApp.git",
-                "reference": "099b6a9a42d0cea7ba7f4472941ea2d3c1b6ca01"
+                "reference": "0dd766a2b98efcbae40fc1f12655740e342467fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Planetbiru/MagicApp/zipball/099b6a9a42d0cea7ba7f4472941ea2d3c1b6ca01",
-                "reference": "099b6a9a42d0cea7ba7f4472941ea2d3c1b6ca01",
+                "url": "https://api.github.com/repos/Planetbiru/MagicApp/zipball/0dd766a2b98efcbae40fc1f12655740e342467fa",
+                "reference": "0dd766a2b98efcbae40fc1f12655740e342467fa",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,7 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "MagicApp\\": "src/"
                 }
             },
@@ -41,9 +41,9 @@
             "description": "Magic App",
             "support": {
                 "issues": "https://github.com/Planetbiru/MagicApp/issues",
-                "source": "https://github.com/Planetbiru/MagicApp/tree/0.1.1"
+                "source": "https://github.com/Planetbiru/MagicApp/tree/feature/0.1"
             },
-            "time": "2024-06-19T10:17:28+00:00"
+            "time": "2024-06-19T22:17:43+00:00"
         },
         {
             "name": "planetbiru/magic-object",
@@ -238,7 +238,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "planetbiru/magic-app": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

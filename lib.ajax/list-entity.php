@@ -12,6 +12,9 @@ try
     
     $list = glob($baseDir."/*.php");
     $li = array();
+
+    echo '<input type="checkbox" id="entity-check-controll" checked> <label for="entity-check-controll">Select all</label>';
+
     foreach($list as $idx=>$file)
     {
         $entity = basename($file, '.php');

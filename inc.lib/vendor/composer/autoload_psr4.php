@@ -9,4 +9,5 @@ return array(
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'MagicObject\\' => array($vendorDir . '/planetbiru/magic-object/src'),
+    'MagicApp\\' => array($vendorDir . '/planetbiru/magic-app/src'),
 );
