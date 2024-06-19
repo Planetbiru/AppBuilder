@@ -5,7 +5,6 @@
         }
     },
     "require": {
-        "planetbiru/magic-object": "^1.8",
         "planetbiru/magic-app": "^0.1.1"
     }
 }
