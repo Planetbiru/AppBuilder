@@ -1410,6 +1410,8 @@ $resultSet = $pageData->getResult();
         $tbody->appendChild($dom->createTextNode(self::PHP_CLOSE_TAG));  
         
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+
+        $trh->setAttribute('data-number', '<?php echo $pageData->getDataOffset() + $dataIndex + 1;?>'); 
         $tbody->appendChild($trh);
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         

@@ -265,7 +265,6 @@ function getReferenceResource()
   `;
 }
 
-
 $(document).ready(function(){
 	$(document).on('click', '#load_table', function(e2){
 		loadTable();
@@ -461,7 +460,6 @@ $(document).ready(function(){
 		});
 	  }
 	});
-
 	
 	$(document).on('change', '.map-section input[type="checkbox"]', function(e){
 	  if($(this)[0].checked)
@@ -797,30 +795,16 @@ function loadColumn(tableName, selector)
 			var i;
 			var field, args;
 			var DOMHTML;
-			var so = false;
-			let skipedOnInsertEdit = getSkipedCol();
-			
+			let skipedOnInsertEdit = getSkipedCol();			
 			for(i in data)
 			{
 				field = data[i].column_name;
-				if(field == 'sort_order')
-				{
-					so = true;
-				}
 				args = {type:data[i].data_type};
 				DOMHTML = generateRow(field, args, skipedOnInsertEdit);
 				$(selector).append(DOMHTML);
 			}
-			if(so)
-			{
-				$('#manualsortorder').parent().css({'display':'inline'});
-			}
-			else
-			{
-				$('#manualsortorder').parent().css({'display':'none'});
-				$('#manualsortorder')[0].checked = false;
-			}
 			$('.define-wrapper').css('display', 'block');
+			$('#column-tab').click();
 		}
 	});
 }
