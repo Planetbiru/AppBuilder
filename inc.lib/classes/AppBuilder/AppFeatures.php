@@ -6,7 +6,7 @@ use MagicObject\MagicObject;
 
 class AppFeatures
 {
-    private $actiavteDeactivate = false;
+    private $activateDeactivate = false;
     private $sortOrder = false;
     private $approvalRequired = false;
     private $approvalNote = false;
@@ -21,7 +21,7 @@ class AppFeatures
     {
         if($features != null)
         {
-            $this->actiavteDeactivate = $this->isTrue($features->get('actiavteDeactivate'));
+            $this->activateDeactivate = $this->isTrue($features->get('activateDeactivate'));
             $this->sortOrder = $this->isTrue($features->get('sortOrder'));
             $this->approvalRequired = $this->isTrue($features->get('approvalRequired'));
             $this->approvalNote = $this->isTrue($features->get('approvalNote'));
@@ -41,11 +41,11 @@ class AppFeatures
     }
 
     /**
-     * Get the value of actiavteDeactivate
+     * Get the value of activateDeactivate
      */ 
     public function isActiavteDeactivate()
     {
-        return $this->actiavteDeactivate;
+        return $this->activateDeactivate;
     }
 
     /**

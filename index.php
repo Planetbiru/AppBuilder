@@ -447,7 +447,7 @@ require_once __DIR__ . "/inc.app/navs.php";
                           <tbody>
                             <tr>
                               <td>Activate/Decativate</td>
-                              <td><label><input type="checkbox" name="actiavte_deactivate" id="actiavte_deactivate" value="1"> Activate/Decativate</label> &nbsp;</td>
+                              <td><label><input type="checkbox" name="activate_deactivate" id="activate_deactivate" value="1"> Activate/Decativate</label> &nbsp;</td>
                             </tr>
                             <tr>
                               <td>Sort Order</td>

@@ -215,7 +215,7 @@ class ScriptGenerator
      * @param EntityApvInfo $entityApvInfo
      * @return void
      */
-    public function generate($database, $request, $builderConfig, $appConfig, $entityInfo, $entityApvInfo)
+    public function generate($database, $request, $builderConfig, $appConfig, $entityInfo, $entityApvInfo) // NOSONAR
     {
         $insertFields = array();
         $editFields = array();
@@ -261,11 +261,11 @@ class ScriptGenerator
         $entityApproval = $this->getEntityApproval($entity);
         $entityTrash = $this->getEntityTrash($entity);
      
-        $features = $request->getFeatures();
+        $features = new AppFeatures($request->getFeatures());
 
         $entityMainName = $entityMain->getEntityName();
-        $approvalRequired = AppBuilderBase::isTrue($features->getApprovalRequired());
-        $trashRequired = AppBuilderBase::isTrue($features->getTrashRequired());
+        $approvalRequired = $features->isApprovalRequired();
+        $trashRequired = $features->isTrashRequired();
         
         $activationKey = $entityInfo->getActive();
         

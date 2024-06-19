@@ -648,7 +648,7 @@ function generateScript(selector)
 	let requireApproval = $('#with_approval')[0].checked && true;
 	let withTrash = $('#with_trash')[0].checked && true;
 	let manualSortOrder = $('#manualsortorder')[0].checked && true;
-	let actiavteDeactivate = $('#actiavte_deactivate')[0].checked && true;
+	let activateDeactivate = $('#activate_deactivate')[0].checked && true;
 	let withApprovalNote = $('#with_approval_note')[0].checked && true;
 	let entity = {
 		mainEntity:{
@@ -679,7 +679,7 @@ function generateScript(selector)
 	}
 	
 	let features = {
-		actiavteDeactivate: actiavteDeactivate,
+		activateDeactivate: activateDeactivate,
 		sortOrder: manualSortOrder,
 		approvalRequired: requireApproval,
 		approvalNote: withApprovalNote,

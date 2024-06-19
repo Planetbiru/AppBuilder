@@ -687,7 +687,7 @@
         }
     },
     "features": {
-        "actiavteDeactivate": "true",
+        "activateDeactivate": "true",
         "sortOrder": "false",
         "approvalRequired": "true",
         "approvalNote": "true",
