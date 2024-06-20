@@ -428,13 +428,59 @@ require_once __DIR__ . "/inc.app/navs.php";
                 </tbody>
               </table>
               <div class="button-area">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-order-data">
+                  Data Order
+                </button>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-module-features">
                   Module Features
                 </button>
                 <input class="btn btn-success" type="button" name="generate-script" id="generate-script" value="Generate Script"> &nbsp;            
                 
+                <div class="modal fade" id="modal-order-data" tabindex="-1" aria-labelledby="modal_order_label" aria-hidden="true">
+                  <div class="modal-dialog modal-md modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Data Order</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-reference table-data-order" width="100%" border="0" cellspacing="0" cellpadding="0" data-empty-on-remove="true">
+                        <thead>
+                        <tr>
+                          <td width="65%">Column</td>
+                          <td>Value</td>
+                          <td width="62">Rem</td>
+                        </tr>
+                        </thead>
+                          <tbody>
+                          <tr>
+                            <td><input class="form-control data-order-column-name" type="text" value=""></td>
+                            <td><select class="form-control data-order-order-type">
+                              <option value="PicoSort::ORDER_TYPE_ASC">ASC</option>
+                              <option value="PicoSort::ORDER_TYPE_DESC">DESC</option>
+                            </select></td>
+                            <td><button type="button" class="btn btn-danger btn-remove-row">Rem</button></td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                            <td colspan="3"><button type="button" class="btn btn-primary btn-add-row">Add Row</button></td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
                 <div class="modal fade" id="modal-module-features" tabindex="-1" aria-labelledby="modal_features_label" aria-hidden="true">
-                  <div class="modal-dialog modal-md">
+                  <div class="modal-dialog modal-md modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title">Module Feature</h5>
@@ -450,8 +496,8 @@ require_once __DIR__ . "/inc.app/navs.php";
                               <td><label><input type="checkbox" name="activate_deactivate" id="activate_deactivate" value="1"> Activate/Decativate</label> &nbsp;</td>
                             </tr>
                             <tr>
-                              <td>Sort Order</td>
-                              <td><label><input type="checkbox" name="manualsortorder" id="manualsortorder" value="1"> Sort Order</label> &nbsp;</td>
+                              <td>Manual Sort Order</td>
+                              <td><label><input type="checkbox" name="manualsortorder" id="manualsortorder" value="1"> Manual Sort Order</label> &nbsp;</td>
                             </tr>
                             <tr>
                               <td>Approval</td>

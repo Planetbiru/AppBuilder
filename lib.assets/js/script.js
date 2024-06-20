@@ -693,14 +693,36 @@ function generateScript(selector)
 		trashRequired: withTrash
 	};
 
+	let sortable = getSortableModule();
+
 	let dataToPost = {
 		entity: entity,
 		fields: fields,
+		sortable: sortable,
 		features: features,
 		module_name: $('[name="module_name"]').val(),
 		module_file: $('[name="module_file"]').val()
 	};
 	generateAllCode(dataToPost);
+}
+
+function getSortableModule()
+{
+  let result = [];
+  let selector = '.table-data-order';
+  $(selector).find('tbody').find('tr').each(function(e){
+	let tr = $(this);
+	let sortBy = tr.find('.data-order-column-name').val().trim();
+	let sortType = tr.find('.data-order-order-type').val().trim();
+	if(sortBy.length > 0)
+	{
+	  result.push({
+		sortBy: sortBy,
+		sortType: sortType
+	});
+	}
+  });
+  return result;
 }
 
 function parseJsonData(text)
