@@ -320,6 +320,8 @@ class ScriptGenerator
         
         $declarationSection = implode("\r\n", array(AppBuilderBase::VAR."inputGet = new InputGet();", AppBuilderBase::VAR."inputPost = new InputPost();",""));
         
+        $appBuilder = null;
+
         // prepare CRUD section begin
         if($approvalRequired)
         {
@@ -333,7 +335,7 @@ class ScriptGenerator
             $deleteSection = $appBuilder->createDeleteApprovalSection($entityMain);
             $approvalSection = $appBuilder->createApprovalSection($entityMain, $editFields, $approvalRequired, $entityApproval, $trashRequired, $entityTrash);
             $rejectionSection = $appBuilder->createRejectionSection($entityMain, $approvalRequired, $entityApproval);  
-            
+
             // GUI
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
@@ -348,8 +350,7 @@ class ScriptGenerator
             $createSection = $appBuilder->createInsertSection($entityMain, $insertFields);
             $updateSection = $appBuilder->createUpdateSection($entityMain, $editFields);
             $activationSection = $appBuilder->createActivationSection($entityMain, $activationKey);
-            $deactivationSection = $appBuilder->createDeactivationSection($entityMain, $activationKey);
-            
+            $deactivationSection = $appBuilder->createDeactivationSection($entityMain, $activationKey);           
             $deleteSection = $this->createDeleteWithoutApproval($appBuilder, $entityMain, $trashRequired, $entityTrash);
 
             $approvalSection = "";
@@ -371,6 +372,15 @@ class ScriptGenerator
         ->add($approvalSection)
         ->add($rejectionSection)
         ;
+
+        if($appFeatures->isSortOrder())
+        {
+            $primaryKey = $entityMain->getPrimaryKey();
+            $entityName = $entityMain->getEntityName();
+            $objectName = lcfirst($entityMainName);
+            $sortOrderSection = $appBuilder->createSortOrderSection($objectName, $entityName, $primaryKey);  
+            $crudSection->add($sortOrderSection);
+        }
             
         $guiSection = (new AppSection(AppSection::SEPARATOR_IF_ELSE))
         ->add($guiInsert)

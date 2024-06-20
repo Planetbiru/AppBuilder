@@ -1412,6 +1412,7 @@ $resultSet = $pageData->getResult();
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
 
         $trh->setAttribute('data-number', '<?php echo $pageData->getDataOffset() + $dataIndex + 1;?>'); 
+        $tbody->setAttribute('data-offset', '<?php echo $pageData->getDataOffset() + $dataIndex;?>'); 
         $tbody->appendChild($trh);
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         
@@ -2030,6 +2031,7 @@ $resultSet = $pageData->getResult();
             $input->setAttribute('name', $insertField->getFieldName());
             $input = $this->addAttributeId($input, $id);  
             $value = $dom->createElement('option');
+            $value->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
@@ -2119,6 +2121,7 @@ $resultSet = $pageData->getResult();
             $input = $this->addAttributeId($input, $id);
 
             $value = $dom->createElement('option');
+            $value->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);
@@ -3185,6 +3188,26 @@ $resultSet = $pageData->getResult();
         {
             return '"'.$str.'"';
         }
+    }
+
+    public function createSortOrderSection($objectName, $entityName, $primaryKeyName)
+    {
+        $camelPrimaryKey = PicoStringUtil::camelize($primaryKeyName);
+        $lines = array();
+        $lines[] = "if(".self::VAR."inputPost".self::CALL_GET."UserAction() == UserAction::SORT_ORDER)";
+        $lines[] = self::CURLY_BRACKET_OPEN;
+        $lines[] = self::TAB1.self::VAR.$objectName.' = new '.$entityName.'(null, $database);';
+        $lines[] = self::TAB1.'if($inputPost->getDataToSort() != null && $inputPost->countableDataToSort())';
+        $lines[] = self::TAB1.self::CURLY_BRACKET_OPEN;
+        $lines[] = self::TAB1.self::TAB1.'foreach($inputPost->getDataToSort() as $dataItem)';
+        $lines[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.'primaryKeyValue = $dataItem->getPrimaryKey();';
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.'sortOrder = $dataItem->getSortOrder();';
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.$objectName.'->where(PicoSpecification::getInstance()->addAnd(new PicoPredicate(Field::of()->'.$camelPrimaryKey.', $primaryKeyValue)))->setSortOder($sortOrder)->update();';     
+        $lines[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $lines[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
+        $lines[] = self::CURLY_BRACKET_CLOSE;   
+        return implode("\r\n", $lines);
     }
     
 }

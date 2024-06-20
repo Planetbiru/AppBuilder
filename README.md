@@ -410,6 +410,19 @@ else if($inputPost->getUserAction() == UserAction::REJECT)
 		}
 	}
 }
+else if($inputPost->getUserAction() == UserAction::SORT_ORDER)
+{
+	$user = new User(null, $database);
+	if($inputPost->getDataToSort() != null && $inputPost->countableDataToSort())
+	{
+		foreach($inputPost->getDataToSort() as $dataItem)
+		{
+			$primaryKeyValue = $dataItem->getPrimaryKey();
+			$sortOrder = $dataItem->getSortOrder();
+			$user->where(PicoSpecification::getInstance()->addAnd(new PicoPredicate(Field::of()->userId, $primaryKeyValue)))->setSortOder($sortOrder)->update();
+		}
+	}
+}
 if($inputGet->getUserAction() == UserAction::CREATE)
 {
 require_once AppInclude::mainAppHeader(__DIR__, $appConfig);
