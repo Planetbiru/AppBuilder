@@ -631,6 +631,12 @@ class AppBuilderBase //NOSONAR
         }
     }
 
+    /**
+     * Define map
+     *
+     * @param MagicObject[] $referenceData
+     * @return string
+     */
     public function defineMap($referenceData)
     {
         $map = array();
@@ -938,9 +944,10 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
      * @param MagicObject[] $referenceData
      * @param boolean $approvalRequired
      * @param MagicObject $approvalEntity
+     * @param array $sortable
      * @return string
      */
-    public function createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval)
+    public function createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval, $sortable)
     {
         $entityName = $entityMain->getentityName();
         $primaryKey = $entityMain->getPrimaryKey();
@@ -958,7 +965,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         
         $dataSection->appendChild($dom->createTextNode("\n\t".self::PHP_OPEN_TAG)); 
         
-        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName, $referenceData))); 
+        $dataSection->appendChild($dom->createTextNode($this->beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName, $referenceData, $sortable))); 
         
         $dataSection->appendChild($dom->createTextNode("\n\tif(\$pageData->getTotalResult() > 0)")); 
         
@@ -1068,13 +1075,37 @@ else
      * @param MagicObject $mainEntity
      * @param AppField[] $listFields
      * @param AppField[] $filterFields
-     * @param string $referenceData
-     * @param MagicObject[] $objectName
+     * @param string $objectName
+     * @param MagicObject[] $referenceData
+     * @param array $sortable
      * @return string
      */
-    public function beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName, $referenceData)
+    public function beforeListScript($dom, $entityMain, $listFields, $filterFields, $objectName, $referenceData, $sortable)
     {
         $map = $this->defineMap($referenceData);
+        
+        $sortableParam = 'null';
+        if(isset($sortable))
+        {
+            $arr0 = array();
+            foreach($sortable as $values)
+            {
+                if(is_array($values) || is_object($values))
+                {
+                    $sortBy = $values->getSortBy();
+                    $sortType = $values->getSortType();
+                    if(stripos($sortType, 'PicoSort::') === false)
+                    {
+                        $sortType = '"'.$sortType.'"';
+                    }
+                    $arr0[] = "array(\r\n\t\t\"sortBy\" => \"$sortBy\", \r\n\t\t\"sortType\" => $sortType\r\n\t)";
+                }
+            }
+            if(!empty($arr0))
+            {
+                $sortableParam = "array(\r\n".self::TAB1.implode(",\r\n".self::TAB1, $arr0)."\r\n".")";
+            }
+        }
         $arrFilter = array();
         $arrSort = array();
         foreach($filterFields as $field)
@@ -1097,7 +1128,7 @@ $sortOrderMap = array(
 
 // You can define your own specifications
 // Pay attention to security issues
-$specification = PicoSpecification::fromUserInput($inputGet, $specMap);
+$specification = PicoSpecification::fromUserInput($inputGet, $specMap, '.$sortableParam.');
 
 // You can define your own sortable
 // Pay attention to security issues

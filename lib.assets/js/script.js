@@ -712,14 +712,17 @@ function getSortableModule()
   let selector = '.table-data-order';
   $(selector).find('tbody').find('tr').each(function(e){
 	let tr = $(this);
-	let sortBy = tr.find('.data-order-column-name').val().trim();
-	let sortType = tr.find('.data-order-order-type').val().trim();
-	if(sortBy.length > 0)
+	if(tr.find('.data-order-column-name').length && tr.find('.data-order-order-type').length)
 	{
-	  result.push({
-		sortBy: sortBy,
-		sortType: sortType
-	});
+		let sortBy = tr.find('.data-order-column-name').val().trim();
+		let sortType = tr.find('.data-order-order-type').val().trim();
+		if(sortBy.length > 0)
+		{
+			result.push({
+				sortBy: sortBy,
+				sortType: sortType
+			});
+		}
 	}
   });
   return result;

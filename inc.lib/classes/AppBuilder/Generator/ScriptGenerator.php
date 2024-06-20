@@ -322,6 +322,8 @@ class ScriptGenerator
         
         $appBuilder = null;
 
+        $sortable = $request->getSortable();
+
         // prepare CRUD section begin
         if($approvalRequired)
         {
@@ -340,7 +342,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $referenceData, $approvalRequired, $entityApproval); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval, $sortable); 
         }
         else
         {
@@ -358,7 +360,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $referenceData); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval, $sortable); 
         }
         
         // prepare CRUD section end
