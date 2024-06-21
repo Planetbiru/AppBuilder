@@ -1376,12 +1376,12 @@ $appEntityLanguage = new AppEntityLanguage(new User(), $appConfig);
 							</tr>
 						</thead>
 					
-						<tbody>
+						<tbody data-offset="<?php echo $pageData->getDataOffset();?>">
 							<?php 
-							foreach($resultSet as $dataIndex => $user)
+							foreach($resultSet as $dataIndex => $hariLibur)
 							{
 							?>
-							<tr>
+							<tr data-number="<?php echo $pageData->getDataOffset() + $dataIndex + 1;?>">
 								<td class="data-selector" data-key="user_id">
 									<input type="checkbox" class="checkbox check-slave checkbox-user-id" name="checked_row_id[]" value="<?php echo $user->getUserId();?>"/>
 								</td>

@@ -1443,7 +1443,7 @@ $resultSet = $pageData->getResult();
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
 
         $trh->setAttribute('data-number', '<?php echo $pageData->getDataOffset() + $dataIndex + 1;?>'); 
-        $tbody->setAttribute('data-offset', '<?php echo $pageData->getDataOffset() + $dataIndex;?>'); 
+        $tbody->setAttribute('data-offset', '<?php echo $pageData->getDataOffset();?>'); 
         $tbody->appendChild($trh);
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         
