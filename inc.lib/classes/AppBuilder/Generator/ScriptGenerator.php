@@ -481,8 +481,6 @@ class ScriptGenerator
             }
             
         }
-   
-        
     }
     public function prepareComposer($appConf)
     {
@@ -512,25 +510,16 @@ class ScriptGenerator
         if(!file_exists($baseDir)) {
             mkdir($baseDir, 0755, true);
         }
-        
-        
-
-        
-        
     }
     
     public function updateComposer($appConf, $composer)
     {
-        $composerJsonFile = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/composer.json";
-        
-        
+        $composerJsonFile = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/composer.json";   
         $composerJson = json_decode(file_get_contents($composerJsonFile));
         if(!isset($composerJson->autoload))
         {
             $composerJson->autoload = new stdClass;
         }
-        
-        
         $psr0 = $composer->getPsr0();
         $psr4 = $composer->getPsr4();
         
@@ -547,8 +536,6 @@ class ScriptGenerator
             }
         }
         
-        
-        
         if($psr4)
         {
             if(!isset($composerJson->autoload->{'psr-4'}))
@@ -563,20 +550,17 @@ class ScriptGenerator
         }
         
         $this->prepareDir($appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/classes/AppBuilder");
-        
-        
+         
         if(!isset($composerJson->autoload->{'psr-0'}))
         {
             $composerJson->autoload->{'psr-0'} = new stdClass;
         }
         $composerJson->autoload->{'psr-0'}->{"AppBuilder\\"} = $dir->getDirectory()."/";
-
         
         file_put_contents($composerJsonFile, json_encode($composerJson, JSON_PRETTY_PRINT));
 
         $targetDir = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."";
         $cmd = "cd $targetDir"."&&"."php composer.phar update";
         exec($cmd);
-
     }
 }

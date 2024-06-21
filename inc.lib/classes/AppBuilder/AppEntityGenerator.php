@@ -71,7 +71,51 @@ class AppEntityGenerator extends PicoEntityGenerator
         $prop = "\tprotected \$$objectName;";
         return implode("\r\n", $docs)."\r\n".$prop."\r\n";
     }
+
+    /**
+     * Get class name
+     *
+     * @param string $realEntityName
+     * @param string $picoTableName
+     * @return string
+     */
+    private function getClassName($realEntityName, $picoTableName)
+    {
+        if($realEntityName != null)
+        {
+            $className = $realEntityName;
+        }
+        else if($this->entityName != null)
+        {
+            $className = $this->entityName;
+        }
+        else
+        {
+            $className = ucfirst(PicoStringUtil::camelize($picoTableName));
+        }
+        return $className;
+    }
     
+
+    /**
+     * Get table name
+     *
+     * @param string $realTableName
+     * @return string
+     */
+    private function getTableName($realTableName)
+    {
+        if($realTableName != null)
+        {
+            $picoTableName = $realTableName;
+        }
+        else
+        {
+            $picoTableName = $this->tableName;
+        }
+        return $picoTableName;
+    }
+
     /**
      * Generate custom entity
      *
@@ -88,19 +132,8 @@ class AppEntityGenerator extends PicoEntityGenerator
         $typeMap = $this->getTypeMap();
         $picoTableName = $this->tableName;
         
+        $className = $this->getClassName($realEntityName, $picoTableName);
         
-        if($realEntityName != null)
-        {
-            $className = $realEntityName;
-        }
-        else if($this->entityName != null)
-        {
-            $className = $this->entityName;
-        }
-        else
-        {
-            $className = ucfirst(PicoStringUtil::camelize($picoTableName));
-        }
         $fileName = $this->baseNamespace."/".$className;
         $path = $this->baseDir."/".$fileName.".php";
         $path = str_replace("\\", "/", $path); 
@@ -115,8 +148,7 @@ class AppEntityGenerator extends PicoEntityGenerator
             $rows = $this->updateField($rows, $predecessorField, $successorField, $removePk);
         }
 
-
-        
+        $picoTableName = $this->getTableName($realTableName);
         
 
         $attrs = array();
@@ -151,14 +183,8 @@ class AppEntityGenerator extends PicoEntityGenerator
             }
         }    
         $prettify = $this->prettify ? 'true' : 'false';
-        if($realTableName != null)
-        {
-            $picoTableName = $realTableName;
-        }
-        else
-        {
-            $picoTableName = $this->tableName;
-        }
+        
+
         $uses = array();
         $uses[] = "";
         $classStr = '<?php
