@@ -153,6 +153,10 @@ function getReferenceResource()
 			  <td>Reference Property Name</td>
 			  <td><input class="form-control rd-reference-property-name" type="text"></td>
 			</tr>
+			<tr class="entity-generator">
+			  <td></td>
+			  <td><button type="button" class="btn btn-primary generate-entity">Generate Entity Now</button></td>
+			</tr>
 		  </tbody>
 		</table>
 		<h4>Specfification</h4>
@@ -484,8 +488,32 @@ $(document).ready(function(){
 		getEntityQuery(ents);
 	});
 
+	$(document).on('click', '#create-new-app', function(e){
+		let modal = $(this).closest('.modal');
+		let name = modal.find('[name="application_name"]').val().trim();
+		let id = modal.find('[name="application_id"]').val().trim();
+		let directory = modal.find('[name="application_directory"]').val().trim();
+		let author = modal.find('[name="application_author"]').val().trim();
+		if(name != '' && id != '' && directory != '' && author != '')
+		{
+			$.ajax({
+				method:'POST',
+				url:'lib.ajax/create-new-application.php',
+				data:{name:name, id:id, directory:directory, author:author},
+				success: function(data)
+				{
+					window.location = './#module';
+				}
+			})
+		}
+	});
+
 	loadTable();
 	updateEntity();
+
+	if(window.location.hash) {
+		console.log(window.location.hash);
+	} 
 });
 
 function getEntitySelection()
@@ -714,8 +742,10 @@ function getSortableModule()
 	let tr = $(this);
 	if(tr.find('.data-order-column-name').length && tr.find('.data-order-order-type').length)
 	{
-		let sortBy = tr.find('.data-order-column-name').val().trim();
-		let sortType = tr.find('.data-order-order-type').val().trim();
+		let sortBy = tr.find('.data-order-column-name').val();
+		let sortType = tr.find('.data-order-order-type').val();
+		sortBy = sortBy ? sortBy.trim() : '';
+		sortType = sortType ? sortType.trim() : '';
 		if(sortBy.length > 0)
 		{
 			result.push({

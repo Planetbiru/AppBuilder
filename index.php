@@ -153,6 +153,7 @@ require_once __DIR__ . "/inc.app/navs.php";
                 <td>Current Application</td>
                 <td>
                   <select class="form-control" name="current_application" id="current_application">
+                    <option value="">- Select One -</option>
                     <?php
                     $arr = $appList->valueArray();
                     foreach ($arr as $app) {
@@ -652,7 +653,7 @@ require_once __DIR__ . "/inc.app/navs.php";
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-primary" id="create-new-app">Save Changes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>

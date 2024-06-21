@@ -1,21 +1,23 @@
 current_application:
-  id: app1
-  name: Application 1
+  id: sipro
+  sipro: Sipro
 application:
-    id: app1
-    name: 'Your Application Name'
-    base_application_namespace: YourApplication
-    base_entity_namespace: YourApplication\\Data\\Entity
-    base_directory: /var/www/html/your-application
+    id: sipro
+    name: 'Sipro'
+    base_application_namespace: Sipro
+    base_entity_namespace: Sipro\\Data\\Entity
+    base_directory: /xampp/htdocs/new-sipro
     base_include_directory: inc.app
-    base_asset_directory: lib.assets
+    application_base_directory: /xampp/htdocs/new-sipro
+    entity_base_directory: /xampp/htdocs/new-sipro/inc.lib/classes
+    entity_base_namespace: Sipro\Data\Entity
     composer:
         base_directory: inc.lib
         psr0: true
         psr4: false
         psr0_base_directory:
             -
-                namespace: YourApplication
+                namespace: Sipro
                 directory: classes
         psr4_base_directory: null
 database:
@@ -24,7 +26,7 @@ database:
     port: '3306'
     username: root
     password: password
-    database_name: 'music'
+    database_name: 'sipro'
     database_schema: ''
     time_zone: Asia/Jakarta
 entity_info:

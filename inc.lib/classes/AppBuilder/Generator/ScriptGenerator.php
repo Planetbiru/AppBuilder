@@ -453,9 +453,12 @@ class ScriptGenerator
 
     public function prepareApplication($appConf, $baseDir)
     {
-        if(!file_exists($baseDir)) 
+        $libDir = $appConf->getBaseDirectory()."/".$appConf->getComposer()->getBaseDirectory();
+        error_log("PREPARE APP1");
+        error_log("CHECK DIR '$libDir'");
+        if(!file_exists($baseDir) || !file_exists($libDir)) 
         {    
-            
+            error_log("PREPARE APP2");
             $this->prepareDir($baseDir);
             $this->prepareComposer($appConf);
                   
@@ -483,20 +486,23 @@ class ScriptGenerator
     }
     public function prepareComposer($appConf)
     {
+        error_log("PREPARE COMPOSER");
         $composer = $appConf->getComposer();
-        $mo = $appConf->getMagicObject();
-        $magicObjectVersion = $mo->getVersion();
-        if(!empty($magicObjectVersion))
+        $mo = $appConf->getMagicApp();
+        $version = $mo->getVersion();
+        if(!empty($version))
         {
-            $magicObjectVersion = ":".$magicObjectVersion;
+            $version = ":".$version;
         }
         $this->prepareDir($appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory());
         $targetDir = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."";
         $targetPath = $appConf->getApplicationBaseDirectory()."/".$composer->getBaseDirectory()."/composer.phar";
-        $success = copy(dirname(dirname(dirname(__DIR__)))."/composer.phar", $targetPath);
+        $sourcePath = dirname(dirname(dirname(__DIR__)))."/composer.phar";
+        $success = copy($sourcePath, $targetPath);
+        error_log("copy($sourcePath, $targetPath)");
         if($success)
         {
-            $cmd = "cd $targetDir"."&&"."php composer.phar require planetbiru/magic-object$magicObjectVersion";
+            $cmd = "cd $targetDir"."&&"."php composer.phar require planetbiru/magic-app$version";
             exec($cmd);     
             $this->updateComposer($appConf, $composer);
         }
