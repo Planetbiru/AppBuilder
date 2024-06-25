@@ -1108,13 +1108,16 @@ else
         }
         $arrFilter = array();
         $arrSort = array();
+        
         foreach($filterFields as $field)
         {
-            $arrFilter[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
+            $type = $this->getFilterType($field);
+            $arrFilter[] = '"'.PicoStringUtil::camelize($field->getFieldName())
+            .'" => array("columnName" => "'.PicoStringUtil::camelize($field->getFieldName()).'", "dataType" => "'.$type.'")';
         }
         foreach($listFields as $field)
         {
-            $arrSort[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
+            $arrSort[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => array("columnName" => "'.PicoStringUtil::camelize($field->getFieldName()).'")';
         }
         $script = 
 '
@@ -1145,6 +1148,38 @@ $resultSet = $pageData->getResult();
         $script = str_replace("\r\n", "\n", $script);
         
         return $script;
+    }
+
+    /**
+     * Get filter type
+     *
+     * @param AppField $field
+     * @return string
+     */
+    private function getFilterType($field)
+    {
+        $type = $field->getReferenceFilter() != null ? $field->getReferenceFilter()->getType() : '';
+        $dataType = null;
+        if($type == 'yesno' || $type == 'truefalse')
+        {
+            $dataType = 'boolean';
+        }
+        else if($type == 'onezero')
+        {
+            $dataType = 'number';
+        }
+        else
+        {
+            if(stripos($field->getInputFilter(), 'number') !== false)
+            {
+                $dataType = 'number';
+            }
+            else
+            {
+                $dataType = 'string';
+            }
+        }
+        return $dataType;
     }
     
     /**

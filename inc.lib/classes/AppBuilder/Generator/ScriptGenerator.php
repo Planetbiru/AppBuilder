@@ -291,6 +291,7 @@ class ScriptGenerator
         $uses[] = "use MagicObject\\Util\\AttrUtil;";
         $uses[] = "use MagicApp\\Field;";
         $uses[] = "use MagicApp\\UserAction;";
+        $uses[] = "use MagicApp\\UserPermission;";
         $uses[] = "use MagicApp\\AppInclude;";
         $uses[] = "use MagicApp\\AppModule;";
         $uses[] = "use MagicApp\\AppEntityLanguage;";
