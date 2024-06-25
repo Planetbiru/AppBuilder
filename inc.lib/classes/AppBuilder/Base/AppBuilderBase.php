@@ -1290,6 +1290,20 @@ $resultSet = $pageData->getResult();
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td2);
         // detail end
+        
+        // approval begin
+        if($approvalRequired && $this->appFeatures->getApprovalPosition() == AppFeatures::BEFORE_DATA)
+        {
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove()){ ?>')); 
+        $td3 = $dom->createElement('td');
+        $td3->setAttribute('class', 'data-controll data-approval');
+        $td3->appendChild($dom->createTextNode('<?php echo $appLanguage->getApproval();?>')); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td3);
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php } ?>')); 
+        }
+        // approval end
 
         // no begin
         $td2 = $dom->createElement('td');
@@ -1298,8 +1312,7 @@ $resultSet = $pageData->getResult();
         
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td2);
-        // no end
-        
+        // no end  
         
         foreach($listFields as $field)
         {
@@ -1312,9 +1325,9 @@ $resultSet = $pageData->getResult();
         }
         
         // approval begin
-        if($approvalRequired)
+        if($approvalRequired && $this->appFeatures->getApprovalPosition() == AppFeatures::AFTER_DATA)
         {
-        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove(){ ?>')); 
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove()){ ?>')); 
         $td3 = $dom->createElement('td');
         $td3->setAttribute('class', 'data-controll data-approval');
         $td3->appendChild($dom->createTextNode('<?php echo $appLanguage->getApproval();?>')); 
@@ -1425,6 +1438,37 @@ $resultSet = $pageData->getResult();
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td2);
         // detail end
+        
+        // approval begin
+        if($approvalRequired && $this->appFeatures->getApprovalPosition() == AppFeatures::BEFORE_DATA)
+        {
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove()){ ?>')); 
+        $td3 = $dom->createElement('td');
+        $td3->setAttribute('class', 'data-controll data-approval');
+        
+        $buttonApprove = $dom->createElement('button');
+        $buttonApprove->setAttribute('type', 'button');
+        $buttonApprove->setAttribute('class', 'btn btn-tn btn-primary');
+        $buttonApprove->setAttribute('onclick', 'window.location=\'<?php $currentModule->getRedirectUrl(UserAction::DETAIL);?>\'');
+        $buttonApprove->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonApprove();?>')); 
+        
+        $buttonReject = $dom->createElement('button');
+        $buttonReject->setAttribute('type', 'button');
+        $buttonReject->setAttribute('class', 'btn btn-tn btn-warning');
+        $buttonReject->setAttribute('onclick', 'window.location=\'<?php $currentModule->getRedirectUrl(UserAction::DETAIL);?>\'');
+        $buttonReject->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonReject();?>')); 
+        
+        $td3->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
+        $td3->appendChild($buttonApprove); 
+        $td3->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t"));  
+        $td3->appendChild($buttonReject); 
+        $td3->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));  
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td3);
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php } ?>')); 
+        }
+        // approval end
 
         // no begin
         $td2 = $dom->createElement('td');
@@ -1434,6 +1478,7 @@ $resultSet = $pageData->getResult();
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td2);
         // no end
+        
         
         foreach($listFields as $field)
         {
@@ -1449,25 +1494,29 @@ $resultSet = $pageData->getResult();
         }
         
         // approval begin
-        if($approvalRequired)
+        if($approvalRequired && $this->appFeatures->getApprovalPosition() == AppFeatures::AFTER_DATA)
         {
-        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove(){ ?>')); 
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove()){ ?>')); 
         $td3 = $dom->createElement('td');
         $td3->setAttribute('class', 'data-controll data-approval');
         
-        $buttonApprove = $dom->createElement('botton');
+        $buttonApprove = $dom->createElement('button');
+        $buttonApprove->setAttribute('type', 'button');
         $buttonApprove->setAttribute('class', 'btn btn-tn btn-primary');
         $buttonApprove->setAttribute('onclick', 'window.location=\'<?php $currentModule->getRedirectUrl(UserAction::DETAIL);?>\'');
         $buttonApprove->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonApprove();?>')); 
         
-        $buttonReject = $dom->createElement('botton');
+        $buttonReject = $dom->createElement('button');
+        $buttonReject->setAttribute('type', 'button');
         $buttonReject->setAttribute('class', 'btn btn-tn btn-warning');
         $buttonReject->setAttribute('onclick', 'window.location=\'<?php $currentModule->getRedirectUrl(UserAction::DETAIL);?>\'');
         $buttonReject->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonReject();?>')); 
         
+        $td3->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t")); 
         $td3->appendChild($buttonApprove); 
-        $td3->appendChild($dom->createTextNode("")); 
+        $td3->appendChild($dom->createTextNode("\n\t\t\t\t\t\t\t"));  
         $td3->appendChild($buttonReject); 
+        $td3->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));  
         
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
         $trh->appendChild($td3);

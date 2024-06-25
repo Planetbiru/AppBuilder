@@ -261,7 +261,10 @@ class ScriptGenerator
         $entityApproval = $this->getEntityApproval($entity);
         $entityTrash = $this->getEntityTrash($entity);
      
+        
         $appFeatures = new AppFeatures($request->getFeatures());
+        error_log($appFeatures->getApprovalPosition());
+        error_log($request->getFeatures());
 
         $entityMainName = $entityMain->getEntityName();
         $approvalRequired = $appFeatures->isApprovalRequired();
@@ -313,7 +316,8 @@ class ScriptGenerator
         
         $includes[] = "require_once __DIR__ . $includeDir;";
         $includes[] = "";
-        $includes[] = '$currentModule = new AppModule("'.$request->getModuleName().'");';
+        $includes[] = '$currentModule = new AppModule($appConfig, "'.$request->getModuleName().'");';
+        $includes[] = '$userPermission = new UserPermission($appConfig, $database, $currentModule);';
         
         $usesSection = implode("\r\n", $uses);
         $includeSection = implode("\r\n", $includes);
@@ -464,16 +468,7 @@ class ScriptGenerator
                   
             $baseAppBuilder = $appConf->getEntityBaseDirectory()."";
             $this->prepareDir($baseAppBuilder);
-            $arr = array( 
-                'AppBuilder/Field.php',
-                'AppBuilder/PicoApproval.php',
-                'AppBuilder/UserAction.php',
-                'AppBuilder/AppInclude.php',
-                'AppBuilder/AppModule.php',
-                'AppBuilder/AppEntityLanguage.php',
-                'AppBuilder/WaitingFor.php',
-                'AppBuilder/PicoTestUtil.php',            
-                'AppBuilder/FormBuilder.php'            
+            $arr = array(           
             );
             foreach($arr as $file)
             {
@@ -500,7 +495,9 @@ class ScriptGenerator
         error_log("copy($sourcePath, $targetPath)");
         if($success)
         {
+            
             $cmd = "cd $targetDir"."&&"."php composer.phar require planetbiru/magic-app$version";
+            error_log("CMD: ".$cmd."\r\n");
             exec($cmd);     
             $this->updateComposer($appConf, $composer);
         }

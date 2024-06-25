@@ -685,6 +685,7 @@ function generateScript(selector)
 	let manualSortOrder = $('#manualsortorder')[0].checked && true;
 	let activateDeactivate = $('#activate_deactivate')[0].checked && true;
 	let withApprovalNote = $('#with_approval_note')[0].checked && true;
+	let approvalPosition = $('[name="approval_position"]:checked').val();
 	let entity = {
 		mainEntity:{
 			entityName: $('[name="entity_master_name"]').val(),
@@ -718,7 +719,8 @@ function generateScript(selector)
 		sortOrder: manualSortOrder,
 		approvalRequired: requireApproval,
 		approvalNote: withApprovalNote,
-		trashRequired: withTrash
+		trashRequired: withTrash,
+		approvalPosition: approvalPosition
 	};
 
 	let sortable = getSortableModule();

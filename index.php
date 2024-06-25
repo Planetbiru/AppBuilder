@@ -484,7 +484,7 @@ require_once __DIR__ . "/inc.app/navs.php";
                   <div class="modal-dialog modal-md modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Module Feature</h5>
+                        <h5 class="modal-title">Module Features</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -507,6 +507,10 @@ require_once __DIR__ . "/inc.app/navs.php";
                             <tr>
                               <td>Approval Note</td>
                               <td><label><input type="checkbox" name="with_approval_note" id="with_approval_note" value="1"> Approval Note</label> &nbsp;</td>
+                            </tr>
+                            <tr>
+                              <td>Approval Position</td>
+                              <td><label><input type="radio" name="approval_position" id="approval_position" value="before-data"> Before Data</label> &nbsp; <label><input type="radio" name="approval_position" id="approval_position" value="after-data" checked> After Data</label> &nbsp;</td>
                             </tr>
                             <tr>
                               <td>Trash</td>

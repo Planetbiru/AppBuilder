@@ -6,11 +6,50 @@ use MagicObject\MagicObject;
 
 class AppFeatures
 {
+    const BEFORE_DATA = 'before-data';
+    const AFTER_DATA = 'after-data';
+    
+    /**
+     * Activate/deactivate
+     *
+     * @var boolean
+     */
     private $activateDeactivate = false;
+    
+    /**
+     * Sort order
+     *
+     * @var boolean
+     */
     private $sortOrder = false;
+    
+    /**
+     * Approval required
+     *
+     * @var boolean
+     */
     private $approvalRequired = false;
+    
+    /**
+     * Approval note
+     *
+     * @var boolean
+     */
     private $approvalNote = false;
+    
+    /**
+     * Trash required
+     *
+     * @var boolean
+     */
     private $trashRequired = false;
+    
+    /**
+     * Approval position
+     *
+     * @var string
+     */
+    private $approvalPosition = '';
     
     /**
      * Constructor
@@ -26,6 +65,7 @@ class AppFeatures
             $this->approvalRequired = $this->isTrue($features->get('approvalRequired'));
             $this->approvalNote = $this->isTrue($features->get('approvalNote'));
             $this->trashRequired = $this->isTrue($features->get('trashRequired'));
+            $this->approvalPosition = $features->get('approvalPosition') == self::BEFORE_DATA ? self::BEFORE_DATA : self::AFTER_DATA;
         }
     }
     
@@ -33,6 +73,7 @@ class AppFeatures
      * Check if value is true
      *
      * @param mixed $value
+     * 
      * @return boolean
      */
     private function isTrue($value)
@@ -42,6 +83,8 @@ class AppFeatures
 
     /**
      * Get the value of activateDeactivate
+     * 
+     * @return boolean
      */ 
     public function isActiavteDeactivate()
     {
@@ -50,6 +93,8 @@ class AppFeatures
 
     /**
      * Get the value of sortOrder
+     * 
+     * @return boolean
      */ 
     public function isSortOrder()
     {
@@ -58,6 +103,8 @@ class AppFeatures
 
     /**
      * Get the value of approvalRequired
+     * 
+     * @return boolean
      */ 
     public function isApprovalRequired()
     {
@@ -66,6 +113,8 @@ class AppFeatures
 
     /**
      * Get the value of approvalNote
+     * 
+     * @return boolean
      */ 
     public function isApprovalNote()
     {
@@ -74,9 +123,21 @@ class AppFeatures
 
     /**
      * Get the value of trashRequired
+     * 
+     * @return boolean
      */ 
     public function isTrashRequired()
     {
         return $this->trashRequired == 1;
+    }
+
+    /**
+     * Get approval position
+     *
+     * @return  string
+     */ 
+    public function getApprovalPosition()
+    {
+        return $this->approvalPosition;
     }
 }
