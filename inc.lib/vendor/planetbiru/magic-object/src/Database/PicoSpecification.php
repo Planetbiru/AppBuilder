@@ -277,44 +277,21 @@ class PicoSpecification
      *
      * @param PicoRequestBase $request
      * @param string[] $map
-     * @param string[] $defaultSortable
      * @return PicoSpecification
      */
-    public static function fromUserInput($request, $map, $defaultSortable = null)
+    public static function fromUserInput($request, $map)
     {
         $specification = new PicoSpecification();
-        if(self::isArray($map))
+        if(isset($map) && is_array($map))
         {
             foreach($map as $key=>$value)
             {
                 if($request->get($key) != null && trim($request->get($key)) != "")
                 {
-                    $specification->addAnd(new PicoPredicate($value, $request->get($key)));
-                }
-            }
-        }
-        if($specification->isEmpty() && self::isArray($defaultSortable))
-        {
-            // no filter from user input
-            foreach($defaultSortable as $filter)
-            {
-                if(isset($filter['sortBy']) && isset($filter['sortType']))
-                {
-                    $specification->addAnd(new PicoPredicate($filter['sortBy'], $filter['sortType']));
+                    $specification->addAnd(PicoPredicate::getInstance()->like($value, PicoPredicate::generateCenterLike($request->get($key))));
                 }
             }
         }
         return $specification;
-    }
-
-    /**
-     * Check if input is array
-     *
-     * @param mixed $array
-     * @return boolean
-     */
-    public static function isArray($array)
-    {
-        return isset($array) && is_array($array);
     }
 }

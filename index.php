@@ -1,5 +1,6 @@
 <?php
 
+use MagicObject\Database\PicoDatabaseType;
 use MagicObject\SecretObject;
 use MagicObject\Util\Database\PicoDatabaseUtil;
 
@@ -65,9 +66,9 @@ require_once __DIR__ . "/inc.app/navs.php";
                   <td>Driver</td>
                   <td>
                     <select class="form-control" name="database_driver" id="database_driver">
-                      <option value="mysql" <?php echo $cfgDatabase->getDriver() == 'mysql' ? ' selected' : ''; ?>>MySQL</option>
-                      <option value="mariadb" <?php echo $cfgDatabase->getDriver() == 'mariadb' ? ' selected' : ''; ?>>MariaDB</option>
-                      <option value="postgresql" <?php echo $cfgDatabase->getDriver() == 'postgresql' ? ' selected' : ''; ?>>PostgreSQL</option>
+                      <option value="mysql" <?php echo $cfgDatabase->getDriver() == PicoDatabaseType::DATABASE_TYPE_MYSQL ? ' selected' : ''; ?>>MySQL</option>
+                      <option value="mariadb" <?php echo $cfgDatabase->getDriver() == PicoDatabaseType::DATABASE_TYPE_MARIADB ? ' selected' : ''; ?>>MariaDB</option>
+                      <option value="postgresql" <?php echo $cfgDatabase->getDriver() == PicoDatabaseType::DATABASE_TYPE_POSTGRESQL ? ' selected' : ''; ?>>PostgreSQL</option>
                     </select>
                   </td>
                 </tr>
