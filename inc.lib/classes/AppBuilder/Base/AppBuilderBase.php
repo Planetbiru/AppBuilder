@@ -1113,7 +1113,7 @@ else
         {
             $type = $this->getFilterType($field);
             $arrFilter[] = '"'.PicoStringUtil::camelize($field->getFieldName())
-            .'" => array("columnName" => "'.PicoStringUtil::camelize($field->getFieldName()).'", "dataType" => "'.$type.'")';
+            .'" => PicoSpecification::filter("'.PicoStringUtil::camelize($field->getFieldName()).'", "'.$type.'")';
         }
         foreach($listFields as $field)
         {
@@ -1176,7 +1176,7 @@ $resultSet = $pageData->getResult();
             }
             else
             {
-                $dataType = 'string';
+                $dataType = 'fulltext';
             }
         }
         return $dataType;
