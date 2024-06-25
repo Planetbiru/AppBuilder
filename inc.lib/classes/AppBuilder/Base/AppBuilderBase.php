@@ -979,7 +979,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         $dataSection->appendChild($pagination1);
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
         
-        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName, $primaryKey));
+        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName, $primaryKey, $approvalRequired));
         
         $dataSection->appendChild($dom->createTextNode("\n")); 
         $dataSection->appendChild($pagination2);
@@ -1153,9 +1153,11 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param AppField[] $listFields
      * @param string $objectName
+     * @param string $primaryKey
+     * @param boolean $approvalRequired
      * @return DOMElement
      */
-    public function createDataList($dom, $listFields, $objectName, $primaryKey)
+    public function createDataList($dom, $listFields, $objectName, $primaryKey, $approvalRequired = false)
     {
         $form = $dom->createElement('form');
         $form->setAttribute('action', '');
@@ -1165,7 +1167,7 @@ $resultSet = $pageData->getResult();
         $div1 = $dom->createElement('div');
         $div1->setAttribute('class', 'data-wrapper');
         
-        $table = $this->createDataTableList($dom, $listFields, $objectName, $primaryKey);
+        $table = $this->createDataTableList($dom, $listFields, $objectName, $primaryKey, $approvalRequired);
         
         $div1->appendChild($dom->createTextNode("\n\t\t\t")); 
         $div1->appendChild($table);
@@ -1186,15 +1188,16 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param AppField[] $listFields
      * @param string $primaryKey
+     * @param boolean $approvalRequired
      * @return DOMElement
      */
-    public function createDataTableList($dom, $listFields, $objectName, $primaryKey)
+    public function createDataTableList($dom, $listFields, $objectName, $primaryKey, $approvalRequired = false)
     {
         $table = $dom->createElement('table');
         $table->setAttribute('class', 'table table-row');
         
-        $thead = $this->createTableListHead($dom, $listFields, $objectName, $primaryKey);
-        $tbody = $this->createTableListBody($dom, $listFields, $objectName, $primaryKey);
+        $thead = $this->createTableListHead($dom, $listFields, $objectName, $primaryKey, $approvalRequired);
+        $tbody = $this->createTableListBody($dom, $listFields, $objectName, $primaryKey, $approvalRequired);
         
         $table->appendChild($dom->createTextNode("\n\t\t\t\t")); 
         $table->appendChild($thead);
@@ -1216,9 +1219,10 @@ $resultSet = $pageData->getResult();
      * @param AppField[] $listFields
      * @param string $objectName
      * @param string $primaryKey
+     * @param boolean $approvalRequired
      * @return DOMElement
      */
-    public function createTableListHead($dom, $listFields, $objectName, $primaryKey)
+    public function createTableListHead($dom, $listFields, $objectName, $primaryKey, $approvalRequired = false)
     {
         
         $thead = $dom->createElement('thead');
@@ -1307,6 +1311,20 @@ $resultSet = $pageData->getResult();
             $trh->appendChild($td);
         }
         
+        // approval begin
+        if($approvalRequired)
+        {
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove(){ ?>')); 
+        $td3 = $dom->createElement('td');
+        $td3->setAttribute('class', 'data-controll data-approval');
+        $td3->appendChild($dom->createTextNode('<?php echo $appLanguage->getApproval();?>')); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td3);
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php } ?>')); 
+        }
+        // approval end
+        
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         
         $thead->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
@@ -1322,9 +1340,10 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param AppField[] $listFields
      * @param string $primaryKey
+     * @param boolean $approvalRequired
      * @return DOMElement
      */
-    public function createTableListBody($dom, $listFields, $objectName, $primaryKey)
+    public function createTableListBody($dom, $listFields, $objectName, $primaryKey, $approvalRequired = false)
     {
         
         $tbody = $dom->createElement('tbody');
@@ -1428,6 +1447,33 @@ $resultSet = $pageData->getResult();
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
         }
+        
+        // approval begin
+        if($approvalRequired)
+        {
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php if($userPermission->isAllowedApprove(){ ?>')); 
+        $td3 = $dom->createElement('td');
+        $td3->setAttribute('class', 'data-controll data-approval');
+        
+        $buttonApprove = $dom->createElement('botton');
+        $buttonApprove->setAttribute('class', 'btn btn-tn btn-primary');
+        $buttonApprove->setAttribute('onclick', 'window.location=\'<?php $currentModule->getRedirectUrl(UserAction::DETAIL);?>\'');
+        $buttonApprove->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonApprove();?>')); 
+        
+        $buttonReject = $dom->createElement('botton');
+        $buttonReject->setAttribute('class', 'btn btn-tn btn-warning');
+        $buttonReject->setAttribute('onclick', 'window.location=\'<?php $currentModule->getRedirectUrl(UserAction::DETAIL);?>\'');
+        $buttonReject->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonReject();?>')); 
+        
+        $td3->appendChild($buttonApprove); 
+        $td3->appendChild($dom->createTextNode("")); 
+        $td3->appendChild($buttonReject); 
+        
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
+        $trh->appendChild($td3);
+        $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t".'<?php } ?>')); 
+        }
+        // approval end
         
         $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         
