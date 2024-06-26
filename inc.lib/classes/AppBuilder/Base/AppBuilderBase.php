@@ -1117,7 +1117,7 @@ else
         }
         foreach($listFields as $field)
         {
-            $arrSort[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => array("columnName" => "'.PicoStringUtil::camelize($field->getFieldName()).'")';
+            $arrSort[] = '"'.PicoStringUtil::camelize($field->getFieldName()).'" => "'.PicoStringUtil::camelize($field->getFieldName()).'"';
         }
         $script = 
 '
@@ -1229,7 +1229,8 @@ $resultSet = $pageData->getResult();
     public function createDataTableList($dom, $listFields, $objectName, $primaryKey, $approvalRequired = false)
     {
         $table = $dom->createElement('table');
-        $table->setAttribute('class', 'table table-row');
+        $table->setAttribute('class', 'table table-row table-sort-by-column');
+        
         
         $thead = $this->createTableListHead($dom, $listFields, $objectName, $primaryKey, $approvalRequired);
         $tbody = $this->createTableListBody($dom, $listFields, $objectName, $primaryKey, $approvalRequired);
@@ -1352,9 +1353,12 @@ $resultSet = $pageData->getResult();
         foreach($listFields as $field)
         {
             $td = $dom->createElement('td');
-            $td->setAttribute('data-field', $field->getFieldName());
-            $td->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
-            
+            $td->setAttribute('data-col-name', $field->getFieldName());
+            $td->setAttribute('class', 'order-controll col-sort');
+            $a = $dom->createElement('a');
+            $a->setAttribute('href', '#');
+            $a->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
+            $td->appendChild($a);
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
         }
@@ -1395,14 +1399,17 @@ $resultSet = $pageData->getResult();
     {
         
         $tbody = $dom->createElement('tbody');
-        
+        if($this->appFeatures->isSortOrder())
+        {
+            $tbody->setAttribute('data-table-manual-sort', 'true');
+        }
         $trh = $dom->createElement('tr');
         
         if($this->appFeatures->isSortOrder())
         {
             // sort-control begin
             $td = $dom->createElement('td');
-            $td->setAttribute('class', 'data-sort data-sort-body data-sort-control');
+            $td->setAttribute('class', 'data-sort data-sort-body data-manual-sort-control');
             $td->appendChild($dom->createTextNode(""));
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
@@ -1518,7 +1525,7 @@ $resultSet = $pageData->getResult();
         foreach($listFields as $field)
         {
             $td = $dom->createElement('td');
-            $td->setAttribute('data-field', $field->getFieldName());
+            $td->setAttribute('data-col-name', $field->getFieldName());
             
             $value = $this->createDetailValue($dom, $objectName, $field);
             
