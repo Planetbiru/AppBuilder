@@ -508,6 +508,18 @@ $(document).ready(function(){
 		}
 	});
 
+	$(document).on('click', '.entity-container-file .entity-li a', function(e){
+		let entity = $(this).attr('data-entity-name');
+		getEntityFile([entity]);
+		e.preventDefault();
+	});
+
+	$(document).on('click', '.entity-container-query .entity-li a', function(e){
+		let entity = $(this).attr('data-entity-name');
+		getEntityQuery([entity]);
+		e.preventDefault();
+	});
+
 	loadTable();
 	updateEntity();
 
@@ -541,16 +553,37 @@ function getEntityQuery(entity)
 	})
 }
 
+function getEntityFile(entity)
+{
+	$.ajax({
+		type:'POST',
+		url:'lib.ajax/entity-file.php',
+		data:{entity:entity},
+		dataType:'html',
+		success: function(data){
+			$('.entity-file').empty().append(data)
+		}
+	})
+}
+
 function updateEntity()
 {
 	$.ajax({
 		type:'GET',
-		url:'lib.ajax/list-entity.php',
+		url:'lib.ajax/entity-list-with-checkbox.php',
 		dataType:'html',
 		success: function(data){
-			$('.entity-list').empty().append(data);
+			$('.entity-container-query .entity-list').empty().append(data);
 			let ents = getEntitySelection();
 			getEntityQuery(ents);
+		}
+	});
+	$.ajax({
+		type:'GET',
+		url:'lib.ajax/entity-list.php',
+		dataType:'html',
+		success: function(data){
+			$('.entity-container-file .entity-list').empty().append(data);
 		}
 	})
 }
@@ -819,7 +852,7 @@ function loadTable()
 {
 	$.ajax({
 		type:'post', 
-		url: 'lib.ajax/list-table.php',
+		url: 'lib.ajax/table-list.php',
 		dataType:'json',
 		success: function(data)
 		{
@@ -851,7 +884,7 @@ function loadColumn(tableName, selector)
 {
 	$.ajax({
 		type:'post', 
-		url: 'lib.ajax/list-column.php',
+		url: 'lib.ajax/column-list.php',
 		data: {table_name: tableName},
 		dataType:'json',
 		success: function(answer)

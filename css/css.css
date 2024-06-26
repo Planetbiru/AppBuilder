@@ -166,7 +166,7 @@ table.table.table-reference tr>td:last-child {
 	height: calc(100vh - 146px);
 	overflow-x: auto;
 }
-.entity-query {
+.app-code {
 	padding: 20px;
 	font-family: 'Courier New', Courier, monospace;
 	height: calc(100vh - 120px);
@@ -174,5 +174,9 @@ table.table.table-reference tr>td:last-child {
 	background-color: #FAFAFA;
 	overflow: auto;
 	display: block;
+  }
+
+  .app-code pre{
+	font-size: 100%;
   }
 

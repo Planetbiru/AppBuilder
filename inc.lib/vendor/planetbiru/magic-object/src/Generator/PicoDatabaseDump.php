@@ -163,7 +163,7 @@ class PicoDatabaseDump
                 {
                     if(!in_array($entityColumn['name'], $dbColumnNames))
                     {
-                        $query = "ALTER TABLE $tableName ADD COLUMN ".$entityColumn['name']." ".$entityColumn['type'];
+                        $query = "ALTER TABLE `$tableName` ADD COLUMN `".$entityColumn['name']."` ".$entityColumn['type'];
                         $query = $this->updateQueryAlterTableNullable($query, $entityColumn);
                         $query = $this->updateQueryAlterTableDefaultValue($query, $entityColumn);  
                         $query = $this->updateQueryAlterTableAddColumn($query, $lastColumn, $database->getDatabaseType());

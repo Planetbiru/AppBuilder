@@ -536,24 +536,27 @@ require_once __DIR__ . "/inc.app/navs.php";
             </form>
           </div>
         </div>
-        <?php
-        $nav = $appNavs->item(4);
-        ?>
-        <div id="<?php echo $nav->getKey(); ?>" class="tab-pane fade<?php echo $nav->getActive() ? ' show active' : ''; ?>" role="tabpanel" aria-labelledby="generated-file-tab">
-        </div>
-        <div id="generated-file" class="tab-pane fade" role="tabpanel" aria-labelledby="generated-file-tab">
-          <div class="code-area">
-            <textarea class="text-code" class="text-code-php" spellcheck="false"></textarea>
+        <div id="entity-file" class="tab-pane fade" role="tabpanel" aria-labelledby="entity-file-tab">
+          <div class="entity-container-file">
+          <div class="row">
+            <div class="col col-2">
+              <div class="column-title"><h4>Entities</h4></div>
+              <div class="column-body">
+                <div class="entity-list"></div>
+              </div>
+            </div>
+            <div class="col col-10">
+              <div class="column-title"><h4>Content</h4></div>
+              <div class="column-body">
+                <div class="entity-file app-code" spellcheck="false" contenteditable="true"></div>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
-        <div id="generated-query" class="tab-pane fade" role="tabpanel" aria-labelledby="generated-query-tab">
-          <div class="code-area">
-            <textarea class="text-code" class="sql-from-server" spellcheck="false"></textarea>
-          </div>
-        </div>
-        <div id="generated-entity" class="tab-pane fade" role="tabpanel" aria-labelledby="generated-entity-tab">
+        <div id="entity-query" class="tab-pane fade" role="tabpanel" aria-labelledby="entity-query-tab">
         
-        <div class="generated-entity-container">
+        <div class="entity-container-query">
           <div class="row">
             <div class="col col-2">
               <div class="column-title"><h4>Entities</h4></div>
@@ -564,7 +567,7 @@ require_once __DIR__ . "/inc.app/navs.php";
             <div class="col col-10">
               <div class="column-title"><h4>Query</h4></div>
               <div class="column-body">
-                <div class="entity-query" spellcheck="false" contenteditable="true"></div>
+                <div class="entity-query app-code" spellcheck="false" contenteditable="true"></div>
               </div>
             </div>
           </div>

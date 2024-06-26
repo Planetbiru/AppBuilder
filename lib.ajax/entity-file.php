@@ -30,26 +30,12 @@ try
             {
                 include_once $path;
                 
-                $className = "\\".$baseEntity."\\".$entityName;
-                $entity = new $className(null, $database);
-                $dumper = new PicoDatabaseDump();
-	
-                $quertArr = $dumper->createAlterTableAdd($entity);
-                foreach($quertArr as $sql)
-                {
-                    $entityQueries[] = $sql."";
-                }
-                if(!empty($entityQueries))
-                {
-                    $allQueries[] = "-- SQL for $entityName begin";
-                    $allQueries[] = implode("\r\n", $entityQueries);
-                    $allQueries[] = "-- SQL for $entityName end\r\n";
-                }
+                $allQueries[] = htmlspecialchars(file_get_contents($path));
             }
         }
     }
 
-    echo '<pre>'.implode("\r\n\r\n", $allQueries).'<pre>';
+    echo '<pre>'.implode("<br />\r\n<br />\n\n", $allQueries).'</pre>';
 
 }
 catch(Exception $e)
