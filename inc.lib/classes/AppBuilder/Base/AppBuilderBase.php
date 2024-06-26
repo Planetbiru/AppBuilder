@@ -1354,7 +1354,7 @@ $resultSet = $pageData->getResult();
         {
             $td = $dom->createElement('td');
             $td->setAttribute('data-col-name', $field->getFieldName());
-            $td->setAttribute('class', 'order-controll col-sort');
+            $td->setAttribute('class', 'order-controll');
             $a = $dom->createElement('a');
             $a->setAttribute('href', '#');
             $a->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
@@ -1401,7 +1401,7 @@ $resultSet = $pageData->getResult();
         $tbody = $dom->createElement('tbody');
         if($this->appFeatures->isSortOrder())
         {
-            $tbody->setAttribute('data-table-manual-sort', 'true');
+            $tbody->setAttribute('class', 'data-table-manual-sort');
         }
         $trh = $dom->createElement('tr');
         
@@ -1409,7 +1409,7 @@ $resultSet = $pageData->getResult();
         {
             // sort-control begin
             $td = $dom->createElement('td');
-            $td->setAttribute('class', 'data-sort data-sort-body data-manual-sort-control');
+            $td->setAttribute('class', 'data-sort data-sort-body data-sort-handler');
             $td->appendChild($dom->createTextNode(""));
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
