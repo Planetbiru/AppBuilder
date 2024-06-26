@@ -254,17 +254,13 @@ class ScriptGenerator
             }
         }
         
-        $entity = $request->getEntity();
-        
+        $entity = $request->getEntity();      
         $entityMain = $entity->getMainEntity();
         
         $entityApproval = $this->getEntityApproval($entity);
-        $entityTrash = $this->getEntityTrash($entity);
-     
+        $entityTrash = $this->getEntityTrash($entity); 
         
         $appFeatures = new AppFeatures($request->getFeatures());
-        error_log($appFeatures->getApprovalPosition());
-        error_log($request->getFeatures());
 
         $entityMainName = $entityMain->getEntityName();
         $approvalRequired = $appFeatures->isApprovalRequired();
@@ -306,8 +302,7 @@ class ScriptGenerator
         $uses[] = "use ".$appConf->getEntityBaseNamespace()."\\$entityMainName;";
         $uses = $this->addUseFromApproval($uses, $appConf, $approvalRequired, $entity);
         $uses = $this->addUseFromTrash($uses, $appConf, $trashRequired, $entity);
-        $uses = $this->addUseFromReference($uses, $appConf, $referenceEntities);
-        
+        $uses = $this->addUseFromReference($uses, $appConf, $referenceEntities);      
         
         $uses[] = "";
         
@@ -459,11 +454,8 @@ class ScriptGenerator
     public function prepareApplication($appConf, $baseDir)
     {
         $libDir = $appConf->getBaseDirectory()."/".$appConf->getComposer()->getBaseDirectory();
-        error_log("PREPARE APP1");
-        error_log("CHECK DIR '$libDir'");
         if(!file_exists($baseDir) || !file_exists($libDir)) 
         {    
-            error_log("PREPARE APP2");
             $this->prepareDir($baseDir);
             $this->prepareComposer($appConf);
                   
@@ -480,7 +472,6 @@ class ScriptGenerator
     }
     public function prepareComposer($appConf)
     {
-        error_log("PREPARE COMPOSER");
         $composer = $appConf->getComposer();
         $mo = $appConf->getMagicApp();
         $version = $mo->getVersion();

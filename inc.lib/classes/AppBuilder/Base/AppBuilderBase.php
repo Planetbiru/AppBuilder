@@ -1526,11 +1526,12 @@ $resultSet = $pageData->getResult();
         {
             $td = $dom->createElement('td');
             $td->setAttribute('data-col-name', $field->getFieldName());
-            
-            $value = $this->createDetailValue($dom, $objectName, $field);
-            
-            $td->appendChild($value); 
-            
+            if($this->appFeatures->isSortOrder() && PicoStringUtil::camelize($this->entityInfo->getSortOrder()) == PicoStringUtil::camelize($field->getFieldName()))
+            {
+                $td->setAttribute('class', 'data-sort-column');
+            }            
+            $value = $this->createDetailValue($dom, $objectName, $field);          
+            $td->appendChild($value);           
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
         }
