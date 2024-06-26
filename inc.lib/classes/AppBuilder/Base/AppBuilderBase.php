@@ -1578,7 +1578,7 @@ $resultSet = $pageData->getResult();
 
         $tbody->appendChild($dom->createTextNode(self::PHP_CLOSE_TAG));  
         
-        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
+        $tbody->appendChild($dom->createTextNode("\n\n\t\t\t\t\t")); 
 
         $trh->setAttribute('data-number', '<?php echo $pageData->getDataOffset() + $dataIndex + 1;?>'); 
         $tbody->setAttribute('data-offset', '<?php echo $pageData->getDataOffset();?>'); 
@@ -1589,7 +1589,8 @@ $resultSet = $pageData->getResult();
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t".self::CURLY_BRACKET_CLOSE)); 
         $tbody->appendChild($dom->createTextNode("\n\t\t\t\t\t")); 
         $tbody->appendChild($dom->createTextNode(self::PHP_CLOSE_TAG));  
-        $tbody->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        $tbody->appendChild($dom->createTextNode("\n\n\t\t\t\t")); 
+        
         
         return $tbody;
     }
