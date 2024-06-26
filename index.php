@@ -20,6 +20,8 @@ require_once __DIR__ . "/inc.app/navs.php";
   <script type="text/javascript" src="js/jquery/js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="lib.assets/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/base64.js"></script>
+  
+  <!--
   <script src="js/cm/lib/codemirror.js"></script>
   <script src="js/cm/addon/mode/loadmode.js"></script>
   <script src="js/cm/addon/edit/matchbrackets.js"></script>
@@ -31,7 +33,10 @@ require_once __DIR__ . "/inc.app/navs.php";
   <script src="js/cm/mode/xml/xml.js"></script>
   <script src="js/cm/mode/javascript/javascript.js"></script>
   <script src="js/cm/mode/css/css.js"></script>
+  -->
   <script src="lib.assets/js/script.js"></script>
+
+  
 </head>
 
 <body>
@@ -559,7 +564,7 @@ require_once __DIR__ . "/inc.app/navs.php";
             <div class="col col-10">
               <div class="column-title"><h4>Query</h4></div>
               <div class="column-body">
-                <div class="entity-query" contenteditable="true" spellcheck="false"></div>
+                <div class="entity-query" spellcheck="false" contenteditable="true"></div>
               </div>
             </div>
           </div>

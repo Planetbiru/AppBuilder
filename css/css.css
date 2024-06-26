@@ -163,6 +163,8 @@ table.table.table-reference tr>td:last-child {
 	margin: 0;
 	padding: 0;
 	line-height: 1.7;
+	height: calc(100vh - 146px);
+	overflow-x: auto;
 }
 .entity-query {
 	padding: 20px;
@@ -171,4 +173,6 @@ table.table.table-reference tr>td:last-child {
 	border: 1px solid #DDD;
 	background-color: #FAFAFA;
 	overflow: auto;
+	display: block;
   }
+

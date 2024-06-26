@@ -66,7 +66,9 @@
     copyObj(defaults, options, false);
     setGuttersForLineNumbers(options);
 
+    
     var doc = options.value;
+    
     if (typeof doc == "string") doc = new Doc(doc, options.mode, null, options.lineSeparator);
     this.doc = doc;
 
