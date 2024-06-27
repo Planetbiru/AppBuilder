@@ -15,6 +15,7 @@ use MagicObject\Database\PicoDatabase;
 use MagicObject\Generator\PicoEntityGenerator;
 use MagicObject\MagicObject;
 use MagicObject\Request\InputPost;
+use MagicObject\SecretObject;
 use stdClass;
 
 class ScriptGenerator
@@ -416,18 +417,19 @@ class ScriptGenerator
         {
             $appBuilder->generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData);
         }
-        $this->generateEntitiesIfNotExists($database, $appConf, $referenceEntities);
+        $this->generateEntitiesIfNotExists($database, $appConf, $entityInfo, $referenceEntities);
     }
 
     /**
      * Generate entity if not exists
      *
      * @param PicoDatabase $database
-     * @param AppBuilderBase $appBuilder
+     * @param SecretObject $appConf
+     * @param EntityInfo $entityInfo
      * @param MagicObject[] $referenceEntities
      * @return void
      */
-    private function generateEntitiesIfNotExists($database, $appConf, $referenceEntities)
+    private function generateEntitiesIfNotExists($database, $appConf, $entityInfo, $referenceEntities)
     {
         $checked = array();
         foreach($referenceEntities as $entity)
@@ -444,7 +446,8 @@ class ScriptGenerator
                 if(!file_exists($path))
                 {
                     $gen = new PicoEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-                    $gen->generate();
+                    $nonupdatables = AppField::getNonupdatetableColumns($entityInfo);
+                    $gen->generate($nonupdatables);
                 }
                 $checked[] = $entityName;
             }

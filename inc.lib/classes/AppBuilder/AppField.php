@@ -134,6 +134,21 @@ class AppField
     }
 
     /**
+     * Get nonupdateable columns
+     *
+     * @param EntityInfo $entityInfo
+     * @return string[]
+     */
+    public static function getNonupdatetableColumns($entityInfo)
+    {
+        $columns = array();
+        $columns[] = $entityInfo->getTimeCreate();
+        $columns[] = $entityInfo->getAdminCreate();
+        $columns[] = $entityInfo->getIpCreate();
+        return $columns;
+    }
+
+    /**
      * Check if value is true
      *
      * @param mixed $value

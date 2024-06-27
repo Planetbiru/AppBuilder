@@ -2974,11 +2974,11 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
      * @param MagicObject[] $referenceData
-     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $referenceData, $nonupdatables)
+    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $referenceData)
     {
+        $nonupdatables = AppField::getNonupdatetableColumns($entityInfo);
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
@@ -2997,11 +2997,11 @@ $resultSet = $pageData->getResult();
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityApproval
      * @param MagicObject[] $referenceData
-     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval, $referenceData, $nonupdatables)
+    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval, $referenceData)
     {
+        $nonupdatables = AppField::getNonupdatetableColumns($entityInfo);
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
@@ -3021,11 +3021,11 @@ $resultSet = $pageData->getResult();
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityTrash
      * @param MagicObject[] $referenceData
-     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData, $nonupdatables)
+    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData)
     {
+        $nonupdatables = AppField::getNonupdatetableColumns($entityInfo);
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
