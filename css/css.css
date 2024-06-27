@@ -180,3 +180,7 @@ table.table.table-reference tr>td:last-child {
 	font-size: 100%;
   }
 
+  .tabs .tab-content>.tab-pane {
+	transition: opacity 0.01s ease 0s;
+  }
+  
