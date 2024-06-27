@@ -50,6 +50,8 @@ if($inputPost->getFieldName() != null && $inputPost->getKey() != null)
                     "tableName"=>$tableName,
                     "primaryKey"=>$fieldName,
                     "value"=>$name,
+                    "objectName"=>$tableName,
+                    "propertyName"=>$name,
                     "specification"=>array(
                         array(
                             "column"=>PicoStringUtil::camelize($active),

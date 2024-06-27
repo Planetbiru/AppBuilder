@@ -127,7 +127,7 @@ class AppEntityGenerator extends PicoEntityGenerator
      * @param MagicObject[] $referenceData
      * @return integer
      */
-    public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false, $referenceData = null)
+    public function generateCustomEntity($realEntityName = null, $realTableName = null, $predecessorField = null, $successorField = null, $removePk = false, $referenceData = null, $nonupdatables = null)
     {
         $typeMap = $this->getTypeMap();
         $picoTableName = $this->tableName;
@@ -162,7 +162,7 @@ class AppEntityGenerator extends PicoEntityGenerator
                 $columnNull = $row['Null'];
                 $columnDefault = $row['Default'];
                 $columnExtra = $row['Extra'];
-                $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra);
+                $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra, $nonupdatables);
                 $attrs[] = $prop;
 
                 if(isset($referenceData) && is_array($referenceData) && isset($referenceData[$columnName]) && $referenceData[$columnName]->getType() == 'entity')

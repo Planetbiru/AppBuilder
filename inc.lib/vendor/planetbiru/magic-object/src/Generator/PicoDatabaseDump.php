@@ -41,7 +41,7 @@ class PicoDatabaseDump
      * @param string $databaseType Target database type
      * @param boolean $createIfNotExists Add DROP TABLE IF EXISTS before create table
      * @param boolean $dropIfExists Add IF NOT EXISTS on create table
-     * @param string $engine Storage engine
+     * @param string $engine Storage engine (for MariaDB and MySQL)
      * @param string $charset Default charset
      * @return string
      */
@@ -163,7 +163,7 @@ class PicoDatabaseDump
                 {
                     if(!in_array($entityColumn['name'], $dbColumnNames))
                     {
-                        $query = "ALTER TABLE `$tableName` ADD COLUMN `".$entityColumn['name']."` ".$entityColumn['type'];
+                        $query = "ALTER TABLE $tableName ADD COLUMN ".$entityColumn['name']." ".$entityColumn['type'];
                         $query = $this->updateQueryAlterTableNullable($query, $entityColumn);
                         $query = $this->updateQueryAlterTableDefaultValue($query, $entityColumn);  
                         $query = $this->updateQueryAlterTableAddColumn($query, $lastColumn, $database->getDatabaseType());

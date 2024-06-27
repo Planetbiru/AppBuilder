@@ -2953,14 +2953,16 @@ $resultSet = $pageData->getResult();
      * @param PicoDatabase $database
      * @param SecretObject $appConf
      * @param MagicObject $entityMain
+     * @param string $tableName
+     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateEntity($database, $appConf, $entityName, $tableName)
+    public function generateEntity($database, $appConf, $entityName, $tableName, $nonupdatables)
     {
         $baseDir = $appConf->getEntityBaseDirectory();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity($entityName, $tableName, null, null);
+        $generator->generateCustomEntity($entityName, $tableName, null, null, false, null, $nonupdatables);
     }
     
     /**
@@ -2972,16 +2974,17 @@ $resultSet = $pageData->getResult();
      * @param MagicObject $entityMain
      * @param EntityInfo $entityInfo
      * @param MagicObject[] $referenceData
+     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $referenceData)
+    public function generateMainEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $referenceData, $nonupdatables)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity($entityMain->getEntityName(), $entityMain->getTableName(), null, $this->getSucessorMainColumns(), false, $referenceData);
+        $generator->generateCustomEntity($entityMain->getEntityName(), $entityMain->getTableName(), null, $this->getSucessorMainColumns(), false, $referenceData, $nonupdatables);
     }
     
     /**
@@ -2994,9 +2997,10 @@ $resultSet = $pageData->getResult();
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityApproval
      * @param MagicObject[] $referenceData
+     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval, $referenceData)
+    public function generateApprovalEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityApproval, $referenceData, $nonupdatables)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
@@ -3004,8 +3008,7 @@ $resultSet = $pageData->getResult();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
 
-        $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName(), 
-        $this->getPredecessorApprovalColumns($entityApproval), $this->getSucessorApprovalColumns(), true, $referenceData);
+        $generator->generateCustomEntity($entityApproval->getEntityName(), $entityApproval->getTableName(), $this->getPredecessorApprovalColumns($entityApproval), $this->getSucessorApprovalColumns(), true, $referenceData, $nonupdatables);
     }
     
     /**
@@ -3018,17 +3021,17 @@ $resultSet = $pageData->getResult();
      * @param EntityInfo $entityInfo
      * @param MagicObject $entityTrash
      * @param MagicObject[] $referenceData
+     * @param string[] $nonupdatables
      * @return void
      */
-    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData)
+    public function generateTrashEntity($database, $builderConfig, $appConf, $entityMain, $entityInfo, $entityTrash, $referenceData, $nonupdatables)
     {
         $entityName = $entityMain->getentityName();
         $tableName = $entityMain->getTableName();
         $baseDir = $appConf->getEntityBaseDirectory();
         $baseNamespace = $appConf->getEntityBaseNamespace();
         $generator = new AppEntityGenerator($database, $baseDir, $tableName, $baseNamespace, $entityName);
-        $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName(),
-        $this->getPredecessorTrashColumns($entityTrash), $this->getSucessorTrashColumns(), true, $referenceData);
+        $generator->generateCustomEntity($entityTrash->getEntityName(), $entityTrash->getTableName(), $this->getPredecessorTrashColumns($entityTrash), $this->getSucessorTrashColumns(), true, $referenceData, $nonupdatables);
     }
 
     /**
