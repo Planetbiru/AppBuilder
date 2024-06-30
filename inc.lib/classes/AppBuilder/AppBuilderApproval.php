@@ -102,7 +102,7 @@ class AppBuilderApproval extends AppBuilderBase
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         $lines = array();
         
-        $lines[] = "if(".parent::VAR."inputGet".parent::CALL_GET."UserAction() == UserAction::UPDATE)";
+        $lines[] = "if(".parent::VAR."inputPost".parent::CALL_GET."UserAction() == UserAction::UPDATE)";
         $lines[] = "{";
         $lines[] = parent::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
         foreach($appFields as $field)
@@ -409,9 +409,17 @@ class AppBuilderApproval extends AppBuilderBase
         .parent::TAB1.parent::TAB1.parent::TAB1.");";
         $lines[] = "";
 
+        if($entityTrashName == null)
+        {
+            $trash = "null";
+        }
+        else
+        {
+            $trash = "new $entityTrashName()";
+        }
 
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR."approval->approve("
-        .parent::VAR."columToBeCopied, new $entityApprovalName(), new $entityTrashName(), ".parent::NEW_LINE 
+        .parent::VAR."columToBeCopied, new $entityApprovalName(), $trash, ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentUser.",  ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentTime.",  ".parent::NEW_LINE 
         .parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$currentIp.", ".parent::NEW_LINE
