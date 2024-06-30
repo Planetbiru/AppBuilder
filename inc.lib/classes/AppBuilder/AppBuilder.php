@@ -3,8 +3,6 @@
 namespace AppBuilder;
 
 use AppBuilder\Base\AppBuilderBase;
-use MagicObject\Database\PicoPredicate;
-use MagicObject\Database\PicoSpecification;
 use MagicObject\MagicObject;
 use MagicObject\Util\PicoStringUtil;
 
@@ -39,13 +37,13 @@ class AppBuilder extends AppBuilderBase
         $upperTimeCreate = PicoStringUtil::upperCamelize($this->entityInfo->getTimeCreate());
         $upperIpCreate = PicoStringUtil::upperCamelize($this->entityInfo->getIpCreate());
 
-        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminEdit());
-        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeEdit());
-        $upperIpEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpEdit());
-
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminCreate."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeCreate."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpCreate."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
+
+        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminEdit());
+        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeEdit());
+        $upperIpEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpEdit());
 
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
@@ -88,6 +86,15 @@ class AppBuilder extends AppBuilderBase
                 $lines[] = $line;
             }
         }
+
+        $upperAdminEdit = PicoStringUtil::upperCamelize($this->entityInfo->getAdminEdit());
+        $upperTimeEdit = PicoStringUtil::upperCamelize($this->entityInfo->getTimeEdit());
+        $upperIpEdit = PicoStringUtil::upperCamelize($this->entityInfo->getIpEdit());
+
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperAdminEdit."(".parent::VAR.$this->getCurrentAction()->getUserFunction().");";
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
+        $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
+
         if(!$updatePk)
         {
             $line = $this->createSetter($objectName, $primaryKeyName, $this->getInputFilter($primaryKeyName));
