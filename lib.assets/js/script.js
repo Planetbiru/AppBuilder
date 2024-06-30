@@ -1025,8 +1025,8 @@ function generateSelectType(field, args)
 		'<option value="date" title="&lt;input type=&quot;text&date;&gt;">date</option>\r\n'+
 		'<option value="time" title="&lt;input type=&quot;time&quot;&gt;">time</option>\r\n'+
 		'<option value="datetime-local" title="&lt;input type=&quot;datetime-local&quot;&gt;">datetime</option>\r\n'+
-		'<option value="week" title="&lt;input type=&quot;text&quot;&gt;">week</option>\r\n'+
-		'<option value="color" title="&lt;input type=&quot;text&quot;&gt;">color</option>\r\n'+
+		'<option value="week" title="&lt;input type=&quot;week&quot;&gt;">week</option>\r\n'+
+		'<option value="color" title="&lt;input type=&quot;color&quot;&gt;">color</option>\r\n'+
 	'</select>\r\n'
 	);
 	
