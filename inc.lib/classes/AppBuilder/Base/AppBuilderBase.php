@@ -1999,6 +1999,10 @@ $resultSet = $pageData->getResult();
         $td1->appendChild($label);
 
         $input = $this->createInsertControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $field->getFieldName());
+        if($field->getRequired())
+        {
+            $input->setAttribute('required', 'required');
+        }
         if($input != null)
         {
             $td2->appendChild($input);
@@ -2033,6 +2037,10 @@ $resultSet = $pageData->getResult();
         $td1->appendChild($label);
 
         $input = $this->createUpdateControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $field->getFieldName());
+        if($field->getRequired())
+        {
+            $input->setAttribute('required', 'required');
+        }
         if($input != null)
         {
             $td2->appendChild($input);
@@ -2280,9 +2288,9 @@ $resultSet = $pageData->getResult();
             $input->setAttribute('name', $insertField->getFieldName());
             $input = $this->addAttributeId($input, $id);  
             $value = $dom->createElement('option');
-            $value->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
+            $input->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
             $value->appendChild($textLabel);
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
@@ -2370,7 +2378,7 @@ $resultSet = $pageData->getResult();
             $input = $this->addAttributeId($input, $id);
 
             $value = $dom->createElement('option');
-            $value->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
+            $input->appendChild($dom->createTextNode("\n\t\t\t\t\t\t"));
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
             $textLabel = $dom->createTextNode($caption);
             $value->appendChild($textLabel);

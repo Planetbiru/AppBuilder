@@ -29,10 +29,19 @@ if($inputPost->getFieldName() != null && $inputPost->getKey() != null)
             $entityConstant = new SecretObject($builderConfig->getEntityInfo());
         }
         $fieldName = trim($inputPost->getFieldName());
+        if(PicoStringUtil::endsWith($fieldName, "_id", true))
+        {
+            $objectName = substr($fieldName, 0, strlen($fieldNameEnt) - 3);
+        }
+        else
+        {
+            $objectName = $fieldName;
+        }
         $fieldNameEnt = $fieldName;
         if(PicoStringUtil::endsWith($fieldNameEnt, "_id", true))
         {
             $fieldNameEnt = substr($fieldNameEnt, 0, strlen($fieldNameEnt) - 3);
+            
         }
         $tableName = $fieldNameEnt;
         $entityName = PicoStringUtil::upperCamelize($fieldNameEnt);
@@ -50,7 +59,7 @@ if($inputPost->getFieldName() != null && $inputPost->getKey() != null)
                     "tableName"=>$tableName,
                     "primaryKey"=>$fieldName,
                     "value"=>$name,
-                    "objectName"=>$tableName,
+                    "objectName"=>$objectName,
                     "propertyName"=>$name,
                     "specification"=>array(
                         array(
