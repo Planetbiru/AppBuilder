@@ -1008,8 +1008,8 @@ function generateSelectType(field, args)
 		'int':['bit', 'varbit', 'smallint', 'int', 'integer', 'bigint', 'smallserial', 'serial', 'bigserial', 'bool', 'boolean'],
 		'float':['numeric', 'double', 'real', 'money'],
 		'text':['char', 'character', 'varchar', 'character varying', 'text'],
+		'datetime-local':['datetime', 'timestamp'],
 		'date':['date'],
-		'datetime':['datetime', 'timestamp'],
 		'time':['time']
 	}
 
@@ -1022,9 +1022,10 @@ function generateSelectType(field, args)
 		'<option value="password" title="&lt;input type=&quot;password&quot;&gt;">password</option>\r\n'+
 		'<option value="int" title="&lt;input type=&quot;number&quot;&gt;">int</option>\r\n'+
 		'<option value="float" title="&lt;input type=&quot;number&quot; step=&quot;any&quot;&gt;">float</option>\r\n'+
-		'<option value="date" title="&lt;input type=&quot;text&quot;&gt;">date</option>\r\n'+
-		'<option value="time" title="&lt;input type=&quot;text&quot;&gt;">time</option>\r\n'+
-		'<option value="datetime" title="&lt;input type=&quot;text&quot;&gt;">datetime</option>\r\n'+
+		'<option value="date" title="&lt;input type=&quot;text&date;&gt;">date</option>\r\n'+
+		'<option value="time" title="&lt;input type=&quot;time&quot;&gt;">time</option>\r\n'+
+		'<option value="datetime-local" title="&lt;input type=&quot;datetime-local&quot;&gt;">datetime</option>\r\n'+
+		'<option value="week" title="&lt;input type=&quot;text&quot;&gt;">week</option>\r\n'+
 		'<option value="color" title="&lt;input type=&quot;text&quot;&gt;">color</option>\r\n'+
 	'</select>\r\n'
 	);

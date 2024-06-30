@@ -2784,9 +2784,22 @@ $resultSet = $pageData->getResult();
         }
         else
         {
+            $dataType = $this->mapInputType($dataType);
             $input->setAttribute('type', $dataType);
         }
         return $input;
+    }
+
+    private function mapInputType($dataType)
+    {
+        $map = array(
+            'datetime'=>'datetime-local'
+        );
+        if(isset($map[$dataType]))
+        {
+            return $map[$dataType];
+        }
+        return $dataType;
     }
     
     /**

@@ -12,6 +12,7 @@ $inputGet = new InputGet();
 if(isset($_POST) && !empty($_POST))
 {
     $request = new InputPost(true);
+    file_put_contents(dirname(__DIR__)."/input2.json", $request);
 }
 else
 {

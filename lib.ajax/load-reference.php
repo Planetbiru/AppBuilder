@@ -31,7 +31,7 @@ if($inputPost->getFieldName() != null && $inputPost->getKey() != null)
         $fieldName = trim($inputPost->getFieldName());
         if(PicoStringUtil::endsWith($fieldName, "_id", true))
         {
-            $objectName = substr($fieldName, 0, strlen($fieldNameEnt) - 3);
+            $objectName = substr($fieldName, 0, strlen($fieldName) - 3);
         }
         else
         {
