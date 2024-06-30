@@ -102,7 +102,7 @@ class AppBuilderApproval extends AppBuilderBase
         $upperWaitingFor = PicoStringUtil::upperCamelize($this->entityInfo->getWaitingFor());
         $lines = array();
         
-        $lines[] = "if(".parent::VAR."inputPost".parent::CALL_GET."UserAction() == UserAction::UPDATE)";
+        $lines[] = "if(".parent::VAR."inputGet".parent::CALL_GET."UserAction() == UserAction::UPDATE)";
         $lines[] = "{";
         $lines[] = parent::TAB1.$this->createConstructor($objectApprovalName, $entityApprovalName);
         foreach($appFields as $field)

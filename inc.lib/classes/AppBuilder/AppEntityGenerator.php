@@ -162,7 +162,10 @@ class AppEntityGenerator extends PicoEntityGenerator
                 $columnNull = $row['Null'];
                 $columnDefault = $row['Default'];
                 $columnExtra = $row['Extra'];
-                $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra, $nonupdatables);
+
+                $nonupdatable = in_array($columnName, $nonupdatables);
+
+                $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra, $nonupdatable);
                 $attrs[] = $prop;
 
                 if(isset($referenceData) && is_array($referenceData) && isset($referenceData[$columnName]) && $referenceData[$columnName]->getType() == 'entity')

@@ -130,9 +130,9 @@ class AppBuilder extends AppBuilderBase
         
         $lines[] = "if(".parent::VAR."inputPost->getUserAction() == UserAction::DELETE)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
-        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableDeletionRowIds())";
+        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableCheckedRowId())";
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_OPEN;
-        $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getDeletionRowIds() as ".parent::VAR."rowId)";    
+        $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getCheckedRowId() as ".parent::VAR."rowId)";    
         $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_OPEN;
             
         if($withTrash)
@@ -180,11 +180,11 @@ class AppBuilder extends AppBuilderBase
         $upperPkName = PicoStringUtil::upperCamelize($pkName);
         $upperActivationKey = PicoStringUtil::upperCamelize($activationKey);
         $act = $activationValue?'true':'false';
-        $lines[] = "if(".parent::VAR."inputGet->getUserAction() == $userAction)";
+        $lines[] = "if(".parent::VAR."inputPost->getUserAction() == $userAction)";
         $lines[] = parent::CURLY_BRACKET_OPEN;
-        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableAtivationRowIds())";
+        $lines[] = parent::TAB1."if(".parent::VAR."inputPost->countableCheckedRowId())";
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_OPEN;
-        $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getAtivationRowIds() as ".parent::VAR."rowId)";    
+        $lines[] = parent::TAB1.parent::TAB1."foreach(".parent::VAR."inputPost->getCheckedRowId() as ".parent::VAR."rowId)";    
         $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_OPEN;
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.$this->createConstructor($objectName, $entityName);
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperActivationKey."($act)->update();";

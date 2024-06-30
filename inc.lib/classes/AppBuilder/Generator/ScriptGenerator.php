@@ -266,6 +266,7 @@ class ScriptGenerator
         $entityMainName = $entityMain->getEntityName();
         $approvalRequired = $appFeatures->isApprovalRequired();
         $trashRequired = $appFeatures->isTrashRequired();
+        $sortOrder = $appFeatures->isSortOrder();
         
         $activationKey = $entityInfo->getActive();
         
@@ -292,9 +293,12 @@ class ScriptGenerator
         $uses[] = "use MagicApp\\AppInclude;";
         $uses[] = "use MagicApp\\AppModule;";
         $uses[] = "use MagicApp\\AppEntityLanguage;";
-        if($approvalRequired)
+        if($approvalRequired || $sortOrder)
         {
             $uses[] = "use MagicObject\\SetterGetter;";
+        }
+        if($approvalRequired)
+        {
             $uses[] = "use MagicApp\\PicoApproval;";
             $uses[] = "use MagicApp\\WaitingFor;";
             $uses[] = "use MagicApp\\PicoTestUtil;";
@@ -343,7 +347,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields, $approvalRequired, $entityApproval); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields, $approvalRequired, $entityApproval); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $referenceData, $approvalRequired, $entityApproval); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval, $sortable); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $sortOrder, $approvalRequired, $sortable); 
         }
         else
         {
@@ -361,7 +365,7 @@ class ScriptGenerator
             $guiInsert = $appBuilder->createGuiInsert($entityMain, $insertFields); 
             $guiUpdate = $appBuilder->createGuiUpdate($entityMain, $editFields); 
             $guiDetail = $appBuilder->createGuiDetail($entityMain, $detailFields, $referenceData); 
-            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval, $sortable); 
+            $guiList = $appBuilder->createGuiList($entityMain, $listFields, $referenceData, $filterFields, $sortOrder, $approvalRequired, $sortable); 
         }
         
         // prepare CRUD section end

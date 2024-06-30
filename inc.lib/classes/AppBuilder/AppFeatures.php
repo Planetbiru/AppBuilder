@@ -86,7 +86,7 @@ class AppFeatures
      * 
      * @return boolean
      */ 
-    public function isActiavteDeactivate()
+    public function isActivateDeactivate()
     {
         return $this->activateDeactivate == 1;
     }

@@ -942,12 +942,12 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
      * @param MagicObject $mainEntity
      * @param AppField[] $appFields
      * @param MagicObject[] $referenceData
+     * @param boolean $sortOrder
      * @param boolean $approvalRequired
-     * @param MagicObject $approvalEntity
      * @param array $sortable
      * @return string
      */
-    public function createGuiList($entityMain, $listFields, $referenceData, $filterFields, $approvalRequired, $entityApproval, $sortable)
+    public function createGuiList($entityMain, $listFields, $referenceData, $filterFields, $sortOrder, $approvalRequired, $sortable)
     {
         $entityName = $entityMain->getentityName();
         $primaryKey = $entityMain->getPrimaryKey();
@@ -979,7 +979,7 @@ else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
         $dataSection->appendChild($pagination1);
         $dataSection->appendChild($dom->createTextNode("\n\t")); 
         
-        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName, $primaryKey, $approvalRequired));
+        $dataSection->appendChild($this->createDataList($dom, $listFields, $objectName, $primaryKey, $sortOrder, $approvalRequired));
         
         $dataSection->appendChild($dom->createTextNode("\n")); 
         $dataSection->appendChild($pagination2);
@@ -1189,10 +1189,11 @@ $resultSet = $pageData->getResult();
      * @param AppField[] $listFields
      * @param string $objectName
      * @param string $primaryKey
+     * @param boolean $sortOrder
      * @param boolean $approvalRequired
      * @return DOMElement
      */
-    public function createDataList($dom, $listFields, $objectName, $primaryKey, $approvalRequired = false)
+    public function createDataList($dom, $listFields, $objectName, $primaryKey, $sortOrder, $approvalRequired)
     {
         $form = $dom->createElement('form');
         $form->setAttribute('action', '');
@@ -1207,14 +1208,92 @@ $resultSet = $pageData->getResult();
         $div1->appendChild($dom->createTextNode("\n\t\t\t")); 
         $div1->appendChild($table);
         $div1->appendChild($dom->createTextNode("\n\t\t")); 
+
+
+        $div2 = $dom->createElement('div');
+        $div2->setAttribute('class', 'button-wrapper');
+        
+        $buttonWrapper = $this->createButtonWrapper($dom, $this->appFeatures);
+        
+        $div2->appendChild($dom->createTextNode("\n\t\t\t")); 
+        $div2->appendChild($buttonWrapper);
+        $div2->appendChild($dom->createTextNode("\n\t\t")); 
         
         $form->appendChild($dom->createTextNode("\n\t\t")); 
         $form->appendChild($div1);
+        $form->appendChild($dom->createTextNode("\n\t\t")); 
+        $form->appendChild($div2);
         $form->appendChild($dom->createTextNode("\n\t")); 
         
         
         
         return $form;
+    }
+
+    /**
+     * Create buttons
+     *
+     * @param DOMDocument $dom
+     * @param AppFeatures $appFeatures
+     * @return DOMElement
+     */
+    public function createButtonWrapper($dom, $appFeatures)
+    {
+        $activate = $appFeatures->isActivateDeactivate();
+
+        $sortOrder = $appFeatures->isSortOrder();
+
+        $wrapper = $dom->createElement('div');
+        $wrapper->setAttribute('class', 'button-area');
+
+        if($activate)
+        {
+        $activate = $dom->createElement('button');
+        $activate->setAttribute('class', 'btn btn-success');
+        $activate->setAttribute('type', 'submit');
+        $activate->setAttribute('name', 'user-action');
+        $activate->setAttribute('value', 'activate');
+        $activate->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonActivate();?>'));
+
+        $deactivate = $dom->createElement('button');
+        $deactivate->setAttribute('class', 'btn btn-warning');
+        $deactivate->setAttribute('type', 'submit');
+        $deactivate->setAttribute('name', 'user-action');
+        $deactivate->setAttribute('value', 'deactivate');
+        $deactivate->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonDeactivate();?>'));
+
+        
+        $wrapper->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        $wrapper->appendChild($activate);
+        $wrapper->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        $wrapper->appendChild($deactivate);
+        }
+
+        $delete = $dom->createElement('button');
+        $delete->setAttribute('class', 'btn btn-danger');
+        $delete->setAttribute('type', 'submit');
+        $delete->setAttribute('name', 'user-action');
+        $delete->setAttribute('value', 'delete');
+        $delete->appendChild($dom->createTextNode('<?php echo $appLanguage->getButtonDelete();?>'));
+
+        $wrapper->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+        $wrapper->appendChild($delete);
+
+        if($sortOrder)
+        {
+            $order = $dom->createElement('button');
+            $order->setAttribute('class', 'btn btn-primary');
+            $order->setAttribute('type', 'submit');
+            $order->setAttribute('name', 'user-action');
+            $order->setAttribute('value', 'sort_order');
+            $order->appendChild($dom->createTextNode('<?php echo $appLanguage->getSaveCurrentOrder();?>'));
+
+            $wrapper->appendChild($dom->createTextNode("\n\t\t\t\t")); 
+            $wrapper->appendChild($order);
+        }
+        
+        $wrapper->appendChild($dom->createTextNode("\n\t\t\t")); 
+        return $wrapper;
     }
     
     /**
@@ -3047,7 +3126,7 @@ $resultSet = $pageData->getResult();
         {
             $cols["sortOrder"]       = array('Type'=>'int(11)',     'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //sort_order",
         }
-        if($this->appFeatures->isActiavteDeactivate())
+        if($this->appFeatures->isActivateDeactivate())
         {
             $cols["active"]          = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //active",
         }
@@ -3100,7 +3179,7 @@ $resultSet = $pageData->getResult();
         {
             $cols["sortOrder"]       = array('Type'=>'int(11)',     'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //sort_order",
         }
-        if($this->appFeatures->isActiavteDeactivate())
+        if($this->appFeatures->isActivateDeactivate())
         {
             $cols["active"]          = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //active",
         }
@@ -3147,7 +3226,7 @@ $resultSet = $pageData->getResult();
         {
             $cols["sortOrder"]       = array('Type'=>'int(11)',     'Null'=>'YES', 'Key'=>'', 'Default'=>'NULL', 'Extra'=>''); //sort_order",
         }
-        if($this->appFeatures->isActiavteDeactivate())
+        if($this->appFeatures->isActivateDeactivate())
         {
             $cols["active"]          = array('Type'=>'tinyint(1)',  'Null'=>'YES', 'Key'=>'', 'Default'=>'0',    'Extra'=>''); //active",
         }
@@ -3370,13 +3449,21 @@ $resultSet = $pageData->getResult();
         $lines[] = "if(".self::VAR."inputPost".self::CALL_GET."UserAction() == UserAction::SORT_ORDER)";
         $lines[] = self::CURLY_BRACKET_OPEN;
         $lines[] = self::TAB1.self::VAR.$objectName.' = new '.$entityName.'(null, $database);';
-        $lines[] = self::TAB1.'if($inputPost->getDataToSort() != null && $inputPost->countableDataToSort())';
+        $lines[] = self::TAB1.'if($inputPost->getNewOrder() != null && $inputPost->countableNewOrder())';
         $lines[] = self::TAB1.self::CURLY_BRACKET_OPEN;
-        $lines[] = self::TAB1.self::TAB1.'foreach($inputPost->getDataToSort() as $dataItem)';
+        $lines[] = self::TAB1.self::TAB1.'foreach($inputPost->getNewOrder() as $dataItem)';
         $lines[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.'if(is_string($dataItem))';
+
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::TAB1.'$dataItem = new SetterGetter(json_decode($dataItem));';
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
+
+
         $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.'primaryKeyValue = $dataItem->getPrimaryKey();';
         $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.'sortOrder = $dataItem->getSortOrder();';
-        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.$objectName.'->where(PicoSpecification::getInstance()->addAnd(new PicoPredicate(Field::of()->'.$camelPrimaryKey.', $primaryKeyValue)))->setSortOder($sortOrder)->update();';     
+        $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.$objectName.'->where(PicoSpecification::getInstance()->addAnd(new PicoPredicate(Field::of()->'.$camelPrimaryKey.', $primaryKeyValue)))->setSortOrder($sortOrder)->update();';     
         $lines[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $lines[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
         $lines[] = self::CURLY_BRACKET_CLOSE;   
