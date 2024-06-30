@@ -481,13 +481,13 @@ class AppBuilderBase //NOSONAR
     /**
      * Create GUI INSERT section without approval
      *
-     * @param AppField[] $appFields
      * @param MagicObject $mainEntity
+     * @param AppField[] $fields
      * @param boolean $approvalRequired
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiInsert($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
+    public function createGuiInsert($mainEntity, $fields, $approvalRequired = false, $approvalEntity = null)
     {
         $entityName = $mainEntity->getEntityName();
         $primaryKeyName =  $mainEntity->getPrimaryKey();
@@ -497,7 +497,7 @@ class AppBuilderBase //NOSONAR
         
         $form = $this->createElementForm($dom, 'createform');
         
-        $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName);
+        $table1 = $this->createInsertFormTable($dom, $mainEntity, $objectName, $fields, $primaryKeyName);
 
 
         $table2 = $this->createButtonContainerTableCreate($dom, "save-create", "save-create", 'UserAction::CREATE');
@@ -537,7 +537,7 @@ class AppBuilderBase //NOSONAR
      * @param MagicObject $approvalEntity
      * @return string
      */
-    public function createGuiUpdate($mainEntity, $insertFields, $approvalRequired = false, $approvalEntity = null)
+    public function createGuiUpdate($mainEntity, $fields, $approvalRequired = false, $approvalEntity = null)
     {
         
         $entityName = $mainEntity->getEntityName();
@@ -549,7 +549,7 @@ class AppBuilderBase //NOSONAR
         
         $form = $this->createElementForm($dom, 'updateform');
         
-        $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName);
+        $table1 = $this->createUpdateFormTable($dom, $mainEntity, $objectName, $fields, $primaryKeyName);
 
         
 
@@ -880,23 +880,23 @@ class AppBuilderBase //NOSONAR
             
         $messagePhp = '
 <?php
-if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::CREATE)
+if($'.$objectName.self::CALL_GET.$upperWaitingFor.'() == WaitingFor::CREATE)
 {
     echo $appLanguage->getMessageWaitingForCreate();
 }
-else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::UPDATE)
+else if($'.$objectName.self::CALL_GET.$upperWaitingFor.'() == WaitingFor::UPDATE)
 {
     echo $appLanguage->getMessageWaitingForUpdate();
 }
-else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::ACTIVATE)
+else if($'.$objectName.self::CALL_GET.$upperWaitingFor.'() == WaitingFor::ACTIVATE)
 {
     echo $appLanguage->getMessageWaitingForActivate();
 }
-else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DEACTIVATE)
+else if($'.$objectName.self::CALL_GET.$upperWaitingFor.'() == WaitingFor::DEACTIVATE)
 {
     echo $appLanguage->getMessageWaitingForDeactivate();
 }
-else if($'.$objectName.'->get'.$upperWaitingFor.'() == WaitingFor::DELETE)
+else if($'.$objectName.self::CALL_GET.$upperWaitingFor.'() == WaitingFor::DELETE)
 {
     echo $appLanguage->getMessageWaitingForDelete();
 }
@@ -1493,8 +1493,8 @@ $resultSet = $pageData->getResult();
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
             
-            $trh->setAttribute("data-primary-key", '<?php echo $'.$objectName.'->get'.PicoStringUtil::upperCamelize($primaryKey).'();?>');
-            $trh->setAttribute("data-sort-order", '<?php echo $'.$objectName.'->get'.PicoStringUtil::upperCamelize($this->entityInfo->getSortOrder()).'();?>');
+            $trh->setAttribute("data-primary-key", '<?php echo $'.$objectName.self::CALL_GET.PicoStringUtil::upperCamelize($primaryKey).'();?>');
+            $trh->setAttribute("data-sort-order", '<?php echo $'.$objectName.self::CALL_GET.PicoStringUtil::upperCamelize($this->entityInfo->getSortOrder()).'();?>');
             
             // sort-control end
         }
@@ -1523,7 +1523,7 @@ $resultSet = $pageData->getResult();
         // edit begin
         $edit = $dom->createElement('a');
         $edit->setAttribute('class', 'edit-control');
-        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.'());?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::UPDATE, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.self::CALL_GET.$upperPkName.'());?>';
         $edit->setAttribute('href', $href);
         $spanEdit = $dom->createElement('span');
         $spanEdit->setAttribute('class', 'fa fa-edit');
@@ -1543,7 +1543,7 @@ $resultSet = $pageData->getResult();
         // detail begin
         $detail = $dom->createElement('a');
         $detail->setAttribute('class', 'detail-control field-master');
-        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.'->get'.$upperPkName.'());?>';
+        $href = '<?php echo $currentModule->getRedirectUrl(UserAction::DETAIL, '.$this->getStringOf($primaryKey).', '.self::VAR.$objectName.self::CALL_GET.$upperPkName.'());?>';
         $detail->setAttribute('href', $href);
         $spanDetail = $dom->createElement('span');
         $spanDetail->setAttribute('class', 'fa fa-folder');
@@ -1878,15 +1878,15 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField[] $insertFields
+     * @param AppField[] $fields
      * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createInsertFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName)
+    private function createInsertFormTable($dom, $mainEntity, $objectName, $fields, $primaryKeyName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
-        foreach($insertFields as $field)
+        foreach($fields as $field)
         {
             if($field->getIncludeInsert())
             {
@@ -1904,15 +1904,15 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField[] $insertFields
+     * @param AppField[] $fields
      * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createUpdateFormTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName)
+    private function createUpdateFormTable($dom, $mainEntity, $objectName, $fields, $primaryKeyName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
-        foreach($insertFields as $field)
+        foreach($fields as $field)
         {
             if($field->getIncludeEdit())
             {
@@ -1930,15 +1930,15 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField[] $insertFields
+     * @param AppField[] $fields
      * @param string $primaryKeyName
      * @return DOMElement
      */
-    private function createDetailTable($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName)
+    private function createDetailTable($dom, $mainEntity, $objectName, $fields, $primaryKeyName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
-        foreach($insertFields as $field)
+        foreach($fields as $field)
         {
             if($field->getIncludeDetail())
             {
@@ -1956,15 +1956,17 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField[] $insertFields
+     * @param AppField[] $fields
      * @param string $primaryKeyName
+     * @param MagicObject $approvalEntity
+     * @param string $objectApprovalName
      * @return DOMElement
      */
-    private function createDetailTableCompare($dom, $mainEntity, $objectName, $insertFields, $primaryKeyName, $approvalEntity, $objectApprovalName)
+    private function createDetailTableCompare($dom, $mainEntity, $objectName, $fields, $primaryKeyName, $approvalEntity, $objectApprovalName)
     {
         $table = $this->createElementTableResponsive($dom);
         $tbody = $dom->createElement('tbody');
-        foreach($insertFields as $field)
+        foreach($fields as $field)
         {
             if($field->getIncludeDetail())
             {
@@ -1982,7 +1984,7 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @param string $primaryKeyName
      * @return DOMElement
      */
@@ -1999,10 +2001,7 @@ $resultSet = $pageData->getResult();
         $td1->appendChild($label);
 
         $input = $this->createInsertControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $field->getFieldName());
-        if($field->getRequired())
-        {
-            $input->setAttribute('required', 'required');
-        }
+
         if($input != null)
         {
             $td2->appendChild($input);
@@ -2020,7 +2019,7 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @param string $primaryKeyName
      * @return DOMElement
      */
@@ -2037,10 +2036,7 @@ $resultSet = $pageData->getResult();
         $td1->appendChild($label);
 
         $input = $this->createUpdateControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $field->getFieldName());
-        if($field->getRequired())
-        {
-            $input->setAttribute('required', 'required');
-        }
+
         if($input != null)
         {
             $td2->appendChild($input);
@@ -2058,7 +2054,7 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @param string $primaryKeyName
      * @return DOMElement
      */
@@ -2092,7 +2088,7 @@ $resultSet = $pageData->getResult();
      *
      * @param DOMDocument $dom
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @return DOMElement|DOMText
      */
     private function createDetailValue($dom, $objectName, $field)
@@ -2120,7 +2116,7 @@ $resultSet = $pageData->getResult();
             $upperObjName = PicoStringUtil::upperCamelize($objName);
             $upperPropName = PicoStringUtil::upperCamelize($propName);
 
-            $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.'->get'.$upperObjName.'()->get'.$upperPropName.'() : ""';
+            $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.self::CALL_GET.$upperObjName.'()->get'.$upperPropName.'() : ""';
             $result = self::VAR.$objectName.$val;
         }
         else if($field->getElementType() == 'select' 
@@ -2130,9 +2126,9 @@ $resultSet = $pageData->getResult();
             )
         {
             $v1 = 'isset('.'$mapFor'.$upperFieldName.')';
-            $v2 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()])';
-            $v3 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()]["label"])';
-            $v4 = '$mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()]["label"]';
+            $v2 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.self::CALL_GET.$upperFieldName.'()])';
+            $v3 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.self::CALL_GET.$upperFieldName.'()]["label"])';
+            $v4 = '$mapFor'.$upperFieldName.'[$'.$objectName.self::CALL_GET.$upperFieldName.'()]["label"]';
             $val = "$v1 && $v2 && $v3 ? $v4 : \"\"";
             $result = $val;
         }
@@ -2152,8 +2148,10 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @param string $primaryKeyName
+     * @param MagicObject $approvalEntity
+     * @param string $objectApprovalName
      * @return DOMElement
      */
     private function createDetailCompareRow($dom, $mainEntity, $objectName, $field, $primaryKeyName, $approvalEntity, $objectApprovalName)
@@ -2188,7 +2186,7 @@ $resultSet = $pageData->getResult();
             $upperObjName = PicoStringUtil::upperCamelize($objName);
             $upperPropName = PicoStringUtil::upperCamelize($propName);
 
-            $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.'->get'.$upperObjName.'()->get'.$upperPropName.'() : ""';
+            $val = '->hasValue'.$upperObjName.'() ? $'.$objectName.self::CALL_GET.$upperObjName.'()->get'.$upperPropName.'() : ""';
             $result = self::VAR.$objectName.$val;
             $result2 = self::VAR.$objectApprovalName.$val;
         }
@@ -2199,16 +2197,16 @@ $resultSet = $pageData->getResult();
             )
         {
             $v1 = 'isset('.'$mapFor'.$upperFieldName.')';
-            $v2 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()])';
-            $v3 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()["label"]])';
-            $v4 = '$mapFor'.$upperFieldName.'[$'.$objectName.'->get'.$upperFieldName.'()]["label"]';
+            $v2 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.self::CALL_GET.$upperFieldName.'()])';
+            $v3 = 'isset($mapFor'.$upperFieldName.'[$'.$objectName.self::CALL_GET.$upperFieldName.'()["label"]])';
+            $v4 = '$mapFor'.$upperFieldName.'[$'.$objectName.self::CALL_GET.$upperFieldName.'()]["label"]';
             $val = "$v1 && $v2 && $v3 ? $v4 : \"\"";
             $result = $val;
 
             $v12 = 'isset('.'$mapFor'.$upperFieldName.')';
-            $v22 = 'isset($mapFor'.$upperFieldName.'[$'.$objectApprovalName.'->get'.$upperFieldName.'()])';
-            $v32 = 'isset($mapFor'.$upperFieldName.'[$'.$objectApprovalName.'->get'.$upperFieldName.'()]["label"])';
-            $v42 = '$mapFor'.$upperFieldName.'[$'.$objectApprovalName.'->get'.$upperFieldName.'()]["label"]';
+            $v22 = 'isset($mapFor'.$upperFieldName.'[$'.$objectApprovalName.self::CALL_GET.$upperFieldName.'()])';
+            $v32 = 'isset($mapFor'.$upperFieldName.'[$'.$objectApprovalName.self::CALL_GET.$upperFieldName.'()]["label"])';
+            $v42 = '$mapFor'.$upperFieldName.'[$'.$objectApprovalName.self::CALL_GET.$upperFieldName.'()]["label"]';
             $val2 = "$v12 && $v22 && $v32 ? $v42 : \"\"";
             $result2 = $val2;
         }
@@ -2248,44 +2246,53 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @param string $primaryKeyName
+     * @param string $id
      * @return DOMElement
      */
-    private function createInsertControl($dom, $mainEntity, $objectName, $insertField, $primaryKeyName, $id = null)
+    private function createInsertControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $id = null)
     {
-        $upperFieldName = PicoStringUtil::upperCamelize($insertField->getFieldName());
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
         $input = $dom->createElement('input');
-        if($insertField->getElementType() == ElementType::TEXT)
+        if($field->getElementType() == ElementType::TEXT)
         {
             $input = $dom->createElement('input');
             $input->setAttribute('autocomplete', 'off');
-            $this->setInputTypeAttribute($input, $insertField->getDataType()); 
-            $input->setAttribute('name', $insertField->getFieldName());
+            $this->setInputTypeAttribute($input, $field->getDataType()); 
+            $input->setAttribute('name', $field->getFieldName());
 
             $input = $this->addAttributeId($input, $id); 
             $input->setAttribute('autocomplete', 'off'); 
+            if($field->getRequired())
+            {
+                $input->setAttribute('required', 'required');
+            }
         }
-        else if($insertField->getElementType() == ElementType::TEXTAREA)
+        else if($field->getElementType() == ElementType::TEXTAREA)
         {
             $input = $dom->createElement('textarea');
             $classes = array();
             $classes[] = 'form-control';
             $input->setAttribute('class', implode(' ', $classes));
-            $input->setAttribute('name', $insertField->getFieldName());
+            $input->setAttribute('name', $field->getFieldName());
 
             $input = $this->addAttributeId($input, $id);  
             $value = $dom->createTextNode('');
             $input->appendChild($value);
             $input->setAttribute('spellcheck', 'false');
+            if($field->getRequired())
+            {
+                $input->setAttribute('required', 'required');
+            }
         }
-        else if($insertField->getElementType() == ElementType::SELECT)
+        else if($field->getElementType() == ElementType::SELECT)
         {
             $input = $dom->createElement('select');
             $classes = array();
             $classes[] = 'form-control';
             $input->setAttribute('class', implode(' ', $classes));
-            $input->setAttribute('name', $insertField->getFieldName());
+            $input->setAttribute('name', $field->getFieldName());
             $input = $this->addAttributeId($input, $id);  
             $value = $dom->createElement('option');
             $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appLanguage->getLabelOptionSelectOne();".self::PHP_CLOSE_TAG;
@@ -2295,10 +2302,14 @@ $resultSet = $pageData->getResult();
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-            $referenceData = $insertField->getReferenceData();
-            $input = $this->appendOption($dom, $input, $objectName, $insertField, $referenceData);
+            $referenceData = $field->getReferenceData();
+            $input = $this->appendOption($dom, $input, $objectName, $field, $referenceData);
+            if($field->getRequired())
+            {
+                $input->setAttribute('required', 'required');
+            }
         }
-        else if($insertField->getElementType() == ElementType::CHECKBOX)
+        else if($field->getElementType() == ElementType::CHECKBOX)
         {
             $input = $dom->createElement('label');
             $inputStrl = $dom->createElement('input');
@@ -2306,7 +2317,7 @@ $resultSet = $pageData->getResult();
             $classes[] = 'form-check-input';
             $inputStrl->setAttribute('class', implode(' ', $classes));
             $inputStrl->setAttribute('type', 'checkbox');
-            $inputStrl->setAttribute('name', $insertField->getFieldName());
+            $inputStrl->setAttribute('name', $field->getFieldName());
             $inputStrl = $this->addAttributeId($inputStrl, $id);
             $inputStrl->setAttribute('value', '1');
             $input->appendChild($inputStrl);
@@ -2314,10 +2325,7 @@ $resultSet = $pageData->getResult();
             $textLabel = $dom->createTextNode(' '.$caption);
             $input->appendChild($textLabel);
         }
-        if($insertField->getRequired())
-        {
-            $input->setAttribute('required', 'required');
-        }
+
         return $input;
     }
     
@@ -2327,31 +2335,36 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param MagicObject $mainEntity
      * @param string $objectName
-     * @param AppField $updateField
+     * @param AppField $field
      * @param string $primaryKeyName
+     * @param string $id
      * @return DOMElement
      */
-    private function createUpdateControl($dom, $mainEntity, $objectName, $updateField, $primaryKeyName, $id = null)
+    private function createUpdateControl($dom, $mainEntity, $objectName, $field, $primaryKeyName, $id = null)
     {
-        $upperFieldName = PicoStringUtil::upperCamelize($updateField->getFieldName());
-        $fieldName = $updateField->getFieldName();
+        $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        $fieldName = $field->getFieldName();
         if($fieldName == $primaryKeyName)
         {
             $fieldName = "app_builder_new_pk_".$fieldName;
         }
         $input = $dom->createElement('input');
-        if($updateField->getElementType() == ElementType::TEXT)
+        if($field->getElementType() == ElementType::TEXT)
         {
             $input = $dom->createElement('input');
-            $this->setInputTypeAttribute($input, $updateField->getDataType()); 
+            $this->setInputTypeAttribute($input, $field->getDataType()); 
             $input->setAttribute('name', $fieldName);
 
             $input = $this->addAttributeId($input, $id);  
             
             $input->setAttribute('value', $this->createPhpOutputValue(self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()'));
             $input->setAttribute('autocomplete', 'off');
+            if($field->getRequired())
+            {
+                $input->setAttribute('required', 'required');
+            }
         }
-        else if($updateField->getElementType() == ElementType::TEXTAREA)
+        else if($field->getElementType() == ElementType::TEXTAREA)
         {
             $input = $dom->createElement('textarea');
             $classes = array();
@@ -2366,8 +2379,12 @@ $resultSet = $pageData->getResult();
             $value = $dom->createTextNode($this->createPhpOutputValue(self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()'));
             $input->appendChild($value);
             $input->setAttribute('spellcheck', 'false');
+            if($field->getRequired())
+            {
+                $input->setAttribute('required', 'required');
+            }
         }
-        else if($updateField->getElementType() == ElementType::SELECT)
+        else if($field->getElementType() == ElementType::SELECT)
         {
             $input = $dom->createElement('select');
             $classes = array();
@@ -2385,10 +2402,14 @@ $resultSet = $pageData->getResult();
             $value->setAttribute('value', '');
             $value->appendChild($textLabel);
             $input->appendChild($value);
-            $referenceData = $updateField->getReferenceData();
-            $input = $this->appendOption($dom, $input, $objectName, $updateField, $referenceData, self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()');
+            $referenceData = $field->getReferenceData();
+            $input = $this->appendOption($dom, $input, $objectName, $field, $referenceData, self::VAR.$objectName.self::CALL_GET.$upperFieldName.'()');
+            if($field->getRequired())
+            {
+                $input->setAttribute('required', 'required');
+            }
         }
-        else if($updateField->getElementType() == ElementType::CHECKBOX)
+        else if($field->getElementType() == ElementType::CHECKBOX)
         {
             $input = $dom->createElement('label');
             $inputStrl = $dom->createElement('input');
@@ -2409,10 +2430,7 @@ $resultSet = $pageData->getResult();
             $input->appendChild($textLabel);
 
         }
-        if($updateField->getRequired())
-        {
-            $input->setAttribute('required', 'required');
-        }
+        
         return $input;
     }
 
@@ -2438,12 +2456,12 @@ $resultSet = $pageData->getResult();
      * @param DOMDocument $dom
      * @param DOMElement $input
      * @param string $objectName
-     * @param AppField $insertField
+     * @param AppField $field
      * @param MagicObject $referenceData
      * @param string $selected
      * @return DOMElement
      */
-    private function appendOption($dom, $input, $objectName, $insertField, $referenceData, $selected = null)
+    private function appendOption($dom, $input, $objectName, $field, $referenceData, $selected = null)
     {
         if($referenceData != null)
         {        
@@ -2769,7 +2787,7 @@ $resultSet = $pageData->getResult();
         $pkInput = $dom->createElement("input");
         $pkInput->setAttribute("type", "hidden");
         $pkInput->setAttribute("name", $primaryKeyName);
-        $pkInput->setAttribute("value", '<?php echo $'.$objectName.'->get'.$upperPrimaryKeyName.'();?>');
+        $pkInput->setAttribute("value", '<?php echo $'.$objectName.self::CALL_GET.$upperPrimaryKeyName.'();?>');
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
         $td2->appendChild($btn1);
@@ -2808,7 +2826,7 @@ $resultSet = $pageData->getResult();
         $td1 = $dom->createElement('td');
         $td2 = $dom->createElement('td');
         
-        $btn1 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_update'), null, null, 'currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->'.$primaryKeyName.', $'.$objectName.'->get'.$upperPrimaryKeyName.'())');
+        $btn1 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_update'), null, null, 'currentModule->getRedirectUrl(UserAction::UPDATE, Field::of()->'.$primaryKeyName.', $'.$objectName.self::CALL_GET.$upperPrimaryKeyName.'())');
         $btn2 = $this->createCancelButton($dom, $this->getTextOfLanguage('button_back_to_list'), null, null, 'currentModule->getRedirectUrl()');
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t"));
@@ -2862,12 +2880,12 @@ $resultSet = $pageData->getResult();
         $pkInputApprove = $dom->createElement("input");
         $pkInputApprove->setAttribute("type", "hidden");
         $pkInputApprove->setAttribute("name", $primaryKeyName);
-        $pkInputApprove->setAttribute("value", '<?php echo $'.$objectName.'->get'.$upperPrimaryKeyName.'();?>');
+        $pkInputApprove->setAttribute("value", '<?php echo $'.$objectName.self::CALL_GET.$upperPrimaryKeyName.'();?>');
 
         $pkInputReject = $dom->createElement("input");
         $pkInputReject->setAttribute("type", "hidden");
         $pkInputReject->setAttribute("name", $primaryKeyName);
-        $pkInputReject->setAttribute("value", '<?php echo $'.$objectName.'->get'.$upperPrimaryKeyName.'();?>');
+        $pkInputReject->setAttribute("value", '<?php echo $'.$objectName.self::CALL_GET.$upperPrimaryKeyName.'();?>');
 
         
         $td2->appendChild($dom->createTextNode("\n\t\t\t\t\t<?php"));
