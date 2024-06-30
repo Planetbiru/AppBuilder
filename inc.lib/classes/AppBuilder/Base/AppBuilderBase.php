@@ -3565,7 +3565,7 @@ $resultSet = $pageData->getResult();
         $lines[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $lines[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
 
-        $lines[] = self::TAB1.self::VAR.'currentModule->redirectToItSelf();';
+        $lines[] = self::TAB1.self::VAR.'currentModule->redirectToItself();';
 
         $lines[] = self::CURLY_BRACKET_CLOSE;   
         return implode("\r\n", $lines);

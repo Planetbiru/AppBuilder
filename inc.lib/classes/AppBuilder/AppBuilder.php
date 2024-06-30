@@ -178,6 +178,9 @@ class AppBuilder extends AppBuilderBase
             
         $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_CLOSE;
+
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItself();';
+        
         $lines[] = parent::CURLY_BRACKET_CLOSE;
         
         return implode(parent::NEW_LINE, $lines);
@@ -213,7 +216,7 @@ class AppBuilder extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_CLOSE;
 
-        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelf();';
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItself();';
         
         $lines[] = parent::CURLY_BRACKET_CLOSE;
         

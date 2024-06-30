@@ -252,7 +252,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1."}";
 
 
-        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelf();';
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItself();';
 
         $lines[] = "}";
         
@@ -446,7 +446,7 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1."}";
 
 
-        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelfWithRequireApproval();';
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItselfWithRequireApproval();';
 
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
@@ -517,7 +517,7 @@ class AppBuilderApproval extends AppBuilderBase
 
         $lines[] = parent::TAB1."}";
 
-        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelfWithRequireApproval();';
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItselfWithRequireApproval();';
 
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
