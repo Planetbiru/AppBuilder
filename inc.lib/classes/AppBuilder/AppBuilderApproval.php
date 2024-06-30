@@ -75,7 +75,14 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.$this->createConstructor($objectName."Update", $entityName);
         $lines[] = parent::TAB1.parent::VAR.$objectName."Update".parent::CALL_SET.$upperPrimaryKeyName."(".parent::VAR
         .$objectName.parent::CALL_GET.$upperPrimaryKeyName."())".parent::CALL_SET.$approvalId."(".parent::VAR.$objectApprovalName.parent::CALL_GET.$upperApprovalPkName."())".parent::CALL_UPDATE_END;
+        
+        
+
+        $lines[] = parent::TAB1.parent::VAR.'newId = '.parent::VAR.$objectName.parent::CALL_GET.$upperPrimaryKeyName."();";
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectTo(UserAction::DETAIL, "'.$mainEntity->getPrimaryKey().'", $newId);';
+
         $lines[] = "}";
+
         return implode(parent::NEW_LINE, $lines);
     }
     
@@ -138,6 +145,10 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperTimeAskEdit."(".parent::VAR.$this->getCurrentAction()->getTimeFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpAskEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPrimaryKeyName."(".parent::VAR."inputPost".parent::CALL_GET.$upperPrimaryKeyName."())".parent::CALL_SET.$approvalId."(".parent::VAR.$objectApprovalName.parent::CALL_GET.$upperPkeyApprovalName."())".parent::CALL_SET.$approvalId.$upperWaitingFor."(WaitingFor::UPDATE)->update();";
+        
+        $lines[] = parent::TAB1.parent::VAR.'newId = '.parent::VAR.$objectName.parent::CALL_GET.$upperPrimaryKeyName."();";
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectTo(UserAction::DETAIL, "'.$mainEntity->getPrimaryKey().'", $newId);';
+        
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }
@@ -239,6 +250,10 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1.parent::TAB1."}";
         $lines[] = parent::TAB1."}";
+
+
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelf();';
+
         $lines[] = "}";
         
         return implode(parent::NEW_LINE, $lines);
@@ -429,6 +444,10 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."}";
 
         $lines[] = parent::TAB1."}";
+
+
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelfWithRequireApproval();';
+
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
         
@@ -497,6 +516,9 @@ class AppBuilderApproval extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1."}";
 
         $lines[] = parent::TAB1."}";
+
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelfWithRequireApproval();';
+
         $lines[] = "}";
         return implode(parent::NEW_LINE, $lines);
     }

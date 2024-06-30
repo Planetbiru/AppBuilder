@@ -3564,6 +3564,9 @@ $resultSet = $pageData->getResult();
         $lines[] = self::TAB1.self::TAB1.self::TAB1.self::VAR.$objectName.'->where(PicoSpecification::getInstance()->addAnd(new PicoPredicate(Field::of()->'.$camelPrimaryKey.', $primaryKeyValue)))->setSortOrder($sortOrder)->update();';     
         $lines[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $lines[] = self::TAB1.self::CURLY_BRACKET_CLOSE;
+
+        $lines[] = self::TAB1.self::VAR.'currentModule->redirectToItSelf();';
+
         $lines[] = self::CURLY_BRACKET_CLOSE;   
         return implode("\r\n", $lines);
     }

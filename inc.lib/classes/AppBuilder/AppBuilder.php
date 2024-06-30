@@ -19,6 +19,8 @@ class AppBuilder extends AppBuilderBase
     {
         $entityName = $mainEntity->getEntityName();
         $objectName = lcfirst($entityName);
+        $primaryKeyName = $mainEntity->getPrimaryKey();
+        $upperPrimaryKeyName = PicoStringUtil::upperCamelize($primaryKeyName);
         $lines = array();
         
         $lines[] = "if(".parent::VAR."inputPost->getUserAction() == UserAction::CREATE)";
@@ -50,6 +52,10 @@ class AppBuilder extends AppBuilderBase
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperIpEdit."(".parent::VAR.$this->getCurrentAction()->getIpFunction().");";
 
         $lines[] = parent::TAB1.parent::VAR.$objectName.parent::CALL_INSERT_END;
+
+        $lines[] = parent::TAB1.parent::VAR.'newId = '.parent::VAR.$objectName.parent::CALL_GET.$upperPrimaryKeyName."();";
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectTo(UserAction::DETAIL, "'.$mainEntity->getPrimaryKey().'", $newId);';
+
         $lines[] = parent::CURLY_BRACKET_CLOSE;
         return implode(parent::NEW_LINE, $lines);
     }
@@ -110,6 +116,15 @@ class AppBuilder extends AppBuilderBase
                 
             $lines[] = parent::TAB1.$this->createConstructor($objectName, $entityName);
             $lines[] = parent::TAB1.parent::VAR.$objectName.'->where($specification)->set'.$upperPrimaryKeyName.'($inputPost->get'.PicoStringUtil::upperCamelize('app_builder_new_pk').$upperPrimaryKeyName.'())'.parent::CALL_UPDATE_END;
+
+            $lines[] = parent::TAB1.parent::VAR.'newId = $inputPost->get'.PicoStringUtil::upperCamelize('app_builder_new_pk').$upperPrimaryKeyName.'();';
+            $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectTo(UserAction::DETAIL, "'.$mainEntity->getPrimaryKey().'", $newId);';    
+
+        }
+        else
+        {
+            $lines[] = parent::TAB1.parent::VAR.'newId = '.parent::VAR.$objectName.parent::CALL_GET.$upperPrimaryKeyName."();";
+            $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectTo(UserAction::DETAIL, "'.$mainEntity->getPrimaryKey().'", $newId);';    
         }
         
         $lines[] = parent::CURLY_BRACKET_CLOSE;
@@ -197,6 +212,9 @@ class AppBuilder extends AppBuilderBase
         $lines[] = parent::TAB1.parent::TAB1.parent::TAB1.parent::VAR.$objectName.parent::CALL_SET.$upperPkName."(".parent::VAR."rowId)->set".$upperActivationKey."($act)->update();";
         $lines[] = parent::TAB1.parent::TAB1.parent::CURLY_BRACKET_CLOSE;
         $lines[] = parent::TAB1.parent::CURLY_BRACKET_CLOSE;
+
+        $lines[] = parent::TAB1.parent::VAR.'currentModule->redirectToItSelf();';
+        
         $lines[] = parent::CURLY_BRACKET_CLOSE;
         
         return implode(parent::NEW_LINE, $lines);
