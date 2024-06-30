@@ -1436,7 +1436,24 @@ $resultSet = $pageData->getResult();
             $td->setAttribute('class', 'order-controll');
             $a = $dom->createElement('a');
             $a->setAttribute('href', '#');
-            $a->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.PicoStringUtil::upperCamelize($field->getFieldName())."();".self::PHP_CLOSE_TAG)); 
+
+            $caption = PicoStringUtil::upperCamelize($field->getFieldName());
+            if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'entity'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            && PicoStringUtil::endsWith($field->getFieldName(), "_id")
+            )
+            {
+                $caption = PicoStringUtil::upperCamelize(substr($field->getFieldName(), 0, strlen($field->getFieldName()) - 3));
+            }
+
+
+
+
+            $a->appendChild($dom->createTextNode(self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$caption."();".self::PHP_CLOSE_TAG)); 
             $td->appendChild($a);
             $trh->appendChild($dom->createTextNode("\n\t\t\t\t\t\t")); 
             $trh->appendChild($td);
@@ -1995,6 +2012,18 @@ $resultSet = $pageData->getResult();
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'entity'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            && PicoStringUtil::endsWith($field->getFieldName(), "_id")
+        )
+        {
+            $upperFieldName = PicoStringUtil::upperCamelize(substr($field->getFieldName(), 0, strlen($field->getFieldName()) - 3));
+        }
+
         $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
@@ -2030,6 +2059,18 @@ $resultSet = $pageData->getResult();
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'entity'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            && PicoStringUtil::endsWith($field->getFieldName(), "_id")
+        )
+        {
+            $upperFieldName = PicoStringUtil::upperCamelize(substr($field->getFieldName(), 0, strlen($field->getFieldName()) - 3));
+        }
+
         $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
 
@@ -2065,6 +2106,17 @@ $resultSet = $pageData->getResult();
         $td2 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'entity'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            && PicoStringUtil::endsWith($field->getFieldName(), "_id")
+        )
+        {
+            $upperFieldName = PicoStringUtil::upperCamelize(substr($field->getFieldName(), 0, strlen($field->getFieldName()) - 3));
+        }
 
         $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
@@ -2164,6 +2216,17 @@ $resultSet = $pageData->getResult();
         $td3 = $dom->createElement('td');
 
         $upperFieldName = PicoStringUtil::upperCamelize($field->getFieldName());
+        if($field->getElementType() == 'select' 
+            && $field->getReferenceData() != null 
+            && $field->getReferenceData()->getType() == 'entity'
+            && $field->getReferenceData()->getEntity() != null
+            && $field->getReferenceData()->getEntity()->getObjectName() != null
+            && $field->getReferenceData()->getEntity()->getPropertyName() != null
+            && PicoStringUtil::endsWith($field->getFieldName(), "_id")
+        )
+        {
+            $upperFieldName = PicoStringUtil::upperCamelize(substr($field->getFieldName(), 0, strlen($field->getFieldName()) - 3));
+        }
         $caption = self::PHP_OPEN_TAG.self::ECHO.self::VAR."appEntityLanguage".self::CALL_GET.$upperFieldName."();".self::PHP_CLOSE_TAG;
         $label = $dom->createTextNode($caption);
         
