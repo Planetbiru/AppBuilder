@@ -733,7 +733,20 @@ class AppBuilderBase //NOSONAR
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
-        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
+        
+        $features = $this->appFeatures;
+        if($features->getSubquery())
+        {
+            $referece = $this->defineSubqueryReference($referenceData);
+            $scriptFindAll = '$subqueryInfo = '.$referece.';';
+            $getData[] = $scriptFindAll;
+            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
+        }
+        else
+        {
+            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
+        }
+        
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'// define map here';
