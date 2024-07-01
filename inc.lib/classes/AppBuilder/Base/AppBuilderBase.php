@@ -1187,7 +1187,7 @@ $dataLoader = new '.$entityMain->getEntityName().'(null, $database);
             $referece = $this->defineSubqueryReference($referenceData);
             $scriptFindAll = '
 $subqueryInfo = '.$referece.';
-$pageData = $dataLoader->findAll($specification, $pageable, $sortable, $subqueryInfo);
+$pageData = $dataLoader->findAll($specification, $pageable, $sortable, true, $subqueryInfo);
 $resultSet = $pageData->getResult();
 ';
         }
