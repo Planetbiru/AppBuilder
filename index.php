@@ -499,6 +499,10 @@ require_once __DIR__ . "/inc.app/navs.php";
                         <table class="config-table" width="100%" border="0" cellspacing="0" cellpadding="0">
                           <tbody>
                             <tr>
+                              <td>Subquery</td>
+                              <td><label><input type="checkbox" name="subquery" id="subquery" value="1"> Subquery</label> &nbsp;</td>
+                            </tr>
+                            <tr>
                               <td>Activate/Decativate</td>
                               <td><label><input type="checkbox" name="activate_deactivate" id="activate_deactivate" value="1"> Activate/Decativate</label> &nbsp;</td>
                             </tr>

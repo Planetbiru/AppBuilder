@@ -713,6 +713,7 @@ function generateScript(selector)
     	fields.push(field);
 	});
 
+	let subquery = $('#subquery')[0].checked && true;
 	let requireApproval = $('#with_approval')[0].checked && true;
 	let withTrash = $('#with_trash')[0].checked && true;
 	let manualSortOrder = $('#manualsortorder')[0].checked && true;
@@ -748,6 +749,7 @@ function generateScript(selector)
 	}
 	
 	let features = {
+		subquery: subquery,
 		activateDeactivate: activateDeactivate,
 		sortOrder: manualSortOrder,
 		approvalRequired: requireApproval,

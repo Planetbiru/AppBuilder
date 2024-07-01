@@ -51,6 +51,8 @@ class AppFeatures
      */
     private $approvalPosition = '';
     
+    private $subquery = false;
+    
     /**
      * Constructor
      *
@@ -65,6 +67,7 @@ class AppFeatures
             $this->approvalRequired = $this->isTrue($features->get('approvalRequired'));
             $this->approvalNote = $this->isTrue($features->get('approvalNote'));
             $this->trashRequired = $this->isTrue($features->get('trashRequired'));
+            $this->subquery = $this->isTrue($features->get('subquery'));
             $this->approvalPosition = $features->get('approvalPosition') == self::BEFORE_DATA ? self::BEFORE_DATA : self::AFTER_DATA;
         }
     }
@@ -139,5 +142,13 @@ class AppFeatures
     public function getApprovalPosition()
     {
         return $this->approvalPosition;
+    }
+
+    /**
+     * Get the value of subquery
+     */ 
+    public function getSubquery()
+    {
+        return $this->subquery == 1;
     }
 }

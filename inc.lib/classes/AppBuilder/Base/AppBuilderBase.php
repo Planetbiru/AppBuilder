@@ -630,6 +630,47 @@ class AppBuilderBase //NOSONAR
             return $this->createGuiDetailWithoutApproval($mainEntity, $appFields, $referenceData);
         }
     }
+    
+    /**
+     * Define map
+     *
+     * @param MagicObject[] $referenceData
+     * @return string
+     */
+    public function defineSubqueryReference($referenceData)
+    {
+        $map = array();
+        foreach($referenceData as $fieldName => $field)
+        {
+            if($field->getType() == 'entity'
+            && $field->getEntity() != null
+            )
+            {
+                $entity = $field->getEntity();
+                $entityName = $entity->getEntityName();
+                $tableName = $entity->getTableName();
+                $primaryKey = $entity->getPrimaryKey();
+                $objectName = $entity->getObjectName();
+                $propertyName = $entity->getPropertyName();
+                $camel = PicoStringUtil::camelize($fieldName);
+                $map[] = "\"$camel\" => array(".
+                "\"entityName\" => \"$entityName\",".
+                "\"tableName\" => \"$tableName\",".
+                "\"primaryKey\" => \"$primaryKey\",".
+                "\"objectName\" => \"$objectName\",".
+                "\"propertyName\" => \"$propertyName\"".
+                ")";
+            }
+        }
+        if(!empty($map))
+        {
+            return 'array('.implode(", \r\n", $map).')';
+        }
+        else
+        {
+            return 'null';
+        }
+    }
 
     /**
      * Define map
@@ -1139,9 +1180,26 @@ $sortable = PicoSortable::fromUserInput($inputGet, $sortOrderMap, '.$sortablePar
 
 $pageable = new PicoPageable(new PicoPage($inputGet->getPage(), $appConfig->getPageSize()), $sortable);
 $dataLoader = new '.$entityMain->getEntityName().'(null, $database);
+';
+        $features = $this->appFeatures;
+        if($features->getSubquery())
+        {
+            $referece = $this->defineSubqueryReference($referenceData);
+            $scriptFindAll = '
+$subqueryInfo = '.$referece.';
+$pageData = $dataLoader->findAll($specification, $pageable, $sortable, $subqueryInfo);
+$resultSet = $pageData->getResult();
+';
+        }
+        else
+        {
+            $scriptFindAll = '
 $pageData = $dataLoader->findAll($specification, $pageable, $sortable);
 $resultSet = $pageData->getResult();
 ';
+        }
+        
+        $script = $script.$scriptFindAll;
 
         $script = str_replace("\r\n", "\n", $script);
         $script = $this->addIndent($script, 1);
