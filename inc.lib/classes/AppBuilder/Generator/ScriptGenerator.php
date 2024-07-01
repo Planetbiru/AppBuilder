@@ -72,6 +72,7 @@ class ScriptGenerator
         if($includeMap)
         {
             return ($value->getReferenceData() != null 
+            && $value->getElementType() == 'select' 
             && $value->getReferenceData()->getType() == 'entity' 
             && $value->getReferenceData()->getEntity() != null 
             && $value->getReferenceData()->getEntity()->getEntityName() != null)
@@ -83,6 +84,7 @@ class ScriptGenerator
         else
         {
             return $value->getReferenceData() != null 
+            && $value->getElementType() == 'select' 
             && $value->getReferenceData()->getType() == 'entity' 
             && $value->getReferenceData()->getEntity() != null 
             && $value->getReferenceData()->getEntity()->getEntityName() != null;

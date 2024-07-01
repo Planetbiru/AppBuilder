@@ -3,6 +3,7 @@
 namespace MagicObject\Database;
 
 use MagicObject\Request\PicoRequestBase;
+use MagicObject\Util\PicoStringUtil;
 
 class PicoSortable
 {
@@ -248,18 +249,18 @@ class PicoSortable
      * Get sortable from user input
      *
      * @param PicoRequestBase $request
-     * @param string[] $map
-     * @param array $defaultSortable
+     * @param string[]|null $map
+     * @param array|null $defaultSortable
      * @return PicoSortable
      */
-    public static function fromUserInput($request, $map, $defaultSortable)
+    public static function fromUserInput($request, $map = null, $defaultSortable = null)
     {
         $sortable = new PicoSortable();
         if(self::isArray($map))
         {
             foreach($map as $key=>$value)
             {
-                if($request->getOrderby() == $key)
+                if(PicoStringUtil::camelize($request->getOrderby()) == PicoStringUtil::camelize($key))
                 {
                     $sortable->add(new PicoSort($value, PicoSort::fixSortType($request->getOrdertype())));
                 }

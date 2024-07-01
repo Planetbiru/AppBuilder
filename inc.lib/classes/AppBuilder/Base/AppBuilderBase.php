@@ -640,31 +640,34 @@ class AppBuilderBase //NOSONAR
     public function defineSubqueryReference($referenceData)
     {
         $map = array();
-        foreach($referenceData as $fieldName => $field)
+        foreach($referenceData as $fieldName => $reference)
         {
-            if($field->getType() == 'entity'
-            && $field->getEntity() != null
+            error_log($reference);
+            if(
+            $reference->getType() == 'entity'
+            && $reference->getEntity() != null
             )
             {
-                $entity = $field->getEntity();
+                $entity = $reference->getEntity();
                 $entityName = $entity->getEntityName();
                 $tableName = $entity->getTableName();
                 $primaryKey = $entity->getPrimaryKey();
                 $objectName = $entity->getObjectName();
                 $propertyName = $entity->getPropertyName();
                 $camel = PicoStringUtil::camelize($fieldName);
-                $map[] = "\"$camel\" => array(".
-                "\"entityName\" => \"$entityName\",".
-                "\"tableName\" => \"$tableName\",".
-                "\"primaryKey\" => \"$primaryKey\",".
-                "\"objectName\" => \"$objectName\",".
-                "\"propertyName\" => \"$propertyName\"".
-                ")";
+                $map[] = "\r\n\"$camel\" => array(".
+                "\r\n\t\"columnName\" => \"$fieldName\",".
+                "\r\n\t\"entityName\" => \"$entityName\",".
+                "\r\n\t\"tableName\" => \"$tableName\",".
+                "\r\n\t\"primaryKey\" => \"$primaryKey\",".
+                "\r\n\t\"objectName\" => \"$objectName\",".
+                "\r\n\t\"propertyName\" => \"$propertyName\"".
+                "\r\n)";
             }
         }
         if(!empty($map))
         {
-            return 'array('.implode(", \r\n", $map).')';
+            return 'array('.implode(", ", $map)."\r\n)";
         }
         else
         {
@@ -681,13 +684,13 @@ class AppBuilderBase //NOSONAR
     public function defineMap($referenceData)
     {
         $map = array();
-        foreach($referenceData as $fieldName => $field)
+        foreach($referenceData as $fieldName => $reference)
         {
-            if($field->getType() == 'map'
-            && $field->getMap() != null
+            if($reference->getType() == 'map'
+            && $reference->getMap() != null
             )
             {
-                $values = $field->getMap()->valueArray();
+                $values = $reference->getMap()->valueArray();
                 $arr1 = array();
                 foreach($values as $val1)
                 {
@@ -739,7 +742,7 @@ class AppBuilderBase //NOSONAR
         {
             $referece = $this->defineSubqueryReference($referenceData);
             $subqueryVar = '$subqueryInfo = '.$referece.';';
-            $getData[] = $subqueryVar;
+            $getData[] = $this->addIndent($subqueryVar, 2);
             $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
         }
         else
@@ -838,7 +841,7 @@ class AppBuilderBase //NOSONAR
         {
             $referece = $this->defineSubqueryReference($referenceData);
             $subqueryVar = '$subqueryInfo = '.$referece.';';
-            $getData[] = $subqueryVar;
+            $getData[] = $this->addIndent($subqueryVar, 2);
             $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
         }
         else

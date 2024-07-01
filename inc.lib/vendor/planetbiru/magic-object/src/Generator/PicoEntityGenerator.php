@@ -83,10 +83,9 @@ class PicoEntityGenerator
      * @param string $columnNull
      * @param string $columnDefault
      * @param string $columnExtra
-     * @param boolean $noneditable
      * @return string
      */
-    protected function createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra, $noneditable)
+    protected function createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra)
     {
         $propertyName = PicoStringUtil::camelize($columnName);
         $description = $this->getPropertyName($columnName);
@@ -138,9 +137,7 @@ class PicoEntityGenerator
             $attrs[] = "nullable=$val";
         }
 
-        //if($columnName == "time_create" || $columnName == "admin_create" || $columnName == "ip_create")
-
-        if($noneditable)
+        if($columnName == "time_create" || $columnName == "admin_create" || $columnName == "ip_create")
         {
             $attrs[] = "updatable=false";
         }
@@ -267,10 +264,9 @@ class PicoEntityGenerator
     /**
      * Generate entity
      *
-     * @param string[] $noneditables
      * @return string
      */
-    public function generate($noneditables)
+    public function generate()
     {
         $typeMap = $this->getTypeMap();
         $picoTableName = $this->tableName;
@@ -306,9 +302,7 @@ class PicoEntityGenerator
                 $columnDefault = $row['Default'];
                 $columnExtra = $row['Extra'];
 
-                $noneditable = in_array($columnName, $noneditables);
-
-                $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra, $noneditable);
+                $prop = $this->createProperty($typeMap, $columnName, $columnType, $columnKey, $columnNull, $columnDefault, $columnExtra);
                 $attrs[] = $prop;
             }
         }
