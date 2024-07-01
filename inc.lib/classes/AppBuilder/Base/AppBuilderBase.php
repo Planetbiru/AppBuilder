@@ -740,7 +740,7 @@ class AppBuilderBase //NOSONAR
             $referece = $this->defineSubqueryReference($referenceData);
             $subqueryVar = '$subqueryInfo = '.$referece.';';
             $getData[] = $subqueryVar;
-            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
+            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
         }
         else
         {
@@ -829,7 +829,6 @@ class AppBuilderBase //NOSONAR
         
         $htmlDetail = $this->createTableDetail($mainEntity, $objectName, $appFields, $primaryKeyName);
 
-
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
@@ -840,7 +839,7 @@ class AppBuilderBase //NOSONAR
             $referece = $this->defineSubqueryReference($referenceData);
             $subqueryVar = '$subqueryInfo = '.$referece.';';
             $getData[] = $subqueryVar;
-            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
+            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
         }
         else
         {
@@ -850,17 +849,13 @@ class AppBuilderBase //NOSONAR
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
 
-
-
         $getData[] = $this->getIncludeHeader();
         $getData[] = $this->constructEntityLabel($entityName);
         $getData[] = self::TAB1.self::TAB1.self::TAB1.'// define map here';
         $getData[] = $map;
 
         $getData[] = self::PHP_CLOSE_TAG.self::NEW_LINE.$htmlDetail.self::NEW_LINE.self::PHP_OPEN_TAG;
-        $getData[] = $this->getIncludeFooter();
-
-            
+        $getData[] = $this->getIncludeFooter();     
 
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_CLOSE;
         $getData[] = self::TAB1.self::TAB1."else";
@@ -1058,7 +1053,6 @@ else if($'.$objectName.self::CALL_GET.$upperWaitingFor.'() == WaitingFor::DELETE
         $dataSection->appendChild($dom->createTextNode($this->scriptWhenListNotFound())); 
         
         $dataSection->appendChild($dom->createTextNode("\n")); 
-
 
         $dom->appendChild($filterSection);
         $dom->appendChild($dataSection);
