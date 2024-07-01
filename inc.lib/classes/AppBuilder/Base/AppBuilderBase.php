@@ -738,8 +738,8 @@ class AppBuilderBase //NOSONAR
         if($features->getSubquery())
         {
             $referece = $this->defineSubqueryReference($referenceData);
-            $scriptFindAll = '$subqueryInfo = '.$referece.';';
-            $getData[] = $scriptFindAll;
+            $subqueryVar = '$subqueryInfo = '.$referece.';';
+            $getData[] = $subqueryVar;
             $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
         }
         else
@@ -833,7 +833,20 @@ class AppBuilderBase //NOSONAR
         $getData = array();
         $getData[] = self::TAB1.$this->createConstructor($objectName, $entityName);
         $getData[] = self::TAB1."try{";
-        $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
+        
+        $features = $this->appFeatures;
+        if($features->getSubquery())
+        {
+            $referece = $this->defineSubqueryReference($referenceData);
+            $subqueryVar = '$subqueryInfo = '.$referece.';';
+            $getData[] = $subqueryVar;
+            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findWithPrimaryKeyValue(".self::VAR."inputGet".self::CALL_GET.$upperPkName."(), ".self::VAR."subqueryInfo);";
+        }
+        else
+        {
+            $getData[] = self::TAB1.self::TAB1.self::VAR.$objectName."->findOneBy".$upperPkName."(".self::VAR."inputGet".self::CALL_GET.$upperPkName."());";
+        }       
+        
         $getData[] = self::TAB1.self::TAB1."if(".self::VAR.$objectName."->hasValue".$upperPkName."())";
         $getData[] = self::TAB1.self::TAB1.self::CURLY_BRACKET_OPEN;
 
@@ -1198,7 +1211,7 @@ $dataLoader = new '.$entityMain->getEntityName().'(null, $database);
         if($features->getSubquery())
         {
             $referece = $this->defineSubqueryReference($referenceData);
-            $scriptFindAll = '
+            $subqueryVar = '
 $subqueryInfo = '.$referece.';
 $pageData = $dataLoader->findAll($specification, $pageable, $sortable, true, $subqueryInfo);
 $resultSet = $pageData->getResult();
@@ -1206,13 +1219,13 @@ $resultSet = $pageData->getResult();
         }
         else
         {
-            $scriptFindAll = '
+            $subqueryVar = '
 $pageData = $dataLoader->findAll($specification, $pageable, $sortable);
 $resultSet = $pageData->getResult();
 ';
         }
         
-        $script = $script.$scriptFindAll;
+        $script = $script.$subqueryVar;
 
         $script = str_replace("\r\n", "\n", $script);
         $script = $this->addIndent($script, 1);
