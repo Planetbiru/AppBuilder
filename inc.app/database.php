@@ -1,6 +1,5 @@
 <?php
 
-use AppBuilder\AppSecretObject;
 use MagicObject\Database\PicoDatabase;
 
 require_once dirname(__DIR__) . "/inc.lib/vendor/autoload.php";
@@ -14,5 +13,5 @@ try
 }
 catch(Exception $e)
 {
-
+    // do nothing
 }
